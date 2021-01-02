@@ -8,6 +8,7 @@ import network.aika.neuron.excitatory.PatternPartNeuron;
 import network.aika.text.Document;
 import network.aika.text.TextModel;
 import network.aika.text.TextReference;
+import org.graphstream.util.MissingDisplayException;
 import org.junit.jupiter.api.Test;
 
 public class SimplePhraseTest {
@@ -30,7 +31,7 @@ public class SimplePhraseTest {
     }
 
     @Test
-    public void simplePhraseTest() throws InterruptedException {
+    public void simplePhraseTest() throws InterruptedException, MissingDisplayException {
         TextModel model = new TextModel();
         System.setProperty("org.graphstream.ui", "swing");
         model.setConfig(

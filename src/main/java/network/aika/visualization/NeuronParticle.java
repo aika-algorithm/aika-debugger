@@ -4,9 +4,7 @@ import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Fired;
 import network.aika.neuron.activation.Link;
-import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.excitatory.PatternPartSynapse;
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.geom.Vector3;
 import org.graphstream.ui.layout.springbox.EdgeSpring;
@@ -16,7 +14,7 @@ import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.layout.springbox.implementations.SpringBoxNodeParticle;
 import org.miv.pherd.geom.Point3;
 
-public class AikaParticle extends SpringBoxNodeParticle {
+public class NeuronParticle extends SpringBoxNodeParticle {
     /**
      * The optimal distance between nodes.
      */
@@ -36,13 +34,13 @@ public class AikaParticle extends SpringBoxNodeParticle {
     Activation act;
     Node node;
 
-    public AikaParticle(Node node, Activation act, SpringBox box, String id) {
+    public NeuronParticle(Node node, Activation act, SpringBox box, String id) {
         super(box, id);
         this.act = act;
         this.node = node;
     }
 
-    public AikaParticle(Node node, Activation act, SpringBox box, String id, double x, double y, double z) {
+    public NeuronParticle(Node node, Activation act, SpringBox box, String id, double x, double y, double z) {
         super(box, id, x, y, z);
         this.act = act;
         this.node = node;
@@ -65,7 +63,7 @@ public class AikaParticle extends SpringBoxNodeParticle {
             if (!edge.ignored) {
                 edgeAttraction(delta, edge, strength, energies);
 
-                AikaParticle other = (AikaParticle) edge.getOpposite(this);
+                NeuronParticle other = (NeuronParticle) edge.getOpposite(this);
                 Link link = act.getInputLinks()
                         .filter(l -> l.getInput() == other.act)
                         .findFirst()

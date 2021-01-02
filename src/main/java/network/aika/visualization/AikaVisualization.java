@@ -1,13 +1,11 @@
 package network.aika.visualization;
 
 import network.aika.EventListener;
-import network.aika.Model;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Fired;
 import network.aika.neuron.activation.Link;
-import network.aika.neuron.activation.QueueEntry;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.excitatory.PatternPartNeuron;
 import network.aika.neuron.excitatory.PatternPartSynapse;
@@ -21,12 +19,14 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 import org.graphstream.ui.swing_viewer.ViewPanel;
-import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
-import org.graphstream.ui.view.camera.Camera;
+import org.graphstream.util.Display;
+import org.graphstream.util.MissingDisplayException;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Comparator;
@@ -40,16 +40,14 @@ import static network.aika.neuron.activation.Fired.NOT_FIRED;
 
 public class AikaVisualization implements EventListener, ViewerListener {
 
-    public Graph getGraph() {
-        return graph;
-    }
+    private Graph activationGraph;
+    private boolean hideActivationGraph = true;
+    private Viewer activationGraphViewer;
 
-    public void setGraph(Graph graph) {
-        this.graph = graph;
-    }
+    private Graph neuronGraph;
+    private boolean hideNeuronGraph = true;
+    private Viewer neuronGraphViewer;
 
-    private Graph graph;
-    private Viewer viewer;
     private ViewerPipe fromViewer;
 
     private boolean clicked;
@@ -59,63 +57,60 @@ public class AikaVisualization implements EventListener, ViewerListener {
     private Map<Class<? extends Neuron>, Consumer<Node>> neuronTypeModifiers = new HashMap<>();
     private Map<Class<? extends Synapse>, BiConsumer<Edge, Synapse>> synapseTypeModifiers = new HashMap<>();
 
-    public AikaVisualization(Document doc) {
+
+    public AikaVisualization(Document doc) throws MissingDisplayException {
         initModifiers();
         doc.addEventListener(this);
-
-//        System.setProperty("org.graphstream.ui", "org.graphstream.ui.swing.util.Display");
-
-        graph = new SingleGraph("0");
-
-        graph.setAttribute("ui.stylesheet",
-                "node {" +
-                    "size: 20px;" +
-//                  "fill-color: #777;" +
-//                  "text-mode: hidden;" +
-                    "z-index: 1;" +
-//                  "shadow-mode: gradient-radial; shadow-width: 2px; shadow-color: #999, white; shadow-offset: 3px, -3px;" +
-                    "stroke-mode: plain; stroke-width: 2px;" +
-                    "text-size: 20px;" +
-                "}" +
-                " edge {" +
-                    "size: 2px;" +
-                    "shape: cubic-curve;" +
-                    "z-index: 0;" +
-//                  "fill-color: #222;" +
-                    "arrow-size: 8px, 5px;" +
-                "}");
-
-        graph.setAttribute("ui.antialias");
-        graph.setAutoCreate(true);
-
-        /*
-                viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+/*
+        viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
 
         add((DefaultView)viewer.addDefaultView(false, new SwingGraphRenderer()), BorderLayout.CENTER);
-
-
-      //  viewer = graph.display(false);
-//        viewer = new Viewer(graph,Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-//        viewer.disableAutoLayout();
-        viewer.enableAutoLayout(new AikaLayout());
-
-        //Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-       //  Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_SWING_THREAD)
-
-        viewer.getDefaultView().enableMouseOptions();
+        viewer = new Viewer(graph,Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 */
+        Display display = Display.getDefault();
 
-        viewer = graph.display(false);
+        activationGraph = initGraph();
+        neuronGraph = initGraph();
 
-        viewer.enableAutoLayout(new AikaLayout(doc, graph));
+        activationGraphViewer = display.display(activationGraph, false);
+        activationGraphViewer.enableAutoLayout(new AikaLayout(doc, activationGraph));
 
- //       viewer.computeGraphMetrics();
+        ViewPanel activationView = (ViewPanel) activationGraphViewer.getDefaultView();
 
-        ViewPanel view = (ViewPanel) viewer.getDefaultView();
+        neuronGraphViewer = display.display(neuronGraph, false);
+        neuronGraphViewer.enableAutoLayout(new AikaLayout(doc, neuronGraph));
 
-        view.enableMouseOptions();
+        ViewPanel neuronView = (ViewPanel) neuronGraphViewer.getDefaultView();
 
-        view.addMouseListener(new MouseListener() {
+        activationView.repaint();
+
+        activationView.enableMouseOptions();
+
+        activationView.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if(e.getKeyChar() == 'a') {
+                    hideActivationGraph = !hideActivationGraph;
+                    hideGraph(hideActivationGraph, activationGraph);
+                }
+                if(e.getKeyChar() == 'n') {
+                    hideNeuronGraph = !hideNeuronGraph;
+                    hideGraph(hideNeuronGraph, neuronGraph);
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+        activationView.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Click");
@@ -146,16 +141,77 @@ public class AikaVisualization implements EventListener, ViewerListener {
 
         // The default action when closing the view is to quit
         // the program.
-        viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
+        activationGraphViewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
 
         // We connect back the viewer to the graph,
         // the graph becomes a sink for the viewer.
         // We also install us as a viewer listener to
         // intercept the graphic events.
-        fromViewer = viewer.newViewerPipe();
+        fromViewer = activationGraphViewer.newViewerPipe();
         fromViewer.addViewerListener(this);
-        fromViewer.addSink(graph);
+        fromViewer.addSink(activationGraph);
     }
+
+    private Graph initGraph() {
+        //        System.setProperty("org.graphstream.ui", "org.graphstream.ui.swing.util.Display");
+
+        Graph graph = new SingleGraph("0");
+
+        graph.setAttribute("ui.stylesheet",
+                "node {" +
+                    "size: 20px;" +
+//                  "fill-color: #777;" +
+//                  "text-mode: hidden;" +
+                    "z-index: 1;" +
+//                  "shadow-mode: gradient-radial; shadow-width: 2px; shadow-color: #999, white; shadow-offset: 3px, -3px;" +
+                    "stroke-mode: plain; stroke-width: 2px;" +
+                    "text-size: 20px;" +
+                "}" +
+                " edge {" +
+                    "size: 2px;" +
+                    "shape: cubic-curve;" +
+                    "z-index: 0;" +
+//                  "fill-color: #222;" +
+                    "arrow-size: 8px, 5px;" +
+                "}");
+
+        graph.setAttribute("ui.antialias");
+        graph.setAutoCreate(true);
+
+        /*
+
+
+      //  viewer = graph.display(false);
+//        viewer = new Viewer(graph,Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+//        viewer.disableAutoLayout();
+        viewer.enableAutoLayout(new AikaLayout());
+
+        //Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+       //  Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_SWING_THREAD)
+
+        viewer.getDefaultView().enableMouseOptions();
+*/
+
+        return graph;
+    }
+
+
+    public Graph getActivationGraph() {
+        return activationGraph;
+    }
+
+    public void setActivationGraph(Graph activationGraph) {
+        this.activationGraph = activationGraph;
+    }
+
+    public Graph getNeuronGraph() {
+        return neuronGraph;
+    }
+
+    public void setNeuronGraph(Graph neuronGraph) {
+        this.neuronGraph = neuronGraph;
+    }
+
 
     private void initModifiers() {
         actPhaseModifiers.put(ActivationPhase.INITIAL_LINKING, n -> n.setAttribute("ui.style", "stroke-color: red;"));
@@ -232,7 +288,7 @@ public class AikaVisualization implements EventListener, ViewerListener {
     }
 
     private Node onActivationEvent(Activation act, Activation originAct) {
-        Graph g = getGraph();
+        Graph g = getActivationGraph();
         String id = "" + act.getId();
         Node node = g.getNode(id);
 
@@ -278,9 +334,9 @@ public class AikaVisualization implements EventListener, ViewerListener {
         String inputId = "" + l.getInput().getId();
         String outputId = "" + l.getOutput().getId();
         String edgeId = inputId + "-" + outputId;
-        Edge edge = graph.getEdge(edgeId);
+        Edge edge = activationGraph.getEdge(edgeId);
         if (edge == null) {
-            edge = graph.addEdge(edgeId, inputId, outputId, true);
+            edge = activationGraph.addEdge(edgeId, inputId, outputId, true);
 
             BiConsumer<Edge, Synapse> synapseTypeModifier = synapseTypeModifiers.get(l.getSynapse().getClass());
             if(synapseTypeModifier != null) {
@@ -314,5 +370,16 @@ public class AikaVisualization implements EventListener, ViewerListener {
 
     public void mouseLeft(String id) {
         System.out.println("Need the Mouse Options to be activated");
+    }
+
+
+    private void hideGraph(boolean hide, Graph g) {
+        if(hide) {
+            g.nodes().forEach(n -> n.setAttribute("ui.hide"));
+            g.edges().forEach(e -> e.setAttribute("ui.hide"));
+        } else {
+            g.nodes().forEach(n -> n.removeAttribute("ui.hide"));
+            g.edges().forEach(e -> e.removeAttribute("ui.hide"));
+        }
     }
 }
