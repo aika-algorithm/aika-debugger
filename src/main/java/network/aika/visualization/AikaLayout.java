@@ -32,6 +32,15 @@ public class AikaLayout extends SpringBox {
         Node n = graph.getNode(id);
         Activation act = doc.getActivation(n.getAttribute("aika.id", Integer.class));
 
-        return new AikaParticle(act, this, id);
+        Integer originActId = n.getAttribute("aika.originActId", Integer.class);
+
+        if(originActId != null) {
+//            Activation originAct = doc.getActivation(originActId);
+//            Node originNode = graph.getNode("" + originAct.getId());
+
+            return new AikaParticle(n, act, this, id);
+        } else {
+            return new AikaParticle(n, act, this, id);
+        }
     }
 }

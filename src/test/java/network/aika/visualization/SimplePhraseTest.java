@@ -73,7 +73,7 @@ public class SimplePhraseTest {
 
 
         Document doc = new Document(phrase);
-        VisualizedDocument vDoc = new VisualizedDocument(doc);
+        AikaVisualization vDoc = new AikaVisualization(doc);
 
 
         int i = 0;

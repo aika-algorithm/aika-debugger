@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
 
-public class VisualizedDocument implements EventListener, ViewerListener {
+public class AikaVisualization implements EventListener, ViewerListener {
 
     public Graph getGraph() {
         return graph;
@@ -52,12 +52,14 @@ public class VisualizedDocument implements EventListener, ViewerListener {
     private Viewer viewer;
     private ViewerPipe fromViewer;
 
+    private boolean clicked;
+
     private Map<ActivationPhase, Consumer<Node>> actPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
     private Map<LinkPhase, Consumer<Edge>> linkPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
     private Map<Class<? extends Neuron>, Consumer<Node>> neuronTypeModifiers = new HashMap<>();
     private Map<Class<? extends Synapse>, BiConsumer<Edge, Synapse>> synapseTypeModifiers = new HashMap<>();
 
-    public VisualizedDocument(Document doc) {
+    public AikaVisualization(Document doc) {
         initModifiers();
         doc.addEventListener(this);
 
@@ -116,7 +118,8 @@ public class VisualizedDocument implements EventListener, ViewerListener {
         view.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                System.out.println("Click");
+                click();
             }
 
             @Override
@@ -183,6 +186,8 @@ public class VisualizedDocument implements EventListener, ViewerListener {
     }
 
     private void pump() {
+        waitForClick();
+
         fromViewer.pump();
         // fromViewer.blockingPump();
         try {
@@ -192,18 +197,41 @@ public class VisualizedDocument implements EventListener, ViewerListener {
         }
     }
 
+    private synchronized void click() {
+        clicked = true;
+        notifyAll();
+    }
+
+    private synchronized void waitForClick() {
+        try {
+            while(!clicked) {
+                wait();
+            }
+            clicked = false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onActivationCreationEvent(Activation act, Activation originAct) {
-        onActivationEvent(act, originAct);
+        Node n = onActivationEvent(act, originAct);
+
+        n.setAttribute("aika.init-node", true);
+
+        pump();
     }
 
 
     @Override
     public void onActivationProcessedEvent(Activation act) {
-        onActivationEvent(act, null);
+        Node n = onActivationEvent(act, null);
+        n.setAttribute("aika.init-node", false);
+
+        pump();
     }
 
-    private void onActivationEvent(Activation act, Activation originAct) {
+    private Node onActivationEvent(Activation act, Activation originAct) {
         Graph g = getGraph();
         String id = "" + act.getId();
         Node node = g.getNode(id);
@@ -241,7 +269,8 @@ public class VisualizedDocument implements EventListener, ViewerListener {
         } else {
             node.setAttribute("ui.style", "stroke-color: gray;");
         }
-        pump();
+
+        return node;
     }
 
     @Override
