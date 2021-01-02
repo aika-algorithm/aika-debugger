@@ -74,8 +74,9 @@ public class SimplePhraseTest {
 
 
         Document doc = new Document(phrase);
-        AikaVisualization vDoc = new AikaVisualization(doc);
+        //AikaVisualization vDoc = new AikaVisualization(doc);
 
+        AikaDebugger.createAndShowGUI(doc);
 
         int i = 0;
         TextReference lastRef = null;
