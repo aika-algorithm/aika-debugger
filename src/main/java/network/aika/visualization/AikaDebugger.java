@@ -78,14 +78,14 @@ public class AikaDebugger extends JPanel {
 
         actViewManager = new ActivationViewerManager(doc);
 
-        addTab(0, "Activations", actViewManager.getView());
+        addTab(0, "Activations", KeyEvent.VK_A, actViewManager.getView());
     }
 
 
-    public void addTab(int tabIndex, String label, JComponent panel) {
+    public void addTab(int tabIndex, String label, int ke, JComponent panel) {
         tabbedPane.addTab(label, null, panel,
                 "Does nothing");
-        tabbedPane.setMnemonicAt(tabIndex, KeyEvent.VK_1);
+        tabbedPane.setMnemonicAt(tabIndex, ke);
     }
 
     public static void createAndShowGUI(Document doc) {
@@ -108,8 +108,7 @@ public class AikaDebugger extends JPanel {
         //Add content to the window.
         frame.add(new AikaDebugger(doc), BorderLayout.CENTER);
 
-        //Display the window.
-        frame.pack();
+        frame.setSize( 800, 600 );
         frame.setVisible(true);
     }
 }

@@ -17,6 +17,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.swing.SwingGraphRenderer;
 import org.graphstream.ui.swing_viewer.DefaultView;
 import org.graphstream.ui.swing_viewer.SwingViewer;
@@ -24,10 +25,13 @@ import org.graphstream.ui.swing_viewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
+import org.graphstream.ui.view.camera.Camera;
 import org.graphstream.util.Display;
 import org.graphstream.util.MissingDisplayException;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +43,8 @@ import static network.aika.neuron.activation.Fired.NOT_FIRED;
 
 public class ActivationViewerManager implements EventListener, ViewerListener {
 
+
+    // https://github.com/graphstream/gs-ui-swing/blob/master/src-test/org/graphstream/ui/viewer/test/DemoTwoGraphsInOneViewer.java
     private Graph graph;
     private SwingViewer viewer;
 
@@ -47,6 +53,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     private ViewPanel view;
 
     private boolean clicked;
+
+    private MouseEvent lastMouseDragEvent;
 
     private Map<ActivationPhase, Consumer<Node>> actPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
     private Map<LinkPhase, Consumer<Edge>> linkPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
@@ -81,7 +89,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         view = (DefaultView)viewer.addDefaultView(false, new SwingGraphRenderer());
         view.enableMouseOptions();
 
-   //     Camera cam = view.getCamera();
+        Camera camera = view.getCamera();
+        camera.setAutoFitView(false);
 
         // The default action when closing the view is to quit
         // the program.
@@ -94,6 +103,55 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         fromViewer = viewer.newViewerPipe();
         fromViewer.addViewerListener(this);
         fromViewer.addSink(graph);
+
+        view.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent mwe) {
+                zoomGraphMouseWheelMoved(mwe, view.getCamera());
+            }
+        });
+
+        view.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if(lastMouseDragEvent != null) {
+                    dragGraphMouseMoved(e, lastMouseDragEvent, view.getCamera());
+                }
+                lastMouseDragEvent = e;
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+
+            }
+        });
+
+        view.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                click();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                lastMouseDragEvent = null;
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                lastMouseDragEvent = null;
+            }
+        });
     }
 
     private Graph initGraph() {
@@ -139,6 +197,30 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         return graph;
     }
 
+    public static void zoomGraphMouseWheelMoved(MouseWheelEvent mwe, Camera camera) {
+        if (mwe.getWheelRotation() > 0) {
+            double newViewPercent = camera.getViewPercent() + 0.05;
+            camera.setViewPercent(newViewPercent);
+        } else if (mwe.getWheelRotation() < 0) {
+            double currentViewPercent = camera.getViewPercent();
+            if (currentViewPercent > 0.05) {
+                camera.setViewPercent(currentViewPercent - 0.05);
+            }
+        }
+    }
+
+
+    public void dragGraphMouseMoved(MouseEvent me, MouseEvent lastMe, Camera camera) {
+        Point3 centerGU = camera.getViewCenter();
+        Point3 centerPX = camera.transformGuToPx(centerGU.x, centerGU.y, 0);
+
+        Point3 newCenterGU = camera.transformPxToGu(
+                centerPX.x - (me.getX() - lastMe.getX()),
+                centerPX.y - (me.getY() - lastMe.getY())
+        );
+
+        camera.setViewCenter(newCenterGU.x, newCenterGU.y, newCenterGU.z);
+    }
 
     public Graph getGraph() {
         return graph;
@@ -310,16 +392,4 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     public void mouseLeft(String id) {
         System.out.println("Need the Mouse Options to be activated");
     }
-
-
-    private void hideGraph(boolean hide, Graph g) {
-        if(hide) {
-            g.nodes().forEach(n -> n.setAttribute("ui.hide"));
-            g.edges().forEach(e -> e.setAttribute("ui.hide"));
-        } else {
-            g.nodes().forEach(n -> n.removeAttribute("ui.hide"));
-            g.edges().forEach(e -> e.removeAttribute("ui.hide"));
-        }
-    }
-
 }
