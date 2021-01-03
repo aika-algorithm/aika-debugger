@@ -105,7 +105,7 @@ public class ActivationParticle extends SpringBoxNodeParticle {
                 attE += factor;
                 energies.accumulateEnergy(factor);
 
-                System.out.println("in:" + other.getId() + " out:" + act.getId() + " fDiff:" + fDiff + " xd:" + dx + " yd:" + dy);
+//                System.out.println("in:" + other.getId() + " out:" + act.getId() + " fDiff:" + fDiff + " xd:" + dx + " yd:" + dy);
             }
         }
 

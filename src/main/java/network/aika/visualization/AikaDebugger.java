@@ -3,6 +3,8 @@ package network.aika.visualization;
 import network.aika.text.Document;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -39,7 +41,11 @@ public class AikaDebugger extends JPanel {
 
             @Override
             public void keyPressed(KeyEvent e) {
-
+                if(e.getKeyChar() == ' ') {
+                    actViewManager.click();
+                } else if(e.getKeyChar() == 'v') {
+                    System.out.println("Visitor");
+                }
             }
 
             @Override
@@ -80,7 +86,6 @@ public class AikaDebugger extends JPanel {
 
         addTab(0, "Activations", KeyEvent.VK_A, actViewManager.getView());
     }
-
 
     public void addTab(int tabIndex, String label, int ke, JComponent panel) {
         tabbedPane.addTab(label, null, panel,

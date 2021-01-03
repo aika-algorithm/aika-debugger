@@ -1,5 +1,6 @@
 package network.aika.visualization;
 
+import com.sun.tools.jconsole.JConsolePlugin;
 import network.aika.EventListener;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
@@ -17,7 +18,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.ui.geom.Point3;
+import org.graphstream.ui.graphicGraph.GraphicElement;
 import org.graphstream.ui.swing.SwingGraphRenderer;
 import org.graphstream.ui.swing_viewer.DefaultView;
 import org.graphstream.ui.swing_viewer.SwingViewer;
@@ -30,6 +31,7 @@ import org.graphstream.util.Display;
 import org.graphstream.util.MissingDisplayException;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Comparator;
@@ -45,16 +47,25 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
 
     // https://github.com/graphstream/gs-ui-swing/blob/master/src-test/org/graphstream/ui/viewer/test/DemoTwoGraphsInOneViewer.java
+
+    private Document doc;
+
     private Graph graph;
     private SwingViewer viewer;
 
     private ViewerPipe fromViewer;
 
-    private ViewPanel view;
+    private ViewPanel graphView;
+
+    private JSplitPane splitPane;
+    private JTextPane consoleTextPane;
 
     private boolean clicked;
 
-    private MouseEvent lastMouseDragEvent;
+    private Node lastActEventNode;
+
+    Map<String, Activation> nodeIdToActivation = new TreeMap<>();
+
 
     private Map<ActivationPhase, Consumer<Node>> actPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
     private Map<LinkPhase, Consumer<Edge>> linkPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
@@ -63,6 +74,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
 
     public ActivationViewerManager(Document doc) {
+        this.doc = doc;
+
         initModifiers();
         doc.addEventListener(this);
 /*
@@ -86,11 +99,13 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         viewer.enableAutoLayout(new AikaLayout(doc, graph));
 
         //view = (ViewPanel) viewer.getDefaultView();
-        view = (DefaultView)viewer.addDefaultView(false, new SwingGraphRenderer());
-        view.enableMouseOptions();
+ //       view = (DefaultView)viewer.addDefaultView(false, new AikaRenderer());
+        graphView = (DefaultView)viewer.addDefaultView(false, new SwingGraphRenderer());
+        graphView.enableMouseOptions();
+        graphView.setMouseManager(new AikaMouseManager(this));
 
-        Camera camera = view.getCamera();
-        camera.setAutoFitView(false);
+        Camera camera = graphView.getCamera();
+        camera.setAutoFitView(true);
 
         // The default action when closing the view is to quit
         // the program.
@@ -104,32 +119,18 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         fromViewer.addViewerListener(this);
         fromViewer.addSink(graph);
 
-        view.addMouseWheelListener(new MouseWheelListener() {
+        graphView.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent mwe) {
-                zoomGraphMouseWheelMoved(mwe, view.getCamera());
+             //   zoomGraphMouseWheelMoved(mwe, view.getCamera());
             }
         });
 
-        view.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if(lastMouseDragEvent != null) {
-                    dragGraphMouseMoved(e, lastMouseDragEvent, view.getCamera());
-                }
-                lastMouseDragEvent = e;
-            }
 
-            @Override
-            public void mouseMoved(MouseEvent e) {
-
-            }
-        });
-
-        view.addMouseListener(new MouseListener() {
+        graphView.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                click();
+
             }
 
             @Override
@@ -139,7 +140,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                lastMouseDragEvent = null;
             }
 
             @Override
@@ -149,9 +149,90 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                lastMouseDragEvent = null;
             }
         });
+
+        splitPane = initSplitPane();
+    }
+
+    private JSplitPane initSplitPane() {
+
+        //Create a text pane.
+        consoleTextPane = new JTextPane();
+        addStylesToDocument(consoleTextPane.getStyledDocument());
+
+        JScrollPane paneScrollPane = new JScrollPane(consoleTextPane);
+        paneScrollPane.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        paneScrollPane.setPreferredSize(new Dimension(250, 155));
+        paneScrollPane.setMinimumSize(new Dimension(10, 10));
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphView, paneScrollPane);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setResizeWeight(0.7);
+
+        return splitPane;
+    }
+
+
+    protected void addStylesToDocument(StyledDocument doc) {
+        Style def = StyleContext.getDefaultStyleContext().
+                getStyle(StyleContext.DEFAULT_STYLE);
+
+        Style regular = doc.addStyle("regular", def);
+        StyleConstants.setFontFamily(def, "SansSerif");
+
+        Style s = doc.addStyle("italic", regular);
+        StyleConstants.setItalic(s, true);
+
+        s = doc.addStyle("bold", regular);
+        StyleConstants.setBold(s, true);
+
+        s = doc.addStyle("small", regular);
+        StyleConstants.setFontSize(s, 10);
+
+        s = doc.addStyle("headline", regular);
+        StyleConstants.setFontSize(s, 16);
+    }
+
+    public void showElementContext(String headlinePrefix, GraphicElement ge) {
+        if(ge instanceof Node) {
+            Node n = (Node) ge;
+
+            Activation act = nodeIdToActivation.get(n.getId());
+            if(act == null)
+                return;
+
+            renderConsoleOutput(headlinePrefix, act);
+        }
+    }
+
+    private void renderConsoleOutput(String headlinePrefix, Activation act) {
+        StyledDocument sDoc = consoleTextPane.getStyledDocument();
+        try {
+            sDoc.remove(0, sDoc.getLength());
+
+            sDoc.insertString(sDoc.getLength(), headlinePrefix + " Activation\n\n", sDoc.getStyle("headline") );
+
+            sDoc.insertString(sDoc.getLength(), "Id: ", sDoc.getStyle("bold") );
+            sDoc.insertString(sDoc.getLength(), "" + act.getId() + "\n", sDoc.getStyle("regular") );
+
+            sDoc.insertString(sDoc.getLength(), "Label: ", sDoc.getStyle("bold") );
+            sDoc.insertString(sDoc.getLength(), act.getLabel() + "\n", sDoc.getStyle("regular") );
+
+            sDoc.insertString(sDoc.getLength(), "Phase: ", sDoc.getStyle("bold") );
+            sDoc.insertString(sDoc.getLength(), act.getPhase() + "\n", sDoc.getStyle("regular") );
+
+            sDoc.insertString(sDoc.getLength(), "Fired: ", sDoc.getStyle("bold") );
+            sDoc.insertString(sDoc.getLength(), act.getFired() + "\n", sDoc.getStyle("regular") );
+
+            sDoc.insertString(sDoc.getLength(), "Reference: ", sDoc.getStyle("bold") );
+            sDoc.insertString(sDoc.getLength(), act.getReference() + "\n", sDoc.getStyle("regular") );
+
+         //   sDoc.insertString(sDoc.getLength(), act.toString(), sDoc.getStyle("bold") );
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
     }
 
     private Graph initGraph() {
@@ -197,30 +278,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         return graph;
     }
 
-    public static void zoomGraphMouseWheelMoved(MouseWheelEvent mwe, Camera camera) {
-        if (mwe.getWheelRotation() > 0) {
-            double newViewPercent = camera.getViewPercent() + 0.05;
-            camera.setViewPercent(newViewPercent);
-        } else if (mwe.getWheelRotation() < 0) {
-            double currentViewPercent = camera.getViewPercent();
-            if (currentViewPercent > 0.05) {
-                camera.setViewPercent(currentViewPercent - 0.05);
-            }
-        }
-    }
-
-
-    public void dragGraphMouseMoved(MouseEvent me, MouseEvent lastMe, Camera camera) {
-        Point3 centerGU = camera.getViewCenter();
-        Point3 centerPX = camera.transformGuToPx(centerGU.x, centerGU.y, 0);
-
-        Point3 newCenterGU = camera.transformPxToGu(
-                centerPX.x - (me.getX() - lastMe.getX()),
-                centerPX.y - (me.getY() - lastMe.getY())
-        );
-
-        camera.setViewCenter(newCenterGU.x, newCenterGU.y, newCenterGU.z);
-    }
 
     public Graph getGraph() {
         return graph;
@@ -230,8 +287,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         this.graph = graph;
     }
 
-    public JComponent getView() {
-        return view;
+    public JSplitPane getView() {
+        return splitPane;
     }
 
     private void initModifiers() {
@@ -274,7 +331,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         }
     }
 
-    private synchronized void click() {
+    public synchronized void click() {
         clicked = true;
         notifyAll();
     }
@@ -296,6 +353,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         n.setAttribute("aika.init-node", true);
 
+        renderConsoleOutput("Current", act);
         pump();
     }
 
@@ -317,6 +375,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
             node = g.addNode(id);
         }
 
+        nodeIdToActivation.put(node.getId(), act);
         node.setAttribute("aika.id", act.getId());
         if(originAct != null) {
             node.setAttribute("aika.originActId", originAct.getId());
@@ -333,19 +392,29 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 //            node.setAttribute("y", f.getFired());
         }
 
+
+        if(lastActEventNode != null) {
+            lastActEventNode.setAttribute("ui.style", "stroke-color: black;");
+        }
+
+        node.setAttribute("ui.style", "stroke-color: red;");
+
         ActivationPhase phase = act.getPhase();
         if(phase != null) {
-            Consumer<Node> actPhaseModifier = actPhaseModifiers.get(phase);
+/*            Consumer<Node> actPhaseModifier = actPhaseModifiers.get(phase);
             if(actPhaseModifier != null) {
                 actPhaseModifier.accept(node);
             }
+ */
             Consumer<Node> neuronTypeModifier = neuronTypeModifiers.get(act.getNeuron().getClass());
             if(neuronTypeModifier != null) {
                 neuronTypeModifier.accept(node);
             }
-        } else {
+        }/* else {
             node.setAttribute("ui.style", "stroke-color: gray;");
-        }
+        }*/
+
+        lastActEventNode = node;
 
         return node;
     }
