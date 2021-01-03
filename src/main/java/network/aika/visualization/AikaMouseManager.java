@@ -11,10 +11,11 @@ import org.graphstream.ui.view.util.MouseManager;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.EnumSet;
 import java.util.Iterator;
 
-public class AikaMouseManager implements MouseInputListener, MouseManager {
+public class AikaMouseManager implements MouseInputListener, MouseManager, MouseWheelListener {
     protected View view;
     protected GraphicGraph graph;
     private final EnumSet<InteractiveElement> types;
@@ -71,6 +72,7 @@ public class AikaMouseManager implements MouseInputListener, MouseManager {
             });
         }*/
     }
+
 
     protected void mouseButtonRelease(MouseEvent event, Iterable<GraphicElement> elementsInArea) {
         Iterator var3 = elementsInArea.iterator();
@@ -192,7 +194,14 @@ public class AikaMouseManager implements MouseInputListener, MouseManager {
                 centerPX.y - (me.getY() - lastMe.getY())
         );
 
-        camera.setViewCenter(newCenterGU.x, newCenterGU.y, newCenterGU.z);
+      //  camera.setViewCenter(0, 0, 0);
+
+    //    camera.setViewCenter(newCenterGU.x, newCenterGU.y, newCenterGU.z);
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent mwe) {
+        zoomGraphMouseWheelMoved(mwe, view.getCamera());
     }
 
     public static void zoomGraphMouseWheelMoved(MouseWheelEvent mwe, Camera camera) {

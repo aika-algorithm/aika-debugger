@@ -18,6 +18,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.stream.thread.ThreadProxyPipe;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 import org.graphstream.ui.swing.SwingGraphRenderer;
 import org.graphstream.ui.swing_viewer.DefaultView;
@@ -44,9 +45,6 @@ import java.util.function.Consumer;
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
 
 public class ActivationViewerManager implements EventListener, ViewerListener {
-
-
-    // https://github.com/graphstream/gs-ui-swing/blob/master/src-test/org/graphstream/ui/viewer/test/DemoTwoGraphsInOneViewer.java
 
     private Document doc;
 
@@ -84,17 +82,12 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         add((DefaultView)viewer.addDefaultView(false, new SwingGraphRenderer()), BorderLayout.CENTER);
         viewer = new Viewer(graph,Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 */
-        Display display = null;
-        try {
-            display = Display.getDefault();
-        } catch (MissingDisplayException e) {
-            e.printStackTrace();
-        }
 
         graph = initGraph();
 
         //viewer = display.display(graph, false);
-        viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+
+        viewer = new SwingViewer(new ThreadProxyPipe(graph));
 
         viewer.enableAutoLayout(new AikaLayout(doc, graph));
 
@@ -102,7 +95,10 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
  //       view = (DefaultView)viewer.addDefaultView(false, new AikaRenderer());
         graphView = (DefaultView)viewer.addDefaultView(false, new SwingGraphRenderer());
         graphView.enableMouseOptions();
-        graphView.setMouseManager(new AikaMouseManager(this));
+
+        AikaMouseManager mouseManager = new AikaMouseManager(this);
+        graphView.setMouseManager(mouseManager);
+        graphView.addMouseWheelListener(mouseManager);
 
         Camera camera = graphView.getCamera();
         camera.setAutoFitView(true);
@@ -118,39 +114,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         fromViewer = viewer.newViewerPipe();
         fromViewer.addViewerListener(this);
         fromViewer.addSink(graph);
-
-        graphView.addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent mwe) {
-             //   zoomGraphMouseWheelMoved(mwe, view.getCamera());
-            }
-        });
-
-
-        graphView.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
 
         splitPane = initSplitPane();
     }
@@ -249,7 +212,14 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 //                  "shadow-mode: gradient-radial; shadow-width: 2px; shadow-color: #999, white; shadow-offset: 3px, -3px;" +
                     "stroke-mode: plain; stroke-width: 2px;" +
                     "text-size: 20px;" +
-                "}" +
+                    "text-alignment: under;" +
+                    "text-color: white;" +
+                    "text-style: bold;" +
+                    "text-background-mode: rounded-box;" +
+                    "text-background-color: #222C; " +
+                    "text-padding: 2px;" +
+                    "text-offset: 0px, 2px;" +
+        "}" +
                 " edge {" +
                     "size: 2px;" +
                     "shape: cubic-curve;" +
@@ -324,11 +294,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         fromViewer.pump();
         // fromViewer.blockingPump();
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     public synchronized void click() {
@@ -353,7 +318,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         n.setAttribute("aika.init-node", true);
 
-        renderConsoleOutput("Current", act);
+        renderConsoleOutput("New", act);
+
         pump();
     }
 
@@ -362,6 +328,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     public void onActivationProcessedEvent(Activation act) {
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
+
+        renderConsoleOutput("Processed", act);
 
         pump();
     }
@@ -376,6 +344,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         }
 
         nodeIdToActivation.put(node.getId(), act);
+
         node.setAttribute("aika.id", act.getId());
         if(originAct != null) {
             node.setAttribute("aika.originActId", originAct.getId());
