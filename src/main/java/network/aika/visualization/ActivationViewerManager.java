@@ -63,6 +63,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     private Node lastActEventNode;
 
     Map<String, Activation> nodeIdToActivation = new TreeMap<>();
+    public Map<Integer, ActivationParticle> actIdToParticle = new TreeMap<>();
 
 
     private Map<ActivationPhase, Consumer<Node>> actPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
@@ -89,7 +90,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         viewer = new SwingViewer(new ThreadProxyPipe(graph));
 
-        viewer.enableAutoLayout(new AikaLayout(doc, graph));
+        viewer.enableAutoLayout(new AikaLayout(this, graph));
 
         //view = (ViewPanel) viewer.getDefaultView();
  //       view = (DefaultView)viewer.addDefaultView(false, new AikaRenderer());
@@ -101,7 +102,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         graphView.addMouseWheelListener(mouseManager);
 
         Camera camera = graphView.getCamera();
-        camera.setAutoFitView(true);
+        camera.setAutoFitView(false);
 
         // The default action when closing the view is to quit
         // the program.
@@ -191,6 +192,12 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
             sDoc.insertString(sDoc.getLength(), "Reference: ", sDoc.getStyle("bold") );
             sDoc.insertString(sDoc.getLength(), act.getReference() + "\n", sDoc.getStyle("regular") );
+
+            ActivationParticle ap = actIdToParticle.get(act.getId());
+            if(ap != null) {
+                sDoc.insertString(sDoc.getLength(), "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y, sDoc.getStyle("bold") );
+                sDoc.insertString(sDoc.getLength(), act.getReference() + "\n", sDoc.getStyle("regular") );
+            }
 
          //   sDoc.insertString(sDoc.getLength(), act.toString(), sDoc.getStyle("bold") );
         } catch (BadLocationException e) {
@@ -429,5 +436,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
     public void mouseLeft(String id) {
         System.out.println("Need the Mouse Options to be activated");
+    }
+
+    public Document getDocument() {
+        return doc;
     }
 }

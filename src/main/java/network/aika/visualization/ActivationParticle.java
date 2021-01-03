@@ -42,15 +42,27 @@ public class ActivationParticle extends SpringBoxNodeParticle {
 
     public ActivationParticle(Node node, Activation act, SpringBox box, String id, double x, double y, double z) {
         super(box, id, x, y, z);
+
+        System.out.println(act.getLabel() + " x:" + x + " y:" + y);
         this.act = act;
         this.node = node;
     }
 
+    @Override
+    protected void repulsionN2(Vector3 delta) {
+       // super.repulsionN2(delta);
+    }
+
+
+    @Override
+    protected void repulsionNLogN(Vector3 delta) {
+        // super.repulsionNLogN(delta);
+    }
 
     @Override
     protected void attraction(Vector3 delta) {
 //        super.attraction(delta);
-
+/*
         Boolean initNode = node.getAttribute("aika.init-node", Boolean.class);
 
         double strength = initNode ? K1Init : K1;
@@ -75,7 +87,7 @@ public class ActivationParticle extends SpringBoxNodeParticle {
                 boolean isRecurrent = false;
                 if(s instanceof PatternPartSynapse) {
                     PatternPartSynapse pps = (PatternPartSynapse) s;
-                    isRecurrent = pps.isRecurrent();
+                    isRecurrent = pps.isRecurrent() && !s.getOutput().isInputNeuron();
                 }
 
                 Fired fIn = link.getInput().getFired();
@@ -108,7 +120,7 @@ public class ActivationParticle extends SpringBoxNodeParticle {
 //                System.out.println("in:" + other.getId() + " out:" + act.getId() + " fDiff:" + fDiff + " xd:" + dx + " yd:" + dy);
             }
         }
-
+*/
     }
 
     private void edgeAttraction(Vector3 delta, EdgeSpring edge, double strength, Energies energies) {

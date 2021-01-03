@@ -113,12 +113,14 @@ public class AikaMouseManager implements MouseInputListener, MouseManager, Mouse
     }
 
     public void mousePressed(MouseEvent event) {
-        this.curElement = view.findGraphicElementAt(this.types, event.getX() * 2.0, event.getY() * 2.0); // Warum Faktor 2?
+        if(!event.isShiftDown()) {
+            this.curElement = view.findGraphicElementAt(this.types, event.getX() /* * 2.0  */, event.getY() /* * 2.0 */); // oder -Dsun.java2d.uiScale=100%
 
-        if (this.curElement != null) {
-            this.mouseButtonPressOnElement(this.curElement, event);
-        } else {
-            viewManager.click();
+            if (this.curElement != null) {
+                this.mouseButtonPressOnElement(this.curElement, event);
+            } else {
+                viewManager.click();
+            }
  /*           this.x1 = (float)event.getX();
             this.y1 = (float)event.getY();
             this.mouseButtonPress(event);
@@ -130,19 +132,23 @@ public class AikaMouseManager implements MouseInputListener, MouseManager, Mouse
     }
 
     public void mouseDragged(MouseEvent event) {
-        if (this.curElement != null) {
-            this.elementMoving(this.curElement, event);
-        } else {
-     //       this.view.selectionGrowsAt((double)event.getX(), (double)event.getY());
+        if(event.isShiftDown()) {
+            if (this.curElement != null) {
+                this.elementMoving(this.curElement, event);
+            } else {
+                //       this.view.selectionGrowsAt((double)event.getX(), (double)event.getY());
 
-            if(lastMouseDragEvent != null) {
-                dragGraphMouseMoved(event, lastMouseDragEvent, view.getCamera());
+                if (lastMouseDragEvent != null) {
+                    dragGraphMouseMoved(event, lastMouseDragEvent, view.getCamera());
+                }
+                lastMouseDragEvent = event;
             }
-            lastMouseDragEvent = event;
         }
     }
 
     public void mouseReleased(MouseEvent event) {
+        lastMouseDragEvent = null;
+
         if (this.curElement != null) {
             this.mouseButtonReleaseOffElement(this.curElement, event);
             this.curElement = null;
@@ -177,15 +183,17 @@ public class AikaMouseManager implements MouseInputListener, MouseManager, Mouse
     }
 
     public void mouseMoved(MouseEvent event) {
-        this.curElement = this.view.findGraphicElementAt(this.types, (double)event.getX() * 2, (double)event.getY() * 2);
+        this.curElement = this.view.findGraphicElementAt(this.types, (double)event.getX() /* * 2*/, (double)event.getY() /* * 2*/);
         if(curElement != null) {
-            System.out.println("Hover:" + curElement.getLabel());
+       //     System.out.println("Hover:" + curElement.getLabel());
         }
 
 //        System.out.println("Mouse Pos: x:" + event.getX() + "y:" + event.getY());
     }
 
     public void dragGraphMouseMoved(MouseEvent me, MouseEvent lastMe, Camera camera) {
+        // https://github.com/graphstream/gs-core/issues/301
+
         Point3 centerGU = camera.getViewCenter();
         Point3 centerPX = camera.transformGuToPx(centerGU.x, centerGU.y, 0);
 
@@ -194,9 +202,7 @@ public class AikaMouseManager implements MouseInputListener, MouseManager, Mouse
                 centerPX.y - (me.getY() - lastMe.getY())
         );
 
-      //  camera.setViewCenter(0, 0, 0);
-
-    //    camera.setViewCenter(newCenterGU.x, newCenterGU.y, newCenterGU.z);
+        camera.setViewCenter(newCenterGU.x, newCenterGU.y, newCenterGU.z);
     }
 
     @Override
@@ -205,6 +211,8 @@ public class AikaMouseManager implements MouseInputListener, MouseManager, Mouse
     }
 
     public static void zoomGraphMouseWheelMoved(MouseWheelEvent mwe, Camera camera) {
+        // https://github.com/graphstream/gs-core/issues/301
+
         if (mwe.getWheelRotation() > 0) {
             double newViewPercent = camera.getViewPercent() + 0.05;
             camera.setViewPercent(newViewPercent);

@@ -6,14 +6,15 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
+import org.miv.pherd.geom.Point3;
 
 public class AikaLayout extends SpringBox {
 
-    Document doc;
+    ActivationViewerManager avm;
     Graph graph;
 
-    AikaLayout(Document doc, Graph g) {
-        this.doc = doc;
+    AikaLayout(ActivationViewerManager avm, Graph g) {
+        this.avm = avm;
         this.graph = g;
     }
 
@@ -29,18 +30,24 @@ public class AikaLayout extends SpringBox {
 
     @Override
     public NodeParticle newNodeParticle(String id) {
+        Document doc = avm.getDocument();
         Node n = graph.getNode(id);
         Activation act = doc.getActivation(n.getAttribute("aika.id", Integer.class));
 
         Integer originActId = n.getAttribute("aika.originActId", Integer.class);
 
+        ActivationParticle particle;
         if(originActId != null) {
-//            Activation originAct = doc.getActivation(originActId);
-//            Node originNode = graph.getNode("" + originAct.getId());
+            ActivationParticle originParticle = avm.actIdToParticle.get(originActId);
+            Point3 originPos = originParticle.getPosition();
 
-            return new ActivationParticle(n, act, this, id);
+            particle = new ActivationParticle(n, act, this, id, originPos.x, originPos.y + 0.1, originPos.z);
         } else {
-            return new ActivationParticle(n, act, this, id);
+            particle = new ActivationParticle(n, act, this, id);
         }
+
+        avm.actIdToParticle.put(act.getId(), particle);
+
+        return particle;
     }
 }
