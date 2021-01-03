@@ -44,13 +44,13 @@ public class ActivationParticle extends SpringBoxNodeParticle {
 
     @Override
     protected void repulsionN2(Vector3 delta) {
-       // super.repulsionN2(delta);
+       super.repulsionN2(delta);
     }
 
 
     @Override
     protected void repulsionNLogN(Vector3 delta) {
-        // super.repulsionNLogN(delta);
+        super.repulsionNLogN(delta);
     }
 
     @Override

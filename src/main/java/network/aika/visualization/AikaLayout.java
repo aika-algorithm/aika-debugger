@@ -36,18 +36,24 @@ public class AikaLayout extends SpringBox {
 
         Integer originActId = n.getAttribute("aika.originActId", Integer.class);
 
+        Double x;
+        Double y;
+        double randomValue = (random.nextDouble() - 0.5) * 0.02;
+
         ActivationParticle particle;
         if(originActId != null) {
             ActivationParticle originParticle = avm.actIdToParticle.get(originActId);
             Point3 originPos = originParticle.getPosition();
 
-            particle = new ActivationParticle(n, act, this, id, originPos.x, originPos.y + 0.1, originPos.z);
+            x = originPos.x;
+            y = originPos.y + 0.1;
         } else {
-            Double x = (Double) n.getAttribute("x");
-            Double y = (Double) n.getAttribute("y");
-
-            particle = new ActivationParticle(n, act, this, id, x, y, 0);
+            x = (Double) n.getAttribute("x");
+            y = (Double) n.getAttribute("y");
         }
+
+
+        particle = new ActivationParticle(n, act, this, id, x + (x * randomValue), y + (y * randomValue), 0);
 
         avm.actIdToParticle.put(act.getId(), particle);
 
