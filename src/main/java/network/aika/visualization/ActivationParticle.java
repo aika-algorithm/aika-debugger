@@ -34,12 +34,6 @@ public class ActivationParticle extends SpringBoxNodeParticle {
     Activation act;
     Node node;
 
-    public ActivationParticle(Node node, Activation act, SpringBox box, String id) {
-        super(box, id);
-        this.act = act;
-        this.node = node;
-    }
-
     public ActivationParticle(Node node, Activation act, SpringBox box, String id, double x, double y, double z) {
         super(box, id, x, y, z);
 

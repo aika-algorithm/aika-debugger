@@ -145,18 +145,21 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         Style regular = doc.addStyle("regular", def);
         StyleConstants.setFontFamily(def, "SansSerif");
+        StyleConstants.setFontSize(regular, 20);
 
         Style s = doc.addStyle("italic", regular);
         StyleConstants.setItalic(s, true);
+     //   StyleConstants.setFontSize(s, 16);
 
         s = doc.addStyle("bold", regular);
         StyleConstants.setBold(s, true);
+  //     StyleConstants.setFontSize(s, 16);
 
         s = doc.addStyle("small", regular);
-        StyleConstants.setFontSize(s, 10);
+        StyleConstants.setFontSize(s, 14);
 
         s = doc.addStyle("headline", regular);
-        StyleConstants.setFontSize(s, 16);
+        StyleConstants.setFontSize(s, 24);
     }
 
     public void showElementContext(String headlinePrefix, GraphicElement ge) {
@@ -195,8 +198,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
             ActivationParticle ap = actIdToParticle.get(act.getId());
             if(ap != null) {
-                sDoc.insertString(sDoc.getLength(), "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y, sDoc.getStyle("bold") );
-                sDoc.insertString(sDoc.getLength(), act.getReference() + "\n", sDoc.getStyle("regular") );
+                sDoc.insertString(sDoc.getLength(), "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", sDoc.getStyle("bold") );
             }
 
          //   sDoc.insertString(sDoc.getLength(), act.toString(), sDoc.getStyle("bold") );
@@ -363,8 +365,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         }
         if(act.getFired() != NOT_FIRED) {
             Fired f = act.getFired();
-            node.setAttribute("x", f.getInputTimestamp());
-            node.setAttribute("y", 0);
+            node.setAttribute("x", f.getInputTimestamp() * 0.1);
+            node.setAttribute("y", 0.0);
 //            node.setAttribute("y", f.getFired());
         }
 

@@ -25,7 +25,7 @@ public class AikaLayout extends SpringBox {
 
     @Override
     protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
-        super.chooseNodePosition(n0, n1);
+  //      super.chooseNodePosition(n0, n1);
     }
 
     @Override
@@ -43,7 +43,10 @@ public class AikaLayout extends SpringBox {
 
             particle = new ActivationParticle(n, act, this, id, originPos.x, originPos.y + 0.1, originPos.z);
         } else {
-            particle = new ActivationParticle(n, act, this, id);
+            Double x = (Double) n.getAttribute("x");
+            Double y = (Double) n.getAttribute("y");
+
+            particle = new ActivationParticle(n, act, this, id, x, y, 0);
         }
 
         avm.actIdToParticle.put(act.getId(), particle);
