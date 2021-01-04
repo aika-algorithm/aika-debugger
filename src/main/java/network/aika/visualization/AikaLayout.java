@@ -8,6 +8,8 @@ import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.miv.pherd.geom.Point3;
 
+import static network.aika.visualization.ActivationParticle.INITIAL_DISTANCE;
+
 public class AikaLayout extends SpringBox {
 
     ActivationViewerManager avm;
@@ -38,7 +40,6 @@ public class AikaLayout extends SpringBox {
 
         Double x;
         Double y;
-        double randomValue = (random.nextDouble() - 0.5) * 0.02;
 
         ActivationParticle particle;
         if(originActId != null) {
@@ -46,14 +47,19 @@ public class AikaLayout extends SpringBox {
             Point3 originPos = originParticle.getPosition();
 
             x = originPos.x;
-            y = originPos.y + 0.1;
+            y = originPos.y + INITIAL_DISTANCE;
         } else {
             x = (Double) n.getAttribute("x");
             y = (Double) n.getAttribute("y");
         }
 
+        if(Math.abs(x) > 0.01 && Math.abs(y) > 0.01) {
+            double randomValue = (random.nextDouble() - 0.5) * 0.02;
+            x += randomValue;
+            y += randomValue;
+        }
 
-        particle = new ActivationParticle(n, act, this, id, x + (x * randomValue), y + (y * randomValue), 0);
+        particle = new ActivationParticle(n, act, this, id, x, y, 0);
 
         avm.actIdToParticle.put(act.getId(), particle);
 

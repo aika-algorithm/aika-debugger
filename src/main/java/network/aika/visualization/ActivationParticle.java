@@ -31,6 +31,8 @@ public class ActivationParticle extends SpringBoxNodeParticle {
      */
     protected static double K2 = 0.024f; // 0.12 ??
 
+    public static double INITIAL_DISTANCE = 0.1;
+
     Activation act;
     Node node;
 

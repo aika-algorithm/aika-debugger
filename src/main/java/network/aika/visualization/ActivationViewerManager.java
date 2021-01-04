@@ -38,6 +38,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
+import static network.aika.visualization.ActivationParticle.INITIAL_DISTANCE;
 
 public class ActivationViewerManager implements EventListener, ViewerListener {
 
@@ -344,7 +345,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         }
         if(act.getFired() != NOT_FIRED) {
             Fired f = act.getFired();
-            node.setAttribute("x", f.getInputTimestamp() * 0.1);
+            node.setAttribute("x", f.getInputTimestamp() * INITIAL_DISTANCE);
             node.setAttribute("y", 0.0);
         }
 
