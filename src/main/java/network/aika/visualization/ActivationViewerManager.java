@@ -1,6 +1,5 @@
 package network.aika.visualization;
 
-import com.sun.tools.jconsole.JConsolePlugin;
 import network.aika.EventListener;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
@@ -11,8 +10,8 @@ import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.excitatory.PatternPartNeuron;
 import network.aika.neuron.excitatory.PatternPartSynapse;
 import network.aika.neuron.inhibitory.InhibitoryNeuron;
+import network.aika.neuron.phase.Phase;
 import network.aika.neuron.phase.activation.ActivationPhase;
-import network.aika.neuron.phase.link.LinkPhase;
 import network.aika.text.Document;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -28,14 +27,10 @@ import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
 import org.graphstream.ui.view.camera.Camera;
-import org.graphstream.util.Display;
-import org.graphstream.util.MissingDisplayException;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -66,8 +61,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     public Map<Integer, ActivationParticle> actIdToParticle = new TreeMap<>();
 
 
-    private Map<ActivationPhase, Consumer<Node>> actPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
-    private Map<LinkPhase, Consumer<Edge>> linkPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
+//    private Map<ActivationPhase, Consumer<Node>> actPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
+//    private Map<LinkPhase, Consumer<Edge>> linkPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
     private Map<Class<? extends Neuron>, Consumer<Node>> neuronTypeModifiers = new HashMap<>();
     private Map<Class<? extends Synapse>, BiConsumer<Edge, Synapse>> synapseTypeModifiers = new HashMap<>();
 
@@ -179,29 +174,35 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         try {
             sDoc.remove(0, sDoc.getLength());
 
-            sDoc.insertString(sDoc.getLength(), headlinePrefix + " Activation\n\n", sDoc.getStyle("headline") );
+            appendText(sDoc, headlinePrefix + " Activation\n\n", "headline");
 
-            sDoc.insertString(sDoc.getLength(), "Id: ", sDoc.getStyle("bold") );
-            sDoc.insertString(sDoc.getLength(), "" + act.getId() + "\n", sDoc.getStyle("regular") );
+            appendText(sDoc, "Id: ", "bold");
+            appendText(sDoc, "" + act.getId() + "\n","regular" );
 
-            sDoc.insertString(sDoc.getLength(), "Label: ", sDoc.getStyle("bold") );
-            sDoc.insertString(sDoc.getLength(), act.getLabel() + "\n", sDoc.getStyle("regular") );
+            appendText(sDoc, "Label: ", "bold");
+            appendText(sDoc, act.getLabel() + "\n", "regular");
 
-            sDoc.insertString(sDoc.getLength(), "Phase: ", sDoc.getStyle("bold") );
-            sDoc.insertString(sDoc.getLength(), act.getPhase() + "\n", sDoc.getStyle("regular") );
+            appendText(sDoc, "Phase: ", "bold");
+            appendText(sDoc, Phase.toString(act.getPhase()) + "\n", "regular");
 
-            sDoc.insertString(sDoc.getLength(), "Fired: ", sDoc.getStyle("bold") );
-            sDoc.insertString(sDoc.getLength(), act.getFired() + "\n", sDoc.getStyle("regular") );
+            appendText(sDoc, "Fired: ", "bold");
+            appendText(sDoc, act.getFired() + "\n", "regular");
 
-            sDoc.insertString(sDoc.getLength(), "Reference: ", sDoc.getStyle("bold") );
-            sDoc.insertString(sDoc.getLength(), act.getReference() + "\n", sDoc.getStyle("regular") );
+            appendText(sDoc, "Reference: ", "bold");
+            appendText(sDoc, act.getReference() + "\n", "regular");
 
             ActivationParticle ap = actIdToParticle.get(act.getId());
             if(ap != null) {
-                sDoc.insertString(sDoc.getLength(), "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", sDoc.getStyle("bold") );
+                appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
             }
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
 
-         //   sDoc.insertString(sDoc.getLength(), act.toString(), sDoc.getStyle("bold") );
+    private void appendText(StyledDocument sDoc, String txt, String style) {
+        try {
+            sDoc.insertString(sDoc.getLength(), txt, sDoc.getStyle(style));
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -233,26 +234,11 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
                     "size: 2px;" +
                     "shape: cubic-curve;" +
                     "z-index: 0;" +
-//                  "fill-color: #222;" +
                     "arrow-size: 8px, 5px;" +
                 "}");
 
         graph.setAttribute("ui.antialias");
         graph.setAutoCreate(true);
-
-        /*
-
-
-      //  viewer = graph.display(false);
-//        viewer = new Viewer(graph,Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-//        viewer.disableAutoLayout();
-        viewer.enableAutoLayout(new AikaLayout());
-
-        //Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-       //  Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_SWING_THREAD)
-
-        viewer.getDefaultView().enableMouseOptions();
-*/
 
         return graph;
     }
@@ -271,18 +257,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     }
 
     private void initModifiers() {
-        actPhaseModifiers.put(ActivationPhase.INITIAL_LINKING, n -> n.setAttribute("ui.style", "stroke-color: red;"));
-        actPhaseModifiers.put(ActivationPhase.PREPARE_FINAL_LINKING, n -> n.setAttribute("ui.style", "stroke-color: brown;"));
-        actPhaseModifiers.put(ActivationPhase.FINAL_LINKING, n -> n.setAttribute("ui.style", "stroke-color: orange;"));
-        actPhaseModifiers.put(ActivationPhase.SOFTMAX, n -> n.setAttribute("ui.style", "stroke-color: violet;"));
-        actPhaseModifiers.put(ActivationPhase.COUNTING, n -> n.setAttribute("ui.style", "stroke-color: pink;"));
-        actPhaseModifiers.put(ActivationPhase.SELF_GRADIENT, n -> n.setAttribute("ui.style", "stroke-color: light blue;"));
-        actPhaseModifiers.put(ActivationPhase.PROPAGATE_GRADIENT, n -> n.setAttribute("ui.style", "stroke-color: blue;"));
-        actPhaseModifiers.put(ActivationPhase.UPDATE_SYNAPSE_INPUT_LINKS, n -> n.setAttribute("ui.style", "stroke-color: light green;"));
-        actPhaseModifiers.put(ActivationPhase.TEMPLATE_INPUT, n -> n.setAttribute("ui.style", "stroke-color: green;"));
-        actPhaseModifiers.put(ActivationPhase.TEMPLATE_OUTPUT, n -> n.setAttribute("ui.style", "stroke-color: green;"));
-        actPhaseModifiers.put(ActivationPhase.INDUCTION, n -> n.setAttribute("ui.style", "stroke-color: yellow;"));
-
         neuronTypeModifiers.put(PatternNeuron.class, n -> n.setAttribute("ui.style", "fill-color: rgb(0,130,0);"));
         neuronTypeModifiers.put(PatternPartNeuron.class, n -> n.setAttribute("ui.style", "fill-color: rgb(0,205,0);"));
         neuronTypeModifiers.put(InhibitoryNeuron.class, n -> n.setAttribute("ui.style", "fill-color: rgb(100,100,255);"));
@@ -350,6 +324,11 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         if (node == null) {
             node = g.addNode(id);
+
+            if(originAct != null) {
+                Edge initialEdge = graph.addEdge(getEdgeId(originAct, act), "" + originAct.getId(), "" + act.getId(), true);
+                initialEdge.setAttribute("ui.style", "fill-color: rgb(200,200,200);");
+            }
         }
 
         nodeIdToActivation.put(node.getId(), act);
@@ -367,9 +346,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
             Fired f = act.getFired();
             node.setAttribute("x", f.getInputTimestamp() * 0.1);
             node.setAttribute("y", 0.0);
-//            node.setAttribute("y", f.getFired());
         }
-
 
         if(lastActEventNode != null) {
             lastActEventNode.setAttribute("ui.style", "stroke-color: black;");
@@ -379,18 +356,11 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         ActivationPhase phase = act.getPhase();
         if(phase != null) {
-/*            Consumer<Node> actPhaseModifier = actPhaseModifiers.get(phase);
-            if(actPhaseModifier != null) {
-                actPhaseModifier.accept(node);
-            }
- */
             Consumer<Node> neuronTypeModifier = neuronTypeModifiers.get(act.getNeuron().getClass());
             if(neuronTypeModifier != null) {
                 neuronTypeModifier.accept(node);
             }
-        }/* else {
-            node.setAttribute("ui.style", "stroke-color: gray;");
-        }*/
+        }
 
         lastActEventNode = node;
 
@@ -399,25 +369,19 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
     @Override
     public void onLinkProcessedEvent(Link l) {
-        String inputId = "" + l.getInput().getId();
-        String outputId = "" + l.getOutput().getId();
-        String edgeId = inputId + "-" + outputId;
+        String edgeId = getEdgeId(l.getInput(), l.getOutput());
         Edge edge = graph.getEdge(edgeId);
         if (edge == null) {
-            edge = graph.addEdge(edgeId, inputId, outputId, true);
+            edge = graph.addEdge(edgeId, "" + l.getInput().getId(), "" + l.getOutput().getId(), true);
+        }
+        BiConsumer<Edge, Synapse> synapseTypeModifier = synapseTypeModifiers.get(l.getSynapse().getClass());
+        if(synapseTypeModifier != null) {
+            synapseTypeModifier.accept(edge, l.getSynapse());
+        }
+    }
 
-            BiConsumer<Edge, Synapse> synapseTypeModifier = synapseTypeModifiers.get(l.getSynapse().getClass());
-            if(synapseTypeModifier != null) {
-                synapseTypeModifier.accept(edge, l.getSynapse());
-            }
-        }
-        LinkPhase phase = l.getPhase();
-        if(phase != null) {
-            Consumer<Edge> linkPhaseModifier = linkPhaseModifiers.get(phase);
-            if(linkPhaseModifier != null) {
-                linkPhaseModifier.accept(edge);
-            }
-        }
+    private String getEdgeId(Activation iAct, Activation oAct) {
+        return iAct.getId() + "-" + oAct.getId();
     }
 
     public void viewClosed(String id) {
