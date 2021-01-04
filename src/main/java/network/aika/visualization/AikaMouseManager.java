@@ -119,21 +119,20 @@ public class AikaMouseManager implements MouseInputListener, MouseManager, Mouse
             if (this.curElement != null) {
                 this.mouseButtonPressOnElement(this.curElement, event);
             } else {
-                System.out.println("Click");
-                viewManager.click();
+//                System.out.println("Click");
+//                viewManager.click();
             }
  /*           this.x1 = (float)event.getX();
             this.y1 = (float)event.getY();
             this.mouseButtonPress(event);
             this.view.beginSelectionAt((double)this.x1, (double)this.y1);
-
   */
         }
 
     }
 
     public void mouseDragged(MouseEvent event) {
-        if(event.isShiftDown()) {
+//        if(event.isShiftDown()) {
             if (this.curElement != null) {
                 this.elementMoving(this.curElement, event);
             } else {
@@ -144,7 +143,7 @@ public class AikaMouseManager implements MouseInputListener, MouseManager, Mouse
                 }
                 lastMouseDragEvent = event;
             }
-        }
+ //       }
     }
 
     public void mouseReleased(MouseEvent event) {
