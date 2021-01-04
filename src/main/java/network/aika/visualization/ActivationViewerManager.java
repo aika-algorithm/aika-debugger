@@ -10,7 +10,6 @@ import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.excitatory.PatternPartNeuron;
 import network.aika.neuron.excitatory.PatternPartSynapse;
 import network.aika.neuron.inhibitory.InhibitoryNeuron;
-import network.aika.neuron.phase.Phase;
 import network.aika.neuron.phase.activation.ActivationPhase;
 import network.aika.text.Document;
 import org.graphstream.graph.Edge;
@@ -29,7 +28,6 @@ import org.graphstream.ui.view.ViewerPipe;
 import org.graphstream.ui.view.camera.Camera;
 
 import javax.swing.*;
-import javax.swing.text.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +50,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     private ViewPanel graphView;
 
     private JSplitPane splitPane;
-    private JTextPane consoleTextPane;
+    private ActivationConsole console;
 
     private boolean clicked;
 
@@ -99,14 +97,12 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         fromViewer.addViewerListener(this);
         fromViewer.addSink(graph);
 
+        console = new ActivationConsole();
         splitPane = initSplitPane();
     }
 
     private JSplitPane initSplitPane() {
-        consoleTextPane = new JTextPane();
-        addStylesToDocument(consoleTextPane.getStyledDocument());
-
-        JScrollPane paneScrollPane = new JScrollPane(consoleTextPane);
+        JScrollPane paneScrollPane = new JScrollPane(console);
         paneScrollPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         paneScrollPane.setPreferredSize(new Dimension(250, 155));
@@ -119,28 +115,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         return splitPane;
     }
 
-
-    protected void addStylesToDocument(StyledDocument doc) {
-        Style def = StyleContext.getDefaultStyleContext().
-                getStyle(StyleContext.DEFAULT_STYLE);
-
-        Style regular = doc.addStyle("regular", def);
-        StyleConstants.setFontFamily(def, "SansSerif");
-        StyleConstants.setFontSize(regular, 20);
-
-        Style s = doc.addStyle("italic", regular);
-        StyleConstants.setItalic(s, true);
-
-        s = doc.addStyle("bold", regular);
-        StyleConstants.setBold(s, true);
-
-        s = doc.addStyle("small", regular);
-        StyleConstants.setFontSize(s, 14);
-
-        s = doc.addStyle("headline", regular);
-        StyleConstants.setFontSize(s, 24);
-    }
-
     public void showElementContext(String headlinePrefix, GraphicElement ge) {
         if(ge instanceof Node) {
             Node n = (Node) ge;
@@ -149,46 +123,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
             if(act == null)
                 return;
 
-            renderConsoleOutput(headlinePrefix, act);
-        }
-    }
-
-    private void renderConsoleOutput(String headlinePrefix, Activation act) {
-        StyledDocument sDoc = consoleTextPane.getStyledDocument();
-        try {
-            sDoc.remove(0, sDoc.getLength());
-
-            appendText(sDoc, headlinePrefix + " Activation\n\n", "headline");
-
-            appendText(sDoc, "Id: ", "bold");
-            appendText(sDoc, "" + act.getId() + "\n","regular" );
-
-            appendText(sDoc, "Label: ", "bold");
-            appendText(sDoc, act.getLabel() + "\n", "regular");
-
-            appendText(sDoc, "Phase: ", "bold");
-            appendText(sDoc, Phase.toString(act.getPhase()) + "\n", "regular");
-
-            appendText(sDoc, "Fired: ", "bold");
-            appendText(sDoc, act.getFired() + "\n", "regular");
-
-            appendText(sDoc, "Reference: ", "bold");
-            appendText(sDoc, act.getReference() + "\n", "regular");
-
-            ActivationParticle ap = actIdToParticle.get(act.getId());
-            if(ap != null) {
-                appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
-            }
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void appendText(StyledDocument sDoc, String txt, String style) {
-        try {
-            sDoc.insertString(sDoc.getLength(), txt, sDoc.getStyle(style));
-        } catch (BadLocationException e) {
-            e.printStackTrace();
+            console.renderConsoleOutput(headlinePrefix, act, actIdToParticle.get(act.getId()));
         }
     }
 
@@ -281,7 +216,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         n.setAttribute("aika.init-node", true);
 
-        renderConsoleOutput("New", act);
+        console.renderConsoleOutput("New", act, actIdToParticle.get(act.getId()));
 
         pump();
     }
@@ -292,7 +227,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
 
-        renderConsoleOutput("Processed", act);
+        console.renderConsoleOutput("Processed", act, actIdToParticle.get(act.getId()));
 
         pump();
     }

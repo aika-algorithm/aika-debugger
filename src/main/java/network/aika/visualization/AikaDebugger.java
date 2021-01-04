@@ -19,6 +19,8 @@ public class AikaDebugger extends JPanel {
 
     ActivationViewerManager actViewManager;
 
+    AikaKeyManager aikaKeyManager;
+
     public AikaDebugger(Document doc) {
         super(new GridLayout(1, 1));
 
@@ -33,26 +35,7 @@ public class AikaDebugger extends JPanel {
         //The following line enables to use scrolling tabs.
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-        tabbedPane.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyChar() == ' ') {
-                    actViewManager.click();
-                } else if(e.getKeyChar() == 'v') {
-                    System.out.println("Visitor");
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
-        });
+        tabbedPane.setFocusCycleRoot(true);
 
         tabbedPane.addMouseListener(new MouseListener() {
             @Override
@@ -83,6 +66,9 @@ public class AikaDebugger extends JPanel {
         });
 
         actViewManager = new ActivationViewerManager(doc);
+        aikaKeyManager = new AikaKeyManager(actViewManager);
+
+        tabbedPane.addKeyListener(aikaKeyManager);
 
         addTab(0, "Activations", KeyEvent.VK_A, actViewManager.getView());
     }
