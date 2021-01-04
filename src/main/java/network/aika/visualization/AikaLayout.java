@@ -8,16 +8,28 @@ import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.miv.pherd.geom.Point3;
 
-import static network.aika.visualization.ActivationParticle.INITIAL_DISTANCE;
 
 public class AikaLayout extends SpringBox {
 
     ActivationViewerManager avm;
     Graph graph;
 
+    protected static double k = 1f;
+
+    protected static double K1Init;
+    protected static double K1Final;
+
+
+    public static double INITIAL_DISTANCE = 1f;
+
     AikaLayout(ActivationViewerManager avm, Graph g) {
         this.avm = avm;
         this.graph = g;
+
+        k = INITIAL_DISTANCE;
+        K1Init = 0.06f;
+        K1Final = 0.01f;
+        K2 = 0.005f;
     }
 
     @Override
@@ -51,9 +63,15 @@ public class AikaLayout extends SpringBox {
         } else {
             x = (Double) n.getAttribute("x");
             y = (Double) n.getAttribute("y");
+
+            if(x == null)
+                x = 0.0;
+
+            if(y == null)
+                y = 0.0;
         }
 
-        if(Math.abs(x) > 0.01 && Math.abs(y) > 0.01) {
+        if(Math.abs(x) > 0.01 || Math.abs(y) > 0.01) {
             double randomValue = (random.nextDouble() - 0.5) * 0.02;
             x += randomValue;
             y += randomValue;

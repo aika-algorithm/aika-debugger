@@ -38,7 +38,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
-import static network.aika.visualization.ActivationParticle.INITIAL_DISTANCE;
+import static network.aika.visualization.AikaLayout.INITIAL_DISTANCE;
 
 public class ActivationViewerManager implements EventListener, ViewerListener {
 
@@ -62,8 +62,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     public Map<Integer, ActivationParticle> actIdToParticle = new TreeMap<>();
 
 
-//    private Map<ActivationPhase, Consumer<Node>> actPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
-//    private Map<LinkPhase, Consumer<Edge>> linkPhaseModifiers = new TreeMap<>(Comparator.comparing(p -> p.getRank()));
     private Map<Class<? extends Neuron>, Consumer<Node>> neuronTypeModifiers = new HashMap<>();
     private Map<Class<? extends Synapse>, BiConsumer<Edge, Synapse>> synapseTypeModifiers = new HashMap<>();
 
@@ -73,23 +71,12 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         initModifiers();
         doc.addEventListener(this);
-/*
-        viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-
-        add((DefaultView)viewer.addDefaultView(false, new SwingGraphRenderer()), BorderLayout.CENTER);
-        viewer = new Viewer(graph,Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-*/
 
         graph = initGraph();
 
-        //viewer = display.display(graph, false);
-
         viewer = new SwingViewer(new ThreadProxyPipe(graph));
-
         viewer.enableAutoLayout(new AikaLayout(this, graph));
 
-        //view = (ViewPanel) viewer.getDefaultView();
- //       view = (DefaultView)viewer.addDefaultView(false, new AikaRenderer());
         graphView = (DefaultView)viewer.addDefaultView(false, new SwingGraphRenderer());
         graphView.enableMouseOptions();
 
@@ -116,8 +103,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     }
 
     private JSplitPane initSplitPane() {
-
-        //Create a text pane.
         consoleTextPane = new JTextPane();
         addStylesToDocument(consoleTextPane.getStyledDocument());
 
@@ -145,11 +130,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         Style s = doc.addStyle("italic", regular);
         StyleConstants.setItalic(s, true);
-     //   StyleConstants.setFontSize(s, 16);
 
         s = doc.addStyle("bold", regular);
         StyleConstants.setBold(s, true);
-  //     StyleConstants.setFontSize(s, 16);
 
         s = doc.addStyle("small", regular);
         StyleConstants.setFontSize(s, 14);
@@ -249,10 +232,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         return graph;
     }
 
-    public void setGraph(Graph graph) {
-        this.graph = graph;
-    }
-
     public JSplitPane getView() {
         return splitPane;
     }
@@ -330,6 +309,14 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
                 Edge initialEdge = graph.addEdge(getEdgeId(originAct, act), "" + originAct.getId(), "" + act.getId(), true);
                 initialEdge.setAttribute("ui.style", "fill-color: rgb(200,200,200);");
             }
+
+            if(act.getNeuron().isInputNeuron() && act.getNeuron() instanceof PatternNeuron) {
+                node.setAttribute("layout.frozen");
+            }
+            if(act.getNeuron().isInputNeuron() && act.getFired() != NOT_FIRED) {
+                Fired f = act.getFired();
+                node.setAttribute("x", f.getInputTimestamp() * INITIAL_DISTANCE);
+            }
         }
 
         nodeIdToActivation.put(node.getId(), act);
@@ -339,15 +326,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
             node.setAttribute("aika.originActId", originAct.getId());
         }
         node.setAttribute("ui.label", act.getLabel());
-
-        if(act.getNeuron().isInputNeuron() && act.getNeuron() instanceof PatternNeuron) {
-            node.setAttribute("layout.frozen");
-        }
-        if(act.getFired() != NOT_FIRED) {
-            Fired f = act.getFired();
-            node.setAttribute("x", f.getInputTimestamp() * INITIAL_DISTANCE);
-            node.setAttribute("y", 0.0);
-        }
 
         if(lastActEventNode != null) {
             lastActEventNode.setAttribute("ui.style", "stroke-color: black;");

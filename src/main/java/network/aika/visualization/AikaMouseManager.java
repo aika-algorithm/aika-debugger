@@ -119,6 +119,7 @@ public class AikaMouseManager implements MouseInputListener, MouseManager, Mouse
             if (this.curElement != null) {
                 this.mouseButtonPressOnElement(this.curElement, event);
             } else {
+                System.out.println("Click");
                 viewManager.click();
             }
  /*           this.x1 = (float)event.getX();
