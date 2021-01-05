@@ -69,7 +69,7 @@ public class GraphManager {
 
 
     public Edge lookupEdge(Activation iAct, Activation oAct, Consumer<Node> onCreate) {
-        String edgeId = getEdgeId(iAct, iAct);
+        String edgeId = getEdgeId(iAct, oAct);
         Edge edge = graph.getEdge(edgeId);
         if (edge == null) {
             edge = graph.addEdge(edgeId, getNodeId(iAct), getNodeId(oAct), true);

@@ -19,9 +19,10 @@ public class AikaKeyManager implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyChar() == ' ') {
+            actViewManager.getVisitorManager().setVisitorMode(false);
             actViewManager.click();
         } else if(e.getKeyChar() == 'v') {
-            actViewManager.setVisitorMode(true);
+            actViewManager.getVisitorManager().setVisitorMode(true);
             actViewManager.click();
         }
     }

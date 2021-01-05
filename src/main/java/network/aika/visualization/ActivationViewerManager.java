@@ -47,6 +47,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
     private GraphManager graphManager;
 
+    private VisitorManager visitorManager;
+
     private SwingViewer viewer;
 
     private ViewerPipe fromViewer;
@@ -57,7 +59,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     private ActivationConsole console;
 
     private boolean clicked;
-    private boolean visitorMode;
 
     private Node lastActEventNode;
 
@@ -73,6 +74,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         graph = initGraph();
         graphManager = new GraphManager(graph);
+        visitorManager = new VisitorManager(this);
 
         viewer = new SwingViewer(new ThreadProxyPipe(graph));
         viewer.enableAutoLayout(new AikaLayout(this, graphManager));
@@ -103,13 +105,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         splitPane = initSplitPane();
     }
 
-    public boolean isVisitorMode() {
-        return visitorMode;
-    }
-
-    public void setVisitorMode(boolean visitorMode) {
-        this.visitorMode = visitorMode;
-    }
 
     private JSplitPane initSplitPane() {
         JScrollPane paneScrollPane = new JScrollPane(console);
@@ -197,11 +192,15 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         });
     }
 
-    private void pumpAndWaitForUserAction() {
-        fromViewer.pump();
-        // fromViewer.blockingPump();
+    public void pumpAndWaitForUserAction() {
+        pump();
 
         waitForClick();
+    }
+
+    public void pump() {
+        fromViewer.pump();
+        // fromViewer.blockingPump();
     }
 
     public synchronized void click() {
@@ -294,17 +293,6 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         }
     }
 
-    @Override
-    public void onVisitorEvent(Visitor v) {
-        if(!visitorMode)
-            return;
-
-        System.out.println("Visitor event");
-
-        pumpAndWaitForUserAction();
-        visitorMode = false;
-    }
-
     public void viewClosed(String id) {
    //     loop = false;
     }
@@ -327,5 +315,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
     public Document getDocument() {
         return doc;
+    }
+
+    public VisitorManager getVisitorManager() {
+        return visitorManager;
     }
 }
