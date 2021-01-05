@@ -21,7 +21,8 @@ public class AikaKeyManager implements KeyListener {
         if(e.getKeyChar() == ' ') {
             actViewManager.click();
         } else if(e.getKeyChar() == 'v') {
-            System.out.println("Visitor");
+            actViewManager.setVisitorMode(true);
+            actViewManager.click();
         }
     }
 

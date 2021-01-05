@@ -6,6 +6,7 @@ import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Fired;
 import network.aika.neuron.activation.Link;
+import network.aika.neuron.activation.Visitor;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.excitatory.PatternPartNeuron;
 import network.aika.neuron.excitatory.PatternPartSynapse;
@@ -43,6 +44,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     private Document doc;
 
     private Graph graph;
+
+    private GraphManager graphManager;
+
     private SwingViewer viewer;
 
     private ViewerPipe fromViewer;
@@ -53,12 +57,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     private ActivationConsole console;
 
     private boolean clicked;
+    private boolean visitorMode;
 
     private Node lastActEventNode;
-
-    Map<String, Activation> nodeIdToActivation = new TreeMap<>();
-    public Map<Integer, ActivationParticle> actIdToParticle = new TreeMap<>();
-
 
     private Map<Class<? extends Neuron>, Consumer<Node>> neuronTypeModifiers = new HashMap<>();
     private Map<Class<? extends Synapse>, BiConsumer<Edge, Synapse>> synapseTypeModifiers = new HashMap<>();
@@ -71,9 +72,10 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         doc.addEventListener(this);
 
         graph = initGraph();
+        graphManager = new GraphManager(graph);
 
         viewer = new SwingViewer(new ThreadProxyPipe(graph));
-        viewer.enableAutoLayout(new AikaLayout(this, graph));
+        viewer.enableAutoLayout(new AikaLayout(this, graphManager));
 
         graphView = (DefaultView)viewer.addDefaultView(false, new SwingGraphRenderer());
         graphView.enableMouseOptions();
@@ -101,6 +103,14 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         splitPane = initSplitPane();
     }
 
+    public boolean isVisitorMode() {
+        return visitorMode;
+    }
+
+    public void setVisitorMode(boolean visitorMode) {
+        this.visitorMode = visitorMode;
+    }
+
     private JSplitPane initSplitPane() {
         JScrollPane paneScrollPane = new JScrollPane(console);
         paneScrollPane.setVerticalScrollBarPolicy(
@@ -119,11 +129,11 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         if(ge instanceof Node) {
             Node n = (Node) ge;
 
-            Activation act = nodeIdToActivation.get(n.getId());
+            Activation act = graphManager.getActivation(n);
             if(act == null)
                 return;
 
-            console.renderConsoleOutput(headlinePrefix, act, actIdToParticle.get(act.getId()));
+            console.renderConsoleOutput(headlinePrefix, act, graphManager.getParticle(act));
         }
     }
 
@@ -187,11 +197,11 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         });
     }
 
-    private void pump() {
-        waitForClick();
-
+    private void pumpAndWaitForUserAction() {
         fromViewer.pump();
         // fromViewer.blockingPump();
+
+        waitForClick();
     }
 
     public synchronized void click() {
@@ -216,9 +226,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         n.setAttribute("aika.init-node", true);
 
-        console.renderConsoleOutput("New", act, actIdToParticle.get(act.getId()));
+        console.renderConsoleOutput("New", act, graphManager.getParticle(act));
 
-        pump();
+        pumpAndWaitForUserAction();
     }
 
 
@@ -227,34 +237,27 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
 
-        console.renderConsoleOutput("Processed", act, actIdToParticle.get(act.getId()));
+        console.renderConsoleOutput("Processed", act, graphManager.getParticle(act));
 
-        pump();
+        pumpAndWaitForUserAction();
     }
 
     private Node onActivationEvent(Activation act, Activation originAct) {
-        Graph g = getGraph();
-        String id = "" + act.getId();
-        Node node = g.getNode(id);
 
-        if (node == null) {
-            node = g.addNode(id);
-
+        Node node = graphManager.lookupNode(act, n -> {
             if(originAct != null) {
-                Edge initialEdge = graph.addEdge(getEdgeId(originAct, act), "" + originAct.getId(), "" + act.getId(), true);
+                Edge initialEdge = graphManager.lookupEdge(originAct, act, e -> {});
                 initialEdge.setAttribute("ui.style", "fill-color: rgb(200,200,200);");
             }
 
             if(act.getNeuron().isInputNeuron() && act.getNeuron() instanceof PatternNeuron) {
-                node.setAttribute("layout.frozen");
+                n.setAttribute("layout.frozen");
             }
             if(act.getNeuron().isInputNeuron() && act.getFired() != NOT_FIRED) {
                 Fired f = act.getFired();
-                node.setAttribute("x", f.getInputTimestamp() * INITIAL_DISTANCE);
+                n.setAttribute("x", f.getInputTimestamp() * INITIAL_DISTANCE);
             }
-        }
-
-        nodeIdToActivation.put(node.getId(), act);
+        });
 
         node.setAttribute("aika.id", act.getId());
         if(originAct != null) {
@@ -283,19 +286,23 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
     @Override
     public void onLinkProcessedEvent(Link l) {
-        String edgeId = getEdgeId(l.getInput(), l.getOutput());
-        Edge edge = graph.getEdge(edgeId);
-        if (edge == null) {
-            edge = graph.addEdge(edgeId, "" + l.getInput().getId(), "" + l.getOutput().getId(), true);
-        }
+        Edge edge = graphManager.lookupEdge(l, e -> {});
+
         BiConsumer<Edge, Synapse> synapseTypeModifier = synapseTypeModifiers.get(l.getSynapse().getClass());
         if(synapseTypeModifier != null) {
             synapseTypeModifier.accept(edge, l.getSynapse());
         }
     }
 
-    private String getEdgeId(Activation iAct, Activation oAct) {
-        return iAct.getId() + "-" + oAct.getId();
+    @Override
+    public void onVisitorEvent(Visitor v) {
+        if(!visitorMode)
+            return;
+
+        System.out.println("Visitor event");
+
+        pumpAndWaitForUserAction();
+        visitorMode = false;
     }
 
     public void viewClosed(String id) {

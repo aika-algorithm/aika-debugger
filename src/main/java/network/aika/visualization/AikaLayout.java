@@ -12,7 +12,7 @@ import org.miv.pherd.geom.Point3;
 public class AikaLayout extends SpringBox {
 
     ActivationViewerManager avm;
-    Graph graph;
+    GraphManager graphManager;
 
     protected static double k = 1f;
 
@@ -22,9 +22,9 @@ public class AikaLayout extends SpringBox {
 
     public static double INITIAL_DISTANCE = 1f;
 
-    AikaLayout(ActivationViewerManager avm, Graph g) {
+    AikaLayout(ActivationViewerManager avm, GraphManager gm) {
         this.avm = avm;
-        this.graph = g;
+        this.graphManager = gm;
 
         k = INITIAL_DISTANCE;
         K1Init = 0.06f;
@@ -45,7 +45,7 @@ public class AikaLayout extends SpringBox {
     @Override
     public NodeParticle newNodeParticle(String id) {
         Document doc = avm.getDocument();
-        Node n = graph.getNode(id);
+        Node n = graphManager.getNode(id);
         Activation act = doc.getActivation(n.getAttribute("aika.id", Integer.class));
 
         Integer originActId = n.getAttribute("aika.originActId", Integer.class);
@@ -55,7 +55,7 @@ public class AikaLayout extends SpringBox {
 
         ActivationParticle particle;
         if(originActId != null) {
-            ActivationParticle originParticle = avm.actIdToParticle.get(originActId);
+            ActivationParticle originParticle = graphManager.getParticle(originActId);
             Point3 originPos = originParticle.getPosition();
 
             x = originPos.x;
@@ -79,7 +79,7 @@ public class AikaLayout extends SpringBox {
 
         particle = new ActivationParticle(n, act, this, id, x, y, 0);
 
-        avm.actIdToParticle.put(act.getId(), particle);
+        graphManager.setParticle(act, particle);
 
         return particle;
     }
