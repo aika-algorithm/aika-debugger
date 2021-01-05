@@ -12,9 +12,9 @@ import java.util.function.Consumer;
 
 public class GraphManager {
 
-    Graph graph;
-    Map<String, Activation> nodeIdToActivation = new TreeMap<>();
-    public Map<Integer, ActivationParticle> actIdToParticle = new TreeMap<>();
+    private Graph graph;
+    private Map<String, Activation> nodeIdToActivation = new TreeMap<>();
+    private Map<Integer, ActivationParticle> actIdToParticle = new TreeMap<>();
 
     public GraphManager(Graph graph) {
         this.graph = graph;

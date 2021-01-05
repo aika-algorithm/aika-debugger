@@ -37,7 +37,7 @@ public class ActivationConsole extends JTextPane {
         StyleConstants.setFontSize(s, 24);
     }
 
-
+// TODO: Remove Particle!
     public void renderConsoleOutput(String headlinePrefix, Activation act, ActivationParticle ap) {
         StyledDocument sDoc = getStyledDocument();
         try {
@@ -53,6 +53,9 @@ public class ActivationConsole extends JTextPane {
 
             appendText(sDoc, "Phase: ", "bold");
             appendText(sDoc, Phase.toString(act.getPhase()) + "\n", "regular");
+
+            appendText(sDoc, "Value: ", "bold");
+            appendText(sDoc, act.getValue() + "\n", "regular");
 
             appendText(sDoc, "Fired: ", "bold");
             appendText(sDoc, act.getFired() + "\n", "regular");
@@ -75,5 +78,4 @@ public class ActivationConsole extends JTextPane {
             e.printStackTrace();
         }
     }
-
 }
