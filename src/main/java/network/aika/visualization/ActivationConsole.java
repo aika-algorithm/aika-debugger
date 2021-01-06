@@ -77,7 +77,7 @@ public class ActivationConsole extends JTextPane {
         try {
             sDoc.remove(0, sDoc.getLength());
 
-            appendText(sDoc, "Visitor " + (dir ? "(down)" : "(up)") + "\n\n", "headline");
+            appendText(sDoc, "Visitor " + (dir ? "(up)" : "(down)") + "\n\n", "headline");
 
             appendText(sDoc, v.toString(),"regular");
 

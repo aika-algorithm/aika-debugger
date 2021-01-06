@@ -9,7 +9,10 @@ import network.aika.neuron.activation.Link;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.excitatory.PatternPartNeuron;
 import network.aika.neuron.excitatory.PatternPartSynapse;
+import network.aika.neuron.excitatory.PatternSynapse;
 import network.aika.neuron.inhibitory.InhibitoryNeuron;
+import network.aika.neuron.inhibitory.InhibitorySynapse;
+import network.aika.neuron.inhibitory.PrimaryInhibitorySynapse;
 import network.aika.neuron.phase.activation.ActivationPhase;
 import network.aika.text.Document;
 import org.graphstream.graph.Edge;
@@ -142,22 +145,31 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 //                  "text-mode: hidden;" +
                     "z-index: 1;" +
 //                  "shadow-mode: gradient-radial; shadow-width: 2px; shadow-color: #999, white; shadow-offset: 3px, -3px;" +
-                    "stroke-mode: plain; stroke-width: 2px;" +
+                    "stroke-mode: plain; " +
+                    "stroke-width: 2px;" +
                     "text-size: 20px;" +
                     "text-alignment: under;" +
-                    "text-color: white;" +
+                    "text-color: black;" +
                     "text-style: bold;" +
                     "text-background-mode: rounded-box;" +
-                    "text-background-color: #222C; " +
+                    "text-background-color: rgba(100, 100, 100, 100); " +
                     "text-padding: 2px;" +
                     "text-offset: 0px, 2px;" +
-        "}" +
-                " edge {" +
+                "} " +
+                "node:selected {" +
+                    "stroke-color: red; stroke-width: 4px;" +
+                "} " +
+                "edge {" +
                     "size: 2px;" +
                     "shape: cubic-curve;" +
                     "z-index: 0;" +
                     "arrow-size: 8px, 5px;" +
-                "}");
+                "} " +
+                "edge:selected {" +
+                    "stroke-color: red;" +
+                    "stroke-width: 4px;" +
+                "}"
+        );
 
         graph.setAttribute("ui.antialias");
         graph.setAutoCreate(true);
@@ -188,6 +200,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
                 e.setAttribute("ui.style", "fill-color: rgb(100,0,0);");
             }
         });
+        synapseTypeModifiers.put(InhibitorySynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(50,50,150);"));
+        synapseTypeModifiers.put(PrimaryInhibitorySynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(0,00,100);"));
+        synapseTypeModifiers.put(PatternSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(0,130,0);"));
     }
 
     public void pumpAndWaitForUserAction() {
@@ -263,10 +278,10 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         node.setAttribute("ui.label", act.getLabel());
 
         if(lastActEventNode != null) {
-            lastActEventNode.setAttribute("ui.style", "stroke-color: black;");
+            unhighlightNode(lastActEventNode);
         }
 
-        node.setAttribute("ui.style", "stroke-color: red;");
+        highlightNode(node);
 
         ActivationPhase phase = act.getPhase();
         if(phase != null) {
@@ -279,6 +294,14 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         lastActEventNode = node;
 
         return node;
+    }
+
+    public void unhighlightNode(Node node) {
+        node.removeAttribute("ui.selected");
+    }
+
+    public void highlightNode(Node node) {
+        node.setAttribute("ui.selected");
     }
 
     @Override
