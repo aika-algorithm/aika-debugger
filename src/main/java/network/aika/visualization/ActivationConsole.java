@@ -1,6 +1,7 @@
 package network.aika.visualization;
 
 import network.aika.neuron.activation.Activation;
+import network.aika.neuron.activation.Visitor;
 import network.aika.neuron.phase.Phase;
 
 
@@ -38,7 +39,7 @@ public class ActivationConsole extends JTextPane {
     }
 
 // TODO: Remove Particle!
-    public void renderConsoleOutput(String headlinePrefix, Activation act, ActivationParticle ap) {
+    public void renderActivationConsoleOutput(String headlinePrefix, Activation act, ActivationParticle ap) {
         StyledDocument sDoc = getStyledDocument();
         try {
             sDoc.remove(0, sDoc.getLength());
@@ -70,6 +71,21 @@ public class ActivationConsole extends JTextPane {
             e.printStackTrace();
         }
     }
+
+    public void renderVisitorConsoleOutput(Visitor v, boolean dir) {
+        StyledDocument sDoc = getStyledDocument();
+        try {
+            sDoc.remove(0, sDoc.getLength());
+
+            appendText(sDoc, "Visitor " + (dir ? "(down)" : "(up)") + "\n\n", "headline");
+
+            appendText(sDoc, v.toString(),"regular");
+
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void appendText(StyledDocument sDoc, String txt, String style) {
         try {

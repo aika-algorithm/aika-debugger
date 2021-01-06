@@ -22,8 +22,17 @@ public class VisitorManager implements VisitorEventListener {
     }
 
     @Override
-    public void onVisitorEvent(Visitor v) {
-        System.out.println("Visitor event");
+    public void onVisitorEvent(Visitor v, boolean dir) {
+        avm.getConsole().renderVisitorConsoleOutput(v, dir);
+
+        switch(v.transition) {
+            case ACT:
+                System.out.println("Visitor ACT event: " + v.act.getLabel() + " " + dir);
+                break;
+            case LINK:
+                System.out.println("Visitor LINK event: " + v.link.toString() + " " + dir);
+                break;
+        }
 
         avm.pumpAndWaitForUserAction();
     }

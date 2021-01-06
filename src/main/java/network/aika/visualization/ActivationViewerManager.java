@@ -6,7 +6,6 @@ import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Fired;
 import network.aika.neuron.activation.Link;
-import network.aika.neuron.activation.Visitor;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.excitatory.PatternPartNeuron;
 import network.aika.neuron.excitatory.PatternPartSynapse;
@@ -32,7 +31,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -128,7 +126,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
             if(act == null)
                 return;
 
-            console.renderConsoleOutput(headlinePrefix, act, graphManager.getParticle(act));
+            console.renderActivationConsoleOutput(headlinePrefix, act, graphManager.getParticle(act));
         }
     }
 
@@ -225,7 +223,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         n.setAttribute("aika.init-node", true);
 
-        console.renderConsoleOutput("New", act, graphManager.getParticle(act));
+        console.renderActivationConsoleOutput("New", act, graphManager.getParticle(act));
 
         pumpAndWaitForUserAction();
     }
@@ -236,7 +234,7 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
 
-        console.renderConsoleOutput("Processed", act, graphManager.getParticle(act));
+        console.renderActivationConsoleOutput("Processed", act, graphManager.getParticle(act));
 
         pumpAndWaitForUserAction();
     }
@@ -319,5 +317,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
     public VisitorManager getVisitorManager() {
         return visitorManager;
+    }
+
+    public ActivationConsole getConsole() {
+        return console;
     }
 }
