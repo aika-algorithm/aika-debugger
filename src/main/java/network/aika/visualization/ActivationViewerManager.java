@@ -320,14 +320,33 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         edge.setAttribute("ui.selected");
     }
 
+
+    @Override
+    public void onLinkCreationEvent(Link l) {
+        Edge e = onLinkEvent(l);
+
+        e.setAttribute("aika.init-node", true);
+
+//        console.renderActivationConsoleOutput("Processed", act, graphManager.getParticle(act));
+    }
+
     @Override
     public void onLinkProcessedEvent(Link l) {
+        Edge e = onLinkEvent(l);
+
+        e.setAttribute("aika.init-node", false);
+
+//        console.renderActivationConsoleOutput("Processed", act, graphManager.getParticle(act));
+    }
+
+    private Edge onLinkEvent(Link l) {
         Edge edge = graphManager.lookupEdge(l, e -> {});
 
         BiConsumer<Edge, Synapse> synapseTypeModifier = synapseTypeModifiers.get(l.getSynapse().getClass());
         if(synapseTypeModifier != null) {
             synapseTypeModifier.accept(edge, l.getSynapse());
         }
+        return edge;
     }
 
     public void viewClosed(String id) {
