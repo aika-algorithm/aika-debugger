@@ -58,6 +58,12 @@ public class GraphManager {
         return node;
     }
 
+
+    public Node getNode(Activation act) {
+        String id = getNodeId(act);
+        return graph.getNode(id);
+    }
+
     public Edge lookupEdge(Link l, Consumer<Node> onCreate) {
         String edgeId = getEdgeId(l.getInput(), l.getOutput());
         Edge edge = graph.getEdge(edgeId);
@@ -67,6 +73,10 @@ public class GraphManager {
         return edge;
     }
 
+    public Edge getEdge(Link l) {
+        String edgeId = getEdgeId(l.getInput(), l.getOutput());
+        return graph.getEdge(edgeId);
+    }
 
     public Edge lookupEdge(Activation iAct, Activation oAct, Consumer<Node> onCreate) {
         String edgeId = getEdgeId(iAct, oAct);
@@ -80,4 +90,5 @@ public class GraphManager {
     public Node getNode(String nodeId) {
         return graph.getNode(nodeId);
     }
+
 }

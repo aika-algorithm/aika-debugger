@@ -107,6 +107,10 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
     }
 
 
+    public GraphManager getGraphManager() {
+        return graphManager;
+    }
+
     private JSplitPane initSplitPane() {
         JScrollPane paneScrollPane = new JScrollPane(console);
         paneScrollPane.setVerticalScrollBarPolicy(
@@ -157,7 +161,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
                     "text-offset: 0px, 2px;" +
                 "} " +
                 "node:selected {" +
-                    "stroke-color: red; stroke-width: 4px;" +
+                    "stroke-color: red; " +
+                    "stroke-width: 4px;" +
                 "} " +
                 "edge {" +
                     "size: 2px;" +
@@ -166,8 +171,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
                     "arrow-size: 8px, 5px;" +
                 "} " +
                 "edge:selected {" +
-                    "stroke-color: red;" +
-                    "stroke-width: 4px;" +
+                    "stroke-mode: plain; " +
+                    "fill-color: red;" +
+                    "stroke-width: 3px;" +
                 "}"
         );
 
@@ -207,6 +213,8 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
     public void pumpAndWaitForUserAction() {
         pump();
+
+        System.out.println("Viewport: " + graphView.getCamera().getViewCenter() + " Zoom:" + graphView.getCamera().getViewPercent());
 
         waitForClick();
     }
@@ -302,6 +310,14 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
     public void highlightNode(Node node) {
         node.setAttribute("ui.selected");
+    }
+
+    public void unhighlightEdge(Edge edge) {
+        edge.removeAttribute("ui.selected");
+    }
+
+    public void highlightEdge(Edge edge) {
+        edge.setAttribute("ui.selected");
     }
 
     @Override

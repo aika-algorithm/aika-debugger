@@ -6,9 +6,11 @@ import java.awt.event.KeyListener;
 public class AikaKeyManager implements KeyListener {
 
     ActivationViewerManager actViewManager;
+    VisitorManager visitorManager;
 
     public AikaKeyManager(ActivationViewerManager actViewManager) {
         this.actViewManager = actViewManager;
+        visitorManager = actViewManager.getVisitorManager();
     }
 
     @Override
@@ -19,11 +21,19 @@ public class AikaKeyManager implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyChar() == ' ') {
-            actViewManager.getVisitorManager().setVisitorMode(false);
-            actViewManager.click();
+            if(visitorManager.isRegistered()) {
+                visitorManager.setVisitorMode(false);
+                visitorManager.click();
+            } else {
+                actViewManager.click();
+            }
         } else if(e.getKeyChar() == 'v') {
-            actViewManager.getVisitorManager().setVisitorMode(true);
-            actViewManager.click();
+            if(!visitorManager.isRegistered()) {
+                visitorManager.setVisitorMode(true);
+                actViewManager.click();
+            } else {
+                visitorManager.click();
+            }
         }
     }
 
