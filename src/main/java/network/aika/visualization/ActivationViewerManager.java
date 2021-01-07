@@ -291,12 +291,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         highlightNode(node);
 
-        ActivationPhase phase = act.getPhase();
-        if(phase != null) {
-            Consumer<Node> neuronTypeModifier = neuronTypeModifiers.get(act.getNeuron().getClass());
-            if(neuronTypeModifier != null) {
-                neuronTypeModifier.accept(node);
-            }
+        Consumer<Node> neuronTypeModifier = neuronTypeModifiers.get(act.getNeuron().getClass());
+        if (neuronTypeModifier != null) {
+            neuronTypeModifier.accept(node);
         }
 
         lastActEventNode = node;
