@@ -30,7 +30,7 @@ public class NeuronViewManager extends AbstractViewManager<NeuronConsole, Neuron
         if(ge instanceof Node) {
             Node n = (Node) ge;
 
-            Neuron neuron = graphManager.getActivation(n);
+            Neuron neuron = graphManager.getKey(n);
             if(neuron == null)
                 return;
 

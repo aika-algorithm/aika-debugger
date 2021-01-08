@@ -21,8 +21,17 @@ public abstract class AbstractGraphManager<K, P> {
         this.graph = graph;
     }
 
-    public K getActivation(Node n) {
+    public K getKey(Node n) {
         return nodeIdToActivation.get(n.getId());
+    }
+
+
+    public K getInputKey(Edge e) {
+        return nodeIdToActivation.get(e.getId().substring(0, e.getId().indexOf("-")));
+    }
+
+    public K getOutputKey(Edge e) {
+        return nodeIdToActivation.get(e.getId().substring(e.getId().indexOf("-") + 1));
     }
 
     protected abstract long getKeyId(K key);

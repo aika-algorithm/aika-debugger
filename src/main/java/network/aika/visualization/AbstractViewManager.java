@@ -34,7 +34,6 @@ import java.util.function.Consumer;
 
 public abstract class AbstractViewManager<C extends AbstractConsole, G extends AbstractGraphManager> implements ViewerListener {
 
-
     protected Map<Class<? extends Neuron>, Consumer<Node>> neuronTypeModifiers = new HashMap<>();
     protected Map<Class<? extends Synapse>, BiConsumer<Edge, Synapse>> synapseTypeModifiers = new HashMap<>();
 

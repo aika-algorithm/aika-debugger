@@ -23,9 +23,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     private Document doc;
 
-
     private VisitorManager visitorManager;
-
 
     public ActivationViewManager(Document doc) {
         super();
@@ -44,7 +42,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         if(ge instanceof Node) {
             Node n = (Node) ge;
 
-            Activation act = graphManager.getActivation(n);
+            Activation act = graphManager.getKey(n);
             if(act == null)
                 return;
 
@@ -55,6 +53,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             console.renderActivationConsoleOutput(act, graphManager.getParticle(act));
             console.setIgnoreRepaint(false);
             console.repaint();
+        } else if(ge instanceof Edge) {
+            Edge e = (Edge) ge;
+
         }
     }
 
