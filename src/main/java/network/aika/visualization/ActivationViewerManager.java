@@ -133,10 +133,13 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
             if(act == null)
                 return;
 
+            console.setIgnoreRepaint(true);
             console.clear();
             console.addHeadline(headlinePrefix);
 
             console.renderActivationConsoleOutput(act, graphManager.getParticle(act));
+            console.setIgnoreRepaint(false);
+            console.repaint();
         }
     }
 

@@ -56,7 +56,9 @@ public class VisitorManager implements VisitorEventListener {
 
     @Override
     public void onVisitorEvent(Visitor v, boolean dir) {
+        avm.getConsole().clear();
         avm.getConsole().renderVisitorConsoleOutput(v, dir);
+
         GraphManager gm = avm.getGraphManager();
 
         switch(v.transition) {

@@ -42,7 +42,6 @@ public class ActivationConsole extends JTextPane {
 
     public void clear() {
         StyledDocument sDoc = getStyledDocument();
-
         try {
             sDoc.remove(0, sDoc.getLength());
         } catch (BadLocationException e) {
@@ -52,8 +51,6 @@ public class ActivationConsole extends JTextPane {
 
 // TODO: Remove Particle!
     public void renderActivationConsoleOutput(Activation act, ActivationParticle ap) {
-        StyledDocument sDoc = getStyledDocument();
-
         appendText("Activation\n\n", "headline");
         appendEntry("Id: ", "" + act.getId());
         appendEntry("Label: ", act.getLabel());
@@ -62,7 +59,6 @@ public class ActivationConsole extends JTextPane {
         appendEntry("Gradient: ", "" + Utils.round(act.getGradient()));
         appendEntry("Fired: ", "" + act.getFired());
         appendEntry("Reference: ", "" + act.getReference());
-
 /*
             if(ap != null) {
                 appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
@@ -74,8 +70,6 @@ public class ActivationConsole extends JTextPane {
     }
 
     public void renderNeuronConsoleOutput(Neuron n) {
-        StyledDocument sDoc = getStyledDocument();
-
         appendText("Neuron\n\n", "headline");
 
         appendEntry("Id: ", "" + n.getId());
@@ -89,19 +83,22 @@ public class ActivationConsole extends JTextPane {
         appendEntry("LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X"));
     }
 
-
     public void renderVisitorConsoleOutput(Visitor v, boolean dir) {
-        StyledDocument sDoc = getStyledDocument();
-
         appendText("Visitor " + (dir ? "(up)" : "(down)") + "\n\n", "headline");
-
+        appendText("\n", "regular");
         appendEntry("Origin:", v.origin.act.getShortString());
+        appendText("\n", "regular");
 
-        appendText(v.toString(),"regular");
+        do {
+            renderVisitorStep(v);
+
+            appendText("\n", "regular");
+            v = v.previousStep;
+        } while(v != null);
     }
 
     public void renderVisitorStep(Visitor v) {
-        StyledDocument sDoc = getStyledDocument();
+        appendText(v.transition.name() + "\n", "bold");
 
         if(v.act != null) {
             appendEntry("Current:", v.act.getShortString());
