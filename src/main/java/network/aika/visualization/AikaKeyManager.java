@@ -5,10 +5,10 @@ import java.awt.event.KeyListener;
 
 public class AikaKeyManager implements KeyListener {
 
-    ActivationViewerManager actViewManager;
+    ActivationViewManager actViewManager;
     VisitorManager visitorManager;
 
-    public AikaKeyManager(ActivationViewerManager actViewManager) {
+    public AikaKeyManager(ActivationViewManager actViewManager) {
         this.actViewManager = actViewManager;
         visitorManager = actViewManager.getVisitorManager();
     }

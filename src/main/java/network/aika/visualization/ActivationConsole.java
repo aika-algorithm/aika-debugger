@@ -32,8 +32,6 @@ public class ActivationConsole extends AbstractAikaConsole {
         renderNeuronConsoleOutput(act.getNeuron());
     }
 
-
-
     public void renderVisitorConsoleOutput(Visitor v, boolean dir) {
         appendText("Visitor " + (dir ? "(up)" : "(down)") + "\n\n", "headline");
         appendText("\n", "regular");

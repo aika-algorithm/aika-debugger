@@ -1,46 +1,23 @@
 package network.aika.visualization;
 
 import network.aika.EventListener;
-import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Fired;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.excitatory.PatternNeuron;
-import network.aika.neuron.excitatory.PatternPartNeuron;
-import network.aika.neuron.excitatory.PatternPartSynapse;
-import network.aika.neuron.excitatory.PatternSynapse;
-import network.aika.neuron.inhibitory.InhibitoryNeuron;
-import network.aika.neuron.inhibitory.InhibitorySynapse;
-import network.aika.neuron.inhibitory.PrimaryInhibitorySynapse;
-import network.aika.neuron.phase.activation.ActivationPhase;
 import network.aika.text.Document;
 import org.graphstream.graph.Edge;
-import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.stream.thread.ThreadProxyPipe;
 import org.graphstream.ui.graphicGraph.GraphicElement;
-import org.graphstream.ui.swing.SwingGraphRenderer;
-import org.graphstream.ui.swing_viewer.DefaultView;
-import org.graphstream.ui.swing_viewer.SwingViewer;
-import org.graphstream.ui.swing_viewer.ViewPanel;
-import org.graphstream.ui.view.Viewer;
-import org.graphstream.ui.view.ViewerListener;
-import org.graphstream.ui.view.ViewerPipe;
-import org.graphstream.ui.view.camera.Camera;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
-import static network.aika.visualization.AikaLayout.INITIAL_DISTANCE;
+import static network.aika.visualization.AbstractLayout.INITIAL_DISTANCE;
 
-public class ActivationViewerManager extends AbstractAikaViewManager<ActivationConsole> implements EventListener {
+public class ActivationViewManager extends AbstractViewManager<ActivationConsole> implements EventListener {
 
     private Document doc;
 
@@ -48,7 +25,7 @@ public class ActivationViewerManager extends AbstractAikaViewManager<ActivationC
     private VisitorManager visitorManager;
 
 
-    public ActivationViewerManager(Document doc) {
+    public ActivationViewManager(Document doc) {
         super();
         this.doc = doc;
         doc.addEventListener(this);

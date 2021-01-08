@@ -6,10 +6,9 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
-import org.miv.pherd.geom.Point3;
 
 
-public abstract class AikaLayout extends SpringBox {
+public abstract class AbstractLayout extends SpringBox {
 
     GraphManager graphManager;
 
@@ -30,6 +29,4 @@ public abstract class AikaLayout extends SpringBox {
     protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
   //      super.chooseNodePosition(n0, n1);
     }
-
-
 }

@@ -3,11 +3,8 @@ package network.aika.visualization;
 import network.aika.text.Document;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -17,7 +14,7 @@ public class AikaDebugger extends JPanel {
 
     Document doc;
 
-    ActivationViewerManager actViewManager;
+    ActivationViewManager actViewManager;
 
     AikaKeyManager aikaKeyManager;
 
@@ -65,7 +62,7 @@ public class AikaDebugger extends JPanel {
             }
         });
 
-        actViewManager = new ActivationViewerManager(doc);
+        actViewManager = new ActivationViewManager(doc);
         aikaKeyManager = new AikaKeyManager(actViewManager);
 
         tabbedPane.addKeyListener(aikaKeyManager);

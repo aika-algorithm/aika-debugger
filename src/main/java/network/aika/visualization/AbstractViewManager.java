@@ -1,11 +1,7 @@
 package network.aika.visualization;
 
-import network.aika.EventListener;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
-import network.aika.neuron.activation.Activation;
-import network.aika.neuron.activation.Fired;
-import network.aika.neuron.activation.Link;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.excitatory.PatternPartNeuron;
 import network.aika.neuron.excitatory.PatternPartSynapse;
@@ -13,7 +9,6 @@ import network.aika.neuron.excitatory.PatternSynapse;
 import network.aika.neuron.inhibitory.InhibitoryNeuron;
 import network.aika.neuron.inhibitory.InhibitorySynapse;
 import network.aika.neuron.inhibitory.PrimaryInhibitorySynapse;
-import network.aika.text.Document;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -36,10 +31,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static network.aika.neuron.activation.Fired.NOT_FIRED;
-import static network.aika.visualization.AikaLayout.INITIAL_DISTANCE;
-
-public abstract class AbstractAikaViewManager<C extends AbstractAikaConsole> implements ViewerListener {
+public abstract class AbstractViewManager<C extends AbstractAikaConsole> implements ViewerListener {
 
 
     protected Map<Class<? extends Neuron>, Consumer<Node>> neuronTypeModifiers = new HashMap<>();
@@ -63,7 +55,7 @@ public abstract class AbstractAikaViewManager<C extends AbstractAikaConsole> imp
 
     protected Node lastActEventNode;
 
-    public AbstractAikaViewManager(){
+    public AbstractViewManager(){
         initModifiers();
 
         graph = initGraph();

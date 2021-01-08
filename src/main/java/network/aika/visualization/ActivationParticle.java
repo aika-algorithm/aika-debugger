@@ -2,7 +2,6 @@ package network.aika.visualization;
 
 import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
-import network.aika.neuron.activation.Fired;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.excitatory.PatternPartSynapse;
 import org.graphstream.graph.Node;
@@ -12,41 +11,22 @@ import org.graphstream.ui.layout.springbox.EdgeSpring;
 import org.graphstream.ui.layout.springbox.Energies;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
-import org.graphstream.ui.layout.springbox.implementations.SpringBoxNodeParticle;
 import org.miv.pherd.geom.Point3;
 
-import static network.aika.visualization.AikaLayout.*;
+import static network.aika.visualization.AbstractLayout.*;
 
-public class ActivationParticle extends SpringBoxNodeParticle {
+public class ActivationParticle extends AbstractParticle {
 
     Activation act;
     Node node;
 
-    public ActivationParticle(Node node, Activation act, SpringBox box, String id, double x, double y, double z) {
-        super(box, id, x, y, z);
+    public ActivationParticle(AbstractLayout layout, Node node, Activation act, String id, double x, double y, double z) {
+        super(layout, id, x, y, z);
 
         this.act = act;
         this.node = node;
     }
 
-    @Override
-    protected void repulsionN2(Vector3 delta) {
-       super.repulsionN2(delta);
-/*
-        if(act.getLabel().equalsIgnoreCase("der Rel Prev. Token"))
-            System.out.println(System.identityHashCode(this) + " " + act.getLabel() + "repulsionN2:" + delta + " disp:" + disp + " pos:" + pos);
- */
-    }
-
-
-    @Override
-    protected void repulsionNLogN(Vector3 delta) {
-        super.repulsionNLogN(delta);
-
-        if(act.getLabel().equalsIgnoreCase("der Rel Prev. Token"))
-            System.out.println(System.identityHashCode(this) + " " + act.getLabel() + "repulsionNLogN:" + delta + " disp:" + disp + " pos:" + pos);
-
-    }
 
     @Override
     protected void attraction(Vector3 delta) {

@@ -6,11 +6,11 @@ import org.graphstream.graph.Node;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.miv.pherd.geom.Point3;
 
-public class ActivationLayout extends AikaLayout{
-    ActivationViewerManager avm;
+public class ActivationLayout extends AbstractLayout {
+    ActivationViewManager avm;
     GraphManager graphManager;
 
-    public ActivationLayout(ActivationViewerManager avm, GraphManager gm) {
+    public ActivationLayout(ActivationViewManager avm, GraphManager gm) {
         this.avm = avm;
         this.graphManager = gm;
 
@@ -56,7 +56,7 @@ public class ActivationLayout extends AikaLayout{
             y += randomValue;
         }
 
-        particle = new ActivationParticle(n, act, this, id, x, y, 0);
+        particle = new ActivationParticle(this, n, act, id, x, y, 0);
 
         graphManager.setParticle(act, particle);
 

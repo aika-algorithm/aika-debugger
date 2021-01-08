@@ -10,12 +10,12 @@ public class VisitorManager implements VisitorEventListener {
 
     private boolean isRegistered = false;
 
-    private ActivationViewerManager avm;
+    private ActivationViewManager avm;
 
     private boolean clicked;
 
 
-    public VisitorManager(ActivationViewerManager avm) {
+    public VisitorManager(ActivationViewManager avm) {
         this.avm = avm;
     }
 
