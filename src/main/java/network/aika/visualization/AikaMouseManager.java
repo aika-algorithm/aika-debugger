@@ -23,11 +23,11 @@ public class AikaMouseManager implements MouseInputListener, MouseManager, Mouse
     protected float x1;
     protected float y1;
 
-    private ActivationViewerManager viewManager;
+    private AbstractAikaViewManager viewManager;
     private MouseEvent lastMouseDragEvent;
 
 
-    public AikaMouseManager(ActivationViewerManager viewManager) {
+    public AikaMouseManager(AbstractAikaViewManager viewManager) {
         this(EnumSet.of(InteractiveElement.NODE, InteractiveElement.SPRITE));
         this.viewManager = viewManager;
     }
