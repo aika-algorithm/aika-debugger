@@ -1,16 +1,12 @@
 package network.aika.visualization;
 
-import network.aika.neuron.activation.Activation;
-import network.aika.text.Document;
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 
 
 public abstract class AbstractLayout extends SpringBox {
 
-    GraphManager graphManager;
+    ActivationGraphManager graphManager;
 
     protected static double k = 1f;
 

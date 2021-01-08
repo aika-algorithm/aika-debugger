@@ -1,17 +1,20 @@
 package network.aika.visualization;
 
+import network.aika.Model;
+import network.aika.neuron.Neuron;
+import network.aika.neuron.NeuronProvider;
 import network.aika.neuron.activation.Activation;
 import network.aika.text.Document;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.miv.pherd.geom.Point3;
 
-public class ActivationLayout extends AbstractLayout {
-    ActivationViewManager avm;
-    ActivationGraphManager graphManager;
+public class NeuronLayout extends AbstractLayout {
+    NeuronViewManager nvm;
+    NeuronGraphManager graphManager;
 
-    public ActivationLayout(ActivationViewManager avm, ActivationGraphManager gm) {
-        this.avm = avm;
+    public NeuronLayout(NeuronViewManager nvm, NeuronGraphManager gm) {
+        this.nvm = nvm;
         this.graphManager = gm;
 
         k = INITIAL_DISTANCE;
@@ -20,20 +23,22 @@ public class ActivationLayout extends AbstractLayout {
         K2 = 0.005f;
     }
 
+
     @Override
     public NodeParticle newNodeParticle(String id) {
-        Document doc = avm.getDocument();
+        Model model = nvm.getModel();
         Node n = graphManager.getNode(id);
-        Activation act = doc.getActivation(n.getAttribute("aika.id", Integer.class));
 
-        Integer originActId = n.getAttribute("aika.originActId", Integer.class);
+        NeuronProvider np = model.lookupNeuron(n.getAttribute("aika.neuronId", Long.class));
+
+        Long originNeuronId = n.getAttribute("aika.originNeuronId", Long.class);
 
         Double x;
         Double y;
 
-        ActivationParticle particle;
-        if(originActId != null) {
-            ActivationParticle originParticle = graphManager.getParticle(originActId);
+        NeuronParticle particle;
+        if(originNeuronId != null) {
+            NeuronParticle originParticle = graphManager.getParticle(originNeuronId);
             Point3 originPos = originParticle.getPosition();
 
             x = originPos.x;
@@ -55,10 +60,11 @@ public class ActivationLayout extends AbstractLayout {
             y += randomValue;
         }
 
-        particle = new ActivationParticle(this, n, act, id, x, y, 0);
+        particle = new NeuronParticle(this, id, x, y, 0);
 
-        graphManager.setParticle(act, particle);
+        graphManager.setParticle(np.getNeuron(), particle);
 
         return particle;
     }
+
 }

@@ -82,23 +82,4 @@ public class ActivationParticle extends AbstractParticle {
                 .findFirst()
                 .orElse(null);
     }
-
-    private void edgeAttraction(Vector3 delta, EdgeSpring edge, double strength, Energies energies) {
-        int neighbourCount = neighbours.size();
-
-        NodeParticle other = edge.getOpposite(this);
-        Point3 opos = other.getPosition();
-
-        delta.set(opos.x - pos.x, opos.y - pos.y, 0);
-
-        double len = delta.normalize();
-        double k = INITIAL_DISTANCE * edge.weight;
-        double factor = strength * (len - k);
-
-        delta.scalarMult(factor * (1f / (neighbourCount * 0.1f)));
-
-        disp.add(delta);
-        attE += factor;
-        energies.accumulateEnergy(factor);
-    }
 }

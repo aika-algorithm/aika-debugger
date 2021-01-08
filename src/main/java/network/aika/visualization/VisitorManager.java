@@ -59,7 +59,7 @@ public class VisitorManager implements VisitorEventListener {
         avm.getConsole().clear();
         avm.getConsole().renderVisitorConsoleOutput(v, dir);
 
-        GraphManager gm = avm.getGraphManager();
+        ActivationGraphManager gm = avm.getGraphManager();
 
         switch(v.transition) {
             case ACT:

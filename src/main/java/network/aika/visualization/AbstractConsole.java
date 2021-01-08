@@ -6,8 +6,8 @@ import network.aika.neuron.Neuron;
 import javax.swing.*;
 import javax.swing.text.*;
 
-public abstract class AbstractAikaConsole extends JTextPane {
-    public AbstractAikaConsole() {
+public abstract class AbstractConsole extends JTextPane {
+    public AbstractConsole() {
         addStylesToDocument(getStyledDocument());
 
         //  setFocusable(false);

@@ -3,12 +3,12 @@ package network.aika.visualization;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class AikaKeyManager implements KeyListener {
+public class KeyManager implements KeyListener {
 
     ActivationViewManager actViewManager;
     VisitorManager visitorManager;
 
-    public AikaKeyManager(ActivationViewManager actViewManager) {
+    public KeyManager(ActivationViewManager actViewManager) {
         this.actViewManager = actViewManager;
         visitorManager = actViewManager.getVisitorManager();
     }

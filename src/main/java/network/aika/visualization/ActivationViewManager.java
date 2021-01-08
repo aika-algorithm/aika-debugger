@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
 import static network.aika.visualization.AbstractLayout.INITIAL_DISTANCE;
 
-public class ActivationViewManager extends AbstractViewManager<ActivationConsole> implements EventListener {
+public class ActivationViewManager extends AbstractViewManager<ActivationConsole, ActivationGraphManager> implements EventListener {
 
     private Document doc;
 
@@ -27,19 +27,14 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     public ActivationViewManager(Document doc) {
         super();
+        graphManager = new ActivationGraphManager(graph);
+
         this.doc = doc;
         doc.addEventListener(this);
         visitorManager = new VisitorManager(this);
         console=new ActivationConsole();
         viewer.enableAutoLayout(new ActivationLayout(this, graphManager));
     }
-
-
-    public GraphManager getGraphManager() {
-        return graphManager;
-    }
-
-
 
     public void showElementContext(String headlinePrefix, GraphicElement ge) {
         if(ge instanceof Node) {
@@ -59,36 +54,6 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         }
     }
 
-
-    public void pumpAndWaitForUserAction() {
-        pump();
-
-        System.out.println("Viewport: " + graphView.getCamera().getViewCenter() + " Zoom:" + graphView.getCamera().getViewPercent());
-
-        waitForClick();
-    }
-
-    public void pump() {
-        fromViewer.pump();
-        // fromViewer.blockingPump();
-    }
-
-    public synchronized void click() {
-        clicked = true;
-        notifyAll();
-    }
-
-    private synchronized void waitForClick() {
-        try {
-            while(!clicked) {
-                wait();
-            }
-            clicked = false;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void onActivationCreationEvent(Activation act, Activation originAct) {
         Node n = onActivationEvent(act, originAct);
@@ -101,7 +66,6 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         pumpAndWaitForUserAction();
     }
-
 
     @Override
     public void onActivationProcessedEvent(Activation act) {
@@ -154,23 +118,6 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         return node;
     }
 
-    public void unhighlightNode(Node node) {
-        node.removeAttribute("ui.selected");
-    }
-
-    public void highlightNode(Node node) {
-        node.setAttribute("ui.selected");
-    }
-
-    public void unhighlightEdge(Edge edge) {
-        edge.removeAttribute("ui.selected");
-    }
-
-    public void highlightEdge(Edge edge) {
-        edge.setAttribute("ui.selected");
-    }
-
-
     @Override
     public void onLinkCreationEvent(Link l) {
         Edge e = onLinkEvent(l);
@@ -203,22 +150,6 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
    //     loop = false;
     }
 
-    public void buttonPushed(String id) {
-        System.out.println("Button pushed on node "+id);
-    }
-
-    public void buttonReleased(String id) {
-        System.out.println("Button released on node "+id);
-    }
-
-    public void mouseOver(String id) {
-        System.out.println("Need the Mouse Options to be activated");
-    }
-
-    public void mouseLeft(String id) {
-        System.out.println("Need the Mouse Options to be activated");
-    }
-
     public Document getDocument() {
         return doc;
     }
@@ -227,7 +158,4 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         return visitorManager;
     }
 
-    public ActivationConsole getConsole() {
-        return console;
-    }
 }

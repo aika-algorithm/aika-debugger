@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public abstract class AbstractViewManager<C extends AbstractAikaConsole> implements ViewerListener {
+public abstract class AbstractViewManager<C extends AbstractConsole, G extends AbstractGraphManager> implements ViewerListener {
 
 
     protected Map<Class<? extends Neuron>, Consumer<Node>> neuronTypeModifiers = new HashMap<>();
@@ -39,7 +39,7 @@ public abstract class AbstractViewManager<C extends AbstractAikaConsole> impleme
 
     protected Graph graph;
 
-    protected GraphManager graphManager;
+    protected G graphManager;
 
     protected SwingViewer viewer;
 
@@ -59,14 +59,12 @@ public abstract class AbstractViewManager<C extends AbstractAikaConsole> impleme
         initModifiers();
 
         graph = initGraph();
-        graphManager = new GraphManager(graph);
         viewer = new SwingViewer(new ThreadProxyPipe(graph));
-
 
         graphView = (DefaultView)viewer.addDefaultView(false, new SwingGraphRenderer());
         graphView.enableMouseOptions();
 
-        AikaMouseManager mouseManager = new AikaMouseManager(this);
+        MouseManager mouseManager = new MouseManager(this);
         graphView.setMouseManager(mouseManager);
         graphView.addMouseWheelListener(mouseManager);
 
@@ -88,6 +86,24 @@ public abstract class AbstractViewManager<C extends AbstractAikaConsole> impleme
 
     }
 
+    public G getGraphManager() {
+        return graphManager;
+    }
+
+    public abstract void showElementContext(String headlinePrefix, GraphicElement ge);
+
+    public Graph getGraph() {
+        return graph;
+    }
+
+    public JSplitPane getView() {
+        return splitPane;
+    }
+
+    public C getConsole() {
+        return console;
+    }
+
     private JSplitPane initSplitPane() {
         JScrollPane paneScrollPane = new JScrollPane(console);
         paneScrollPane.setVerticalScrollBarPolicy(
@@ -101,8 +117,6 @@ public abstract class AbstractViewManager<C extends AbstractAikaConsole> impleme
 
         return splitPane;
     }
-
-    public abstract void showElementContext(String headlinePrefix, GraphicElement ge);
 
     private Graph initGraph() {
         //        System.setProperty("org.graphstream.ui", "org.graphstream.ui.swing.util.Display");
@@ -148,15 +162,6 @@ public abstract class AbstractViewManager<C extends AbstractAikaConsole> impleme
         graph.setAutoCreate(true);
 
         return graph;
-    }
-
-
-    public Graph getGraph() {
-        return graph;
-    }
-
-    public JSplitPane getView() {
-        return splitPane;
     }
 
     protected void initModifiers() {
@@ -245,10 +250,5 @@ public abstract class AbstractViewManager<C extends AbstractAikaConsole> impleme
     public void mouseLeft(String id) {
         System.out.println("Need the Mouse Options to be activated");
     }
-
-    public AbstractAikaConsole getConsole() {
-        return console;
-    }
-
 
 }

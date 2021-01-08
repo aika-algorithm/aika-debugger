@@ -6,7 +6,6 @@ import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.camera.Camera;
 import org.graphstream.ui.view.util.InteractiveElement;
-import org.graphstream.ui.view.util.MouseManager;
 
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
@@ -15,7 +14,7 @@ import java.awt.event.MouseWheelListener;
 import java.util.EnumSet;
 import java.util.Iterator;
 
-public class AikaMouseManager implements MouseInputListener, MouseManager, MouseWheelListener {
+public class MouseManager implements MouseInputListener, org.graphstream.ui.view.util.MouseManager, MouseWheelListener {
     protected View view;
     protected GraphicGraph graph;
     private final EnumSet<InteractiveElement> types;
@@ -27,12 +26,12 @@ public class AikaMouseManager implements MouseInputListener, MouseManager, Mouse
     private MouseEvent lastMouseDragEvent;
 
 
-    public AikaMouseManager(AbstractViewManager viewManager) {
+    public MouseManager(AbstractViewManager viewManager) {
         this(EnumSet.of(InteractiveElement.NODE, InteractiveElement.SPRITE));
         this.viewManager = viewManager;
     }
 
-    public AikaMouseManager(EnumSet<InteractiveElement> types) {
+    public MouseManager(EnumSet<InteractiveElement> types) {
         this.types = types;
     }
 

@@ -1,16 +1,11 @@
 package network.aika.visualization;
 
 import network.aika.Utils;
-import network.aika.neuron.Neuron;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Visitor;
 import network.aika.neuron.phase.Phase;
 
-
-import javax.swing.*;
-import javax.swing.text.*;
-
-public class ActivationConsole extends AbstractAikaConsole {
+public class ActivationConsole extends AbstractConsole {
 
 // TODO: Remove Particle!
     public void renderActivationConsoleOutput(Activation act, ActivationParticle ap) {

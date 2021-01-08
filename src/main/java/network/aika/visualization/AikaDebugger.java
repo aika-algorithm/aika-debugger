@@ -15,8 +15,9 @@ public class AikaDebugger extends JPanel {
     Document doc;
 
     ActivationViewManager actViewManager;
+    NeuronViewManager neuronViewManager;
 
-    AikaKeyManager aikaKeyManager;
+    KeyManager keyManager;
 
     public AikaDebugger(Document doc) {
         super(new GridLayout(1, 1));
@@ -63,9 +64,9 @@ public class AikaDebugger extends JPanel {
         });
 
         actViewManager = new ActivationViewManager(doc);
-        aikaKeyManager = new AikaKeyManager(actViewManager);
+        keyManager = new KeyManager(actViewManager);
 
-        tabbedPane.addKeyListener(aikaKeyManager);
+        tabbedPane.addKeyListener(keyManager);
 
         addTab(0, "Activations", KeyEvent.VK_A, actViewManager.getView());
     }
