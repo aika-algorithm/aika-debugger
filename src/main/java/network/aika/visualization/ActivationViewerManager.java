@@ -133,7 +133,10 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
             if(act == null)
                 return;
 
-            console.renderActivationConsoleOutput(headlinePrefix, act, graphManager.getParticle(act));
+            console.clear();
+            console.addHeadline(headlinePrefix);
+
+            console.renderActivationConsoleOutput(act, graphManager.getParticle(act));
         }
     }
 
@@ -249,7 +252,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
 
         n.setAttribute("aika.init-node", true);
 
-        console.renderActivationConsoleOutput("New", act, graphManager.getParticle(act));
+        console.clear();
+        console.addHeadline("New");
+        console.renderActivationConsoleOutput(act, graphManager.getParticle(act));
 
         pumpAndWaitForUserAction();
     }
@@ -260,7 +265,9 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
 
-        console.renderActivationConsoleOutput("Processed", act, graphManager.getParticle(act));
+        console.clear();
+        console.addHeadline("Processed");
+        console.renderActivationConsoleOutput(act, graphManager.getParticle(act));
 
         pumpAndWaitForUserAction();
     }
