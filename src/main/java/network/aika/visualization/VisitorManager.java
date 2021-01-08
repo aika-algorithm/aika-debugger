@@ -2,6 +2,7 @@ package network.aika.visualization;
 
 import network.aika.VisitorEventListener;
 import network.aika.neuron.activation.Visitor;
+import network.aika.visualization.layout.ActivationGraphManager;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 

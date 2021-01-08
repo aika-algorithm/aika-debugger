@@ -9,6 +9,7 @@ import network.aika.neuron.excitatory.PatternSynapse;
 import network.aika.neuron.inhibitory.InhibitoryNeuron;
 import network.aika.neuron.inhibitory.InhibitorySynapse;
 import network.aika.neuron.inhibitory.PrimaryInhibitorySynapse;
+import network.aika.visualization.layout.AbstractGraphManager;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;

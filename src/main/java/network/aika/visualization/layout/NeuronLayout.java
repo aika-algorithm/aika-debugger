@@ -1,10 +1,8 @@
-package network.aika.visualization;
+package network.aika.visualization.layout;
 
 import network.aika.Model;
-import network.aika.neuron.Neuron;
 import network.aika.neuron.NeuronProvider;
-import network.aika.neuron.activation.Activation;
-import network.aika.text.Document;
+import network.aika.visualization.NeuronViewManager;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.miv.pherd.geom.Point3;

@@ -1,4 +1,4 @@
-package network.aika.visualization;
+package network.aika.visualization.layout;
 
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;

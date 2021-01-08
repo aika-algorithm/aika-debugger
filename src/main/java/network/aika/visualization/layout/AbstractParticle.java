@@ -1,4 +1,4 @@
-package network.aika.visualization;
+package network.aika.visualization.layout;
 
 import org.graphstream.ui.geom.Vector3;
 import org.graphstream.ui.layout.springbox.EdgeSpring;
@@ -7,7 +7,7 @@ import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBoxNodeParticle;
 import org.miv.pherd.geom.Point3;
 
-import static network.aika.visualization.AbstractLayout.INITIAL_DISTANCE;
+import static network.aika.visualization.layout.AbstractLayout.INITIAL_DISTANCE;
 
 
 public abstract class AbstractParticle extends SpringBoxNodeParticle {

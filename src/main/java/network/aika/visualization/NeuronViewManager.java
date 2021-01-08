@@ -2,6 +2,8 @@ package network.aika.visualization;
 
 import network.aika.Model;
 import network.aika.neuron.Neuron;
+import network.aika.visualization.layout.NeuronGraphManager;
+import network.aika.visualization.layout.NeuronLayout;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 

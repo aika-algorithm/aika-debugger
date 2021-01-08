@@ -1,4 +1,4 @@
-package network.aika.visualization;
+package network.aika.visualization.layout;
 
 
 import org.graphstream.ui.geom.Vector3;

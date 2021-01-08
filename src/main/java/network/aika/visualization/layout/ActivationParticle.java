@@ -1,4 +1,4 @@
-package network.aika.visualization;
+package network.aika.visualization.layout;
 
 import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
@@ -9,11 +9,10 @@ import org.graphstream.ui.geom.Vector2;
 import org.graphstream.ui.geom.Vector3;
 import org.graphstream.ui.layout.springbox.EdgeSpring;
 import org.graphstream.ui.layout.springbox.Energies;
-import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.miv.pherd.geom.Point3;
 
-import static network.aika.visualization.AbstractLayout.*;
+import static network.aika.visualization.layout.AbstractLayout.*;
 
 public class ActivationParticle extends AbstractParticle {
 

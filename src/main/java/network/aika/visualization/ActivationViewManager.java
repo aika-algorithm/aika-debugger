@@ -7,6 +7,8 @@ import network.aika.neuron.activation.Fired;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.text.Document;
+import network.aika.visualization.layout.ActivationGraphManager;
+import network.aika.visualization.layout.ActivationLayout;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
@@ -15,7 +17,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
-import static network.aika.visualization.AbstractLayout.INITIAL_DISTANCE;
+import static network.aika.visualization.layout.AbstractLayout.INITIAL_DISTANCE;
 
 public class ActivationViewManager extends AbstractViewManager<ActivationConsole, ActivationGraphManager> implements EventListener {
 
