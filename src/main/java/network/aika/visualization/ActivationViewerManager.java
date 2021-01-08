@@ -201,9 +201,12 @@ public class ActivationViewerManager implements EventListener, ViewerListener {
             PatternPartSynapse pps = (PatternPartSynapse) s;
             if(pps.isRecurrent()) {
                 e.setAttribute("ui.style", "fill-color: rgb(104,34,139);");
-            }
-            if(pps.isNegative()) {
+            } else if(pps.isNegative()) {
                 e.setAttribute("ui.style", "fill-color: rgb(100,0,0);");
+            } if(pps.isInputScope()) {
+                e.setAttribute("ui.style", "fill-color: rgb(50,200,50);");
+            } else {
+                e.setAttribute("ui.style", "fill-color: rgb(0,130,0);");
             }
         });
         synapseTypeModifiers.put(InhibitorySynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(50,50,150);"));
