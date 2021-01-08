@@ -15,9 +15,11 @@ public class NeuronViewManager extends AbstractViewManager<NeuronConsole, Neuron
 
     public NeuronViewManager(Model m) {
         super();
-        this.model = model;
+        this.model = m;
         console=new NeuronConsole();
         viewer.enableAutoLayout(new NeuronLayout(this, graphManager));
+
+        splitPane = initSplitPane();
     }
 
     public Model getModel() {

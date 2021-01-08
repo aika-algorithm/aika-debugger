@@ -83,8 +83,6 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         fromViewer = viewer.newViewerPipe();
         fromViewer.addViewerListener(this);
         fromViewer.addSink(graph);
-        splitPane = initSplitPane();
-
     }
 
     public G getGraphManager() {
@@ -105,7 +103,7 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         return console;
     }
 
-    private JSplitPane initSplitPane() {
+    protected JSplitPane initSplitPane() {
         JScrollPane paneScrollPane = new JScrollPane(console);
         paneScrollPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);

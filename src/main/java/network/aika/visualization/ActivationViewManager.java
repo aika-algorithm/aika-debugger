@@ -34,8 +34,10 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         this.doc = doc;
         doc.addEventListener(this);
         visitorManager = new VisitorManager(this);
-        console=new ActivationConsole();
+        console = new ActivationConsole();
         viewer.enableAutoLayout(new ActivationLayout(this, graphManager));
+
+        splitPane = initSplitPane();
     }
 
     public void showElementContext(String headlinePrefix, GraphicElement ge) {
