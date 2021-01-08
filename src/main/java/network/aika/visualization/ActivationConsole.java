@@ -54,35 +54,21 @@ public class ActivationConsole extends JTextPane {
     public void renderActivationConsoleOutput(Activation act, ActivationParticle ap) {
         StyledDocument sDoc = getStyledDocument();
 
-        appendText(sDoc, "Activation\n\n", "headline");
-
-        appendText(sDoc, "Id: ", "bold");
-        appendText(sDoc, "" + act.getId() + "\n", "regular");
-
-        appendText(sDoc, "Label: ", "bold");
-        appendText(sDoc, act.getLabel() + "\n", "regular");
-
-        appendText(sDoc, "Phase: ", "bold");
-        appendText(sDoc, Phase.toString(act.getPhase()) + "\n", "regular");
-
-        appendText(sDoc, "Value: ", "bold");
-        appendText(sDoc, Utils.round(act.getValue()) + "\n", "regular");
-
-        appendText(sDoc, "Gradient: ", "bold");
-        appendText(sDoc, Utils.round(act.getGradient()) + "\n", "regular");
-
-        appendText(sDoc, "Fired: ", "bold");
-        appendText(sDoc, act.getFired() + "\n", "regular");
-
-        appendText(sDoc, "Reference: ", "bold");
-        appendText(sDoc, act.getReference() + "\n", "regular");
+        appendText("Activation\n\n", "headline");
+        appendEntry("Id: ", "" + act.getId());
+        appendEntry("Label: ", act.getLabel());
+        appendEntry("Phase: ", Phase.toString(act.getPhase()));
+        appendEntry("Value: ", "" + Utils.round(act.getValue()));
+        appendEntry("Gradient: ", "" + Utils.round(act.getGradient()));
+        appendEntry("Fired: ", "" + act.getFired());
+        appendEntry("Reference: ", "" + act.getReference());
 
 /*
             if(ap != null) {
                 appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
             }
  */
-        appendText(sDoc, "\n\n\n", "regular");
+        appendText("\n\n\n", "regular");
 
         renderNeuronConsoleOutput(act.getNeuron());
     }
@@ -90,53 +76,54 @@ public class ActivationConsole extends JTextPane {
     public void renderNeuronConsoleOutput(Neuron n) {
         StyledDocument sDoc = getStyledDocument();
 
-        appendText(sDoc, "Neuron\n\n", "headline");
+        appendText("Neuron\n\n", "headline");
 
-        appendText(sDoc, "Id: ", "bold");
-        appendText(sDoc, "" + n.getId() + "\n", "regular");
-
-        appendText(sDoc, "Label: ", "bold");
-        appendText(sDoc, n.getLabel() + "\n", "regular");
-
-        appendText(sDoc, "Is Input Neuron: ", "bold");
-        appendText(sDoc, n.isInputNeuron() + "\n", "regular");
-
-        appendText(sDoc, "Is Template: ", "bold");
-        appendText(sDoc, n.isTemplate() + "\n", "regular");
-
-        appendText(sDoc, "Bias: ", "bold");
-        appendText(sDoc, Utils.round(n.getBias(false)) + "\n", "regular");
-
-        appendText(sDoc, "Bias (final): ", "bold");
-        appendText(sDoc, Utils.round(n.getBias(true)) + "\n", "regular");
-
-        appendText(sDoc, "Frequency: ", "bold");
-        appendText(sDoc, Utils.round(n.getFrequency()) + "\n", "regular");
-
-        appendText(sDoc, "N: ", "bold");
-        appendText(sDoc, Utils.round(n.getSampleSpace().getN()) + "\n", "regular");
-
-        appendText(sDoc, "LastPos: ", "bold");
-        appendText(sDoc, (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X") + "\n", "regular");
+        appendEntry("Id: ", "" + n.getId());
+        appendEntry("Label: ", n.getLabel());
+        appendEntry("Is Input Neuron: ", "" + n.isInputNeuron());
+        appendEntry("Is Template: ", "" + n.isTemplate());
+        appendEntry("Bias: ", "" + Utils.round(n.getBias(false)));
+        appendEntry("Bias (final): ", "" + Utils.round(n.getBias(true)));
+        appendEntry("Frequency: ", "" + Utils.round(n.getFrequency()));
+        appendEntry("N: ", "" + Utils.round(n.getSampleSpace().getN()));
+        appendEntry("LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X"));
     }
 
 
     public void renderVisitorConsoleOutput(Visitor v, boolean dir) {
         StyledDocument sDoc = getStyledDocument();
-        try {
-            sDoc.remove(0, sDoc.getLength());
 
-            appendText(sDoc, "Visitor " + (dir ? "(up)" : "(down)") + "\n\n", "headline");
+        appendText("Visitor " + (dir ? "(up)" : "(down)") + "\n\n", "headline");
 
-            appendText(sDoc, v.toString(),"regular");
+        appendEntry("Origin:", v.origin.act.getShortString());
 
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
+        appendText(v.toString(),"regular");
     }
 
+    public void renderVisitorStep(Visitor v) {
+        StyledDocument sDoc = getStyledDocument();
 
-    private void appendText(StyledDocument sDoc, String txt, String style) {
+        if(v.act != null) {
+            appendEntry("Current:", v.act.getShortString());
+        } else if(v.link != null) {
+            appendEntry("Current:", v.link.toString());
+        }
+
+        appendEntry("DownUp:", "" + v.downUpDir);
+        appendEntry("StartDir:", "" + v.startDir);
+
+        appendEntry("Scopes:", v.getScopes().toString());
+        appendEntry("DownSteps:", "" + v.downSteps);
+        appendEntry("UpSteps:", "" + v.upSteps);
+    }
+
+    public void appendEntry(String fieldName, String fieldValue) {
+        appendText(fieldName, "bold");
+        appendText(fieldValue + "\n", "regular");
+    }
+
+    private void appendText(String txt, String style) {
+        StyledDocument sDoc = getStyledDocument();
         try {
             sDoc.insertString(sDoc.getLength(), txt, sDoc.getStyle(style));
         } catch (BadLocationException e) {
@@ -145,6 +132,6 @@ public class ActivationConsole extends JTextPane {
     }
 
     public void addHeadline(String headline) {
-        appendText(getStyledDocument(), headline + "\n\n", "headline");
+        appendText(headline + "\n\n", "headline");
     }
 }
