@@ -25,7 +25,6 @@ public abstract class AbstractGraphManager<K, P> {
         return nodeIdToActivation.get(n.getId());
     }
 
-
     public K getInputKey(Edge e) {
         return nodeIdToActivation.get(e.getId().substring(0, e.getId().indexOf("-")));
     }

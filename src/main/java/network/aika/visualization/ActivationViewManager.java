@@ -10,6 +10,7 @@ import network.aika.text.Document;
 import network.aika.visualization.layout.ActivationGraphManager;
 import network.aika.visualization.layout.ActivationLayout;
 import org.graphstream.graph.Edge;
+import org.graphstream.graph.Element;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 
@@ -85,7 +86,6 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     private Node onActivationEvent(Activation act, Activation originAct) {
-
         Node node = graphManager.lookupNode(act, n -> {
             if(originAct != null) {
                 Edge initialEdge = graphManager.lookupEdge(originAct, act, e -> {});
@@ -107,20 +107,24 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         }
         node.setAttribute("ui.label", act.getLabel());
 
-        if(lastActEventNode != null) {
-            unhighlightNode(lastActEventNode);
-        }
-
-        highlightNode(node);
+        highlightCurrentOnly(node);
 
         Consumer<Node> neuronTypeModifier = neuronTypeModifiers.get(act.getNeuron().getClass());
         if (neuronTypeModifier != null) {
             neuronTypeModifier.accept(node);
         }
 
-        lastActEventNode = node;
-
         return node;
+    }
+
+    private void highlightCurrentOnly(Element e) {
+        if(lastHighlighted != e) {
+            if(lastHighlighted != null) {
+                unhighlightElement(lastHighlighted);
+            }
+            lastHighlighted = e;
+            highlightElement(e);
+        }
     }
 
     @Override
@@ -129,7 +133,11 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         e.setAttribute("aika.init-node", true);
 
-//        console.renderActivationConsoleOutput("Processed", act, graphManager.getParticle(act));
+        console.clear();
+        console.addHeadline("New");
+        console.renderLinkConsoleOutput(l);
+
+        pumpAndWaitForUserAction();
     }
 
     @Override
@@ -138,16 +146,23 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         e.setAttribute("aika.init-node", false);
 
-//        console.renderActivationConsoleOutput("Processed", act, graphManager.getParticle(act));
+        console.clear();
+        console.addHeadline("Processed");
+        console.renderLinkConsoleOutput(l);
+
+        pumpAndWaitForUserAction();
     }
 
     private Edge onLinkEvent(Link l) {
         Edge edge = graphManager.lookupEdge(l, e -> {});
 
+        highlightCurrentOnly(edge);
+
         BiConsumer<Edge, Synapse> synapseTypeModifier = synapseTypeModifiers.get(l.getSynapse().getClass());
         if(synapseTypeModifier != null) {
             synapseTypeModifier.accept(edge, l.getSynapse());
         }
+
         return edge;
     }
 
@@ -162,5 +177,4 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     public VisitorManager getVisitorManager() {
         return visitorManager;
     }
-
 }

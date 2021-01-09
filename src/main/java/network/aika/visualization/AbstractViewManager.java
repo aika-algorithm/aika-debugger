@@ -11,6 +11,7 @@ import network.aika.neuron.inhibitory.InhibitorySynapse;
 import network.aika.neuron.inhibitory.PrimaryInhibitorySynapse;
 import network.aika.visualization.layout.AbstractGraphManager;
 import org.graphstream.graph.Edge;
+import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -53,7 +54,7 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
 
     protected boolean clicked;
 
-    protected Node lastActEventNode;
+    protected Element lastHighlighted;
 
     public AbstractViewManager(){
         initModifiers();
@@ -213,20 +214,14 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         }
     }
 
-    public void unhighlightNode(Node node) {
-        node.removeAttribute("ui.selected");
+    public void unhighlightElement(Element ge) {
+        ge.removeAttribute("ui.selected");
+        System.out.println("unhighlightElement" + ge.getId());
     }
 
-    public void highlightNode(Node node) {
-        node.setAttribute("ui.selected");
-    }
-
-    public void unhighlightEdge(Edge edge) {
-        edge.removeAttribute("ui.selected");
-    }
-
-    public void highlightEdge(Edge edge) {
-        edge.setAttribute("ui.selected");
+    public void highlightElement(Element ge) {
+        ge.setAttribute("ui.selected");
+        System.out.println("highlightElement" + ge.getId());
     }
 
     public void viewClosed(String id) {

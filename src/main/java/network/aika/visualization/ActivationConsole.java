@@ -2,6 +2,7 @@ package network.aika.visualization;
 
 import network.aika.Utils;
 import network.aika.neuron.activation.Activation;
+import network.aika.neuron.activation.Link;
 import network.aika.neuron.activation.Visitor;
 import network.aika.neuron.phase.Phase;
 import network.aika.visualization.layout.ActivationParticle;
@@ -26,6 +27,20 @@ public class ActivationConsole extends AbstractConsole {
         appendText("\n\n\n", "regular");
 
         renderNeuronConsoleOutput(act.getNeuron());
+    }
+
+    public void renderLinkConsoleOutput(Link l) {
+        appendText("Link\n\n", "headline");
+        appendEntry("IsSelfRef: ", "" + l.isSelfRef());
+        appendEntry("InputValue: ", "" + l.getInputValue());
+/*
+            if(ap != null) {
+                appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
+            }
+ */
+        appendText("\n\n\n", "regular");
+
+        renderSynapseConsoleOutput(l.getSynapse());
     }
 
     public void renderVisitorConsoleOutput(Visitor v, boolean dir) {

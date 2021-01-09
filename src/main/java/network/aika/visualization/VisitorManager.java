@@ -68,9 +68,9 @@ public class VisitorManager implements VisitorEventListener {
                 Node n = gm.getNode(v.act);
                 if(n != null) {
                     if (!dir)
-                        avm.highlightNode(n);
+                        avm.highlightElement(n);
                     else
-                        avm.unhighlightNode(n);
+                        avm.unhighlightElement(n);
                 }
                 break;
             case LINK:
@@ -79,9 +79,9 @@ public class VisitorManager implements VisitorEventListener {
                 Edge e = gm.getEdge(v.link);
                 if(e != null) {
                     if (!dir)
-                        avm.highlightEdge(e);
+                        avm.highlightElement(e);
                     else
-                        avm.unhighlightEdge(e);
+                        avm.unhighlightElement(e);
                 }
                 break;
         }

@@ -2,6 +2,7 @@ package network.aika.visualization;
 
 import network.aika.Utils;
 import network.aika.neuron.Neuron;
+import network.aika.neuron.Synapse;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -42,6 +43,7 @@ public abstract class AbstractConsole extends JTextPane {
             e.printStackTrace();
         }
     }
+
     public void renderNeuronConsoleOutput(Neuron n) {
         appendText("Neuron\n\n", "headline");
 
@@ -54,6 +56,12 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry("Frequency: ", "" + Utils.round(n.getFrequency()));
         appendEntry("N: ", "" + Utils.round(n.getSampleSpace().getN()));
         appendEntry("LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X"));
+    }
+
+    public void renderSynapseConsoleOutput(Synapse s) {
+        appendText("Synapse\n\n", "headline");
+
+        appendEntry("Weight: ", "" + s.getWeight());
     }
 
     public void appendEntry(String fieldName, String fieldValue) {
