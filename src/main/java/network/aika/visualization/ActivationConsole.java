@@ -35,6 +35,7 @@ public class ActivationConsole extends AbstractConsole {
 
     public void renderLinkConsoleOutput(StyledDocument sDoc, Link l) {
         appendText(sDoc, "Link\n\n", "headline");
+        appendEntry(sDoc, "Phase: ", "" + l.getPhase());
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
         appendEntry(sDoc, "InputValue: ", "" + l.getInputValue());
         appendEntry(sDoc, "Gradient: ", "" + l.getGradient());
