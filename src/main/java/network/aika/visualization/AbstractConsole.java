@@ -18,6 +18,7 @@ package network.aika.visualization;
 
 import network.aika.Utils;
 import network.aika.neuron.Neuron;
+import network.aika.neuron.Sign;
 import network.aika.neuron.Synapse;
 
 import javax.swing.*;
@@ -88,12 +89,24 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, "Frequency: ", "" + Utils.round(n.getFrequency()));
         appendEntry(sDoc, "N: ", "" + Utils.round(n.getSampleSpace().getN()));
         appendEntry(sDoc, "LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X"));
+        appendEntry(sDoc, "P(POS)", "" + Utils.round(n.getP(Sign.POS, n.getSampleSpace().getN())));
+        appendEntry(sDoc, "P(NEG)", "" + Utils.round(n.getP(Sign.NEG, n.getSampleSpace().getN())));
     }
 
     public void renderSynapseConsoleOutput(StyledDocument sDoc, Synapse s) {
         appendText(sDoc, "Synapse\n\n", "headline");
 
         appendEntry(sDoc, "Weight: ", "" + s.getWeight());
+        appendEntry(sDoc, "Frequency(POS, POS): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.POS, s.getSampleSpace().getN())));
+        appendEntry(sDoc, "Frequency(POS, NEG): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.NEG, s.getSampleSpace().getN())));
+        appendEntry(sDoc, "Frequency(NEG, POS): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.POS, s.getSampleSpace().getN())));
+        appendEntry(sDoc, "Frequency(NEG, NEG): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.NEG, s.getSampleSpace().getN())));
+        appendEntry(sDoc, "N: ", "" + Utils.round(s.getSampleSpace().getN()));
+        appendEntry(sDoc, "LastPos: ", "" + (s.getSampleSpace().getLastPos() != null ? Utils.round(s.getSampleSpace().getLastPos()) : "X"));
+        appendEntry(sDoc, "P(POS, POS)", "" + Utils.round(s.getP(Sign.POS, Sign.POS, s.getSampleSpace().getN())));
+        appendEntry(sDoc, "P(POS, NEG)", "" + Utils.round(s.getP(Sign.POS, Sign.NEG, s.getSampleSpace().getN())));
+        appendEntry(sDoc, "P(NEG, POS)", "" + Utils.round(s.getP(Sign.NEG, Sign.POS, s.getSampleSpace().getN())));
+        appendEntry(sDoc, "P(NEG, NEG)", "" + Utils.round(s.getP(Sign.NEG, Sign.NEG, s.getSampleSpace().getN())));
     }
 
     public void appendEntry(StyledDocument sDoc, String fieldName, String fieldValue) {
