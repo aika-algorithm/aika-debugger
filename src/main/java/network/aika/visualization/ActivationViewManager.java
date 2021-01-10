@@ -14,11 +14,13 @@ import org.graphstream.graph.Element;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 
+import javax.swing.text.DefaultStyledDocument;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
 import static network.aika.visualization.layout.AbstractLayout.INITIAL_DISTANCE;
+
 
 public class ActivationViewManager extends AbstractViewManager<ActivationConsole, ActivationGraphManager> implements EventListener {
 
@@ -49,13 +51,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             if(act == null)
                 return;
 
-            console.setIgnoreRepaint(true);
-            console.clear();
-            console.addHeadline(headlinePrefix);
-
-            console.renderActivationConsoleOutput(act, graphManager.getParticle(act));
-            console.setIgnoreRepaint(false);
-            console.repaint();
+            console.render(headlinePrefix, sDoc ->
+                    console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+            );
         } else if(ge instanceof Edge) {
             Edge e = (Edge) ge;
 
@@ -68,9 +66,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         n.setAttribute("aika.init-node", true);
 
-        console.clear();
-        console.addHeadline("New");
-        console.renderActivationConsoleOutput(act, graphManager.getParticle(act));
+        console.render("New", sDoc ->
+                console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+        );
 
         pumpAndWaitForUserAction();
     }
@@ -80,9 +78,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
 
-        console.clear();
-        console.addHeadline("Processed");
-        console.renderActivationConsoleOutput(act, graphManager.getParticle(act));
+        console.render("Processed", sDoc ->
+                console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+        );
 
         pumpAndWaitForUserAction();
     }
@@ -119,7 +117,6 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         return node;
     }
 
-
     public void setLinkStepMode(boolean linkStepMode) {
         this.linkStepMode = linkStepMode;
     }
@@ -140,9 +137,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         e.setAttribute("aika.init-node", true);
 
-        console.clear();
-        console.addHeadline("New");
-        console.renderLinkConsoleOutput(l);
+        console.render("New", sDoc ->
+                console.renderLinkConsoleOutput(sDoc, l)
+        );
 
         if(linkStepMode) {
             pumpAndWaitForUserAction();
@@ -155,9 +152,12 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         e.setAttribute("aika.init-node", false);
 
+        DefaultStyledDocument sDoc = new DefaultStyledDocument();
+        console.addStylesToDocument(sDoc);
         console.clear();
-        console.addHeadline("Processed");
-        console.renderLinkConsoleOutput(l);
+        console.addHeadline(sDoc, "Processed");
+        console.renderLinkConsoleOutput(sDoc, l);
+        console.setStyledDocument(sDoc);
 
         if(linkStepMode) {
             pumpAndWaitForUserAction();

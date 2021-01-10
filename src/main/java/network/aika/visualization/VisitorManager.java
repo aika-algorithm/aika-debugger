@@ -6,7 +6,6 @@ import network.aika.visualization.layout.ActivationGraphManager;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
-
 public class VisitorManager implements VisitorEventListener {
 
     private boolean isRegistered = false;
@@ -15,11 +14,9 @@ public class VisitorManager implements VisitorEventListener {
 
     private boolean clicked;
 
-
     public VisitorManager(ActivationViewManager avm) {
         this.avm = avm;
     }
-
 
     public synchronized void click() {
         clicked = true;
@@ -57,14 +54,14 @@ public class VisitorManager implements VisitorEventListener {
 
     @Override
     public void onVisitorEvent(Visitor v, boolean dir) {
-        avm.getConsole().clear();
-        avm.getConsole().renderVisitorConsoleOutput(v, dir);
+        avm.getConsole().render("Visitor", sDoc ->
+                avm.getConsole().renderVisitorConsoleOutput(sDoc, v, dir)
+        );
 
         ActivationGraphManager gm = avm.getGraphManager();
 
         switch(v.transition) {
             case ACT:
-                System.out.println("Visitor ACT event: " + v.act.getLabel() + " " + dir);
                 Node n = gm.getNode(v.act);
                 if(n != null) {
                     if (!dir)
@@ -74,8 +71,6 @@ public class VisitorManager implements VisitorEventListener {
                 }
                 break;
             case LINK:
-                System.out.println("Visitor LINK event: " + v.link.toString() + " " + dir);
-
                 Edge e = gm.getEdge(v.link);
                 if(e != null) {
                     if (!dir)

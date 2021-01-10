@@ -6,6 +6,7 @@ import network.aika.neuron.Synapse;
 
 import javax.swing.*;
 import javax.swing.text.*;
+import java.util.function.Consumer;
 
 public abstract class AbstractConsole extends JTextPane {
     public AbstractConsole() {
@@ -14,7 +15,22 @@ public abstract class AbstractConsole extends JTextPane {
         //  setFocusable(false);
         setEditable(false);
     }
-    private void addStylesToDocument(StyledDocument doc) {
+
+    public void render(String headline, Consumer<StyledDocument> content) {
+        setDoubleBuffered(true);
+        setOpaque(false);
+        setEnabled(false);
+        DefaultStyledDocument sDoc = new DefaultStyledDocument();
+        addStylesToDocument(sDoc);
+        clear();
+        addHeadline(sDoc, headline);
+
+        content.accept(sDoc);
+        setStyledDocument(sDoc);
+        setEnabled(true);
+    }
+
+    public void addStylesToDocument(StyledDocument doc) {
         Style def = StyleContext.getDefaultStyleContext().
                 getStyle(StyleContext.DEFAULT_STYLE);
 
@@ -44,33 +60,32 @@ public abstract class AbstractConsole extends JTextPane {
         }
     }
 
-    public void renderNeuronConsoleOutput(Neuron n) {
-        appendText("Neuron\n\n", "headline");
+    public void renderNeuronConsoleOutput(StyledDocument sDoc, Neuron n) {
+        appendText(sDoc, "Neuron\n\n", "headline");
 
-        appendEntry("Id: ", "" + n.getId());
-        appendEntry("Label: ", n.getLabel());
-        appendEntry("Is Input Neuron: ", "" + n.isInputNeuron());
-        appendEntry("Is Template: ", "" + n.isTemplate());
-        appendEntry("Bias: ", "" + Utils.round(n.getBias(false)));
-        appendEntry("Bias (final): ", "" + Utils.round(n.getBias(true)));
-        appendEntry("Frequency: ", "" + Utils.round(n.getFrequency()));
-        appendEntry("N: ", "" + Utils.round(n.getSampleSpace().getN()));
-        appendEntry("LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X"));
+        appendEntry(sDoc, "Id: ", "" + n.getId());
+        appendEntry(sDoc, "Label: ", n.getLabel());
+        appendEntry(sDoc, "Is Input Neuron: ", "" + n.isInputNeuron());
+        appendEntry(sDoc, "Is Template: ", "" + n.isTemplate());
+        appendEntry(sDoc, "Bias: ", "" + Utils.round(n.getBias(false)));
+        appendEntry(sDoc, "Bias (final): ", "" + Utils.round(n.getBias(true)));
+        appendEntry(sDoc, "Frequency: ", "" + Utils.round(n.getFrequency()));
+        appendEntry(sDoc, "N: ", "" + Utils.round(n.getSampleSpace().getN()));
+        appendEntry(sDoc, "LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X"));
     }
 
-    public void renderSynapseConsoleOutput(Synapse s) {
-        appendText("Synapse\n\n", "headline");
+    public void renderSynapseConsoleOutput(StyledDocument sDoc, Synapse s) {
+        appendText(sDoc, "Synapse\n\n", "headline");
 
-        appendEntry("Weight: ", "" + s.getWeight());
+        appendEntry(sDoc, "Weight: ", "" + s.getWeight());
     }
 
-    public void appendEntry(String fieldName, String fieldValue) {
-        appendText(fieldName, "bold");
-        appendText(fieldValue + "\n", "regular");
+    public void appendEntry(StyledDocument sDoc, String fieldName, String fieldValue) {
+        appendText(sDoc, fieldName, "bold");
+        appendText(sDoc, fieldValue + "\n", "regular");
     }
 
-    protected void appendText(String txt, String style) {
-        StyledDocument sDoc = getStyledDocument();
+    protected void appendText(StyledDocument sDoc, String txt, String style) {
         try {
             sDoc.insertString(sDoc.getLength(), txt, sDoc.getStyle(style));
         } catch (BadLocationException e) {
@@ -78,7 +93,7 @@ public abstract class AbstractConsole extends JTextPane {
         }
     }
 
-    public void addHeadline(String headline) {
-        appendText(headline + "\n\n", "headline");
+    public void addHeadline(StyledDocument sDoc, String headline) {
+        appendText(sDoc, headline + "\n\n", "headline");
     }
 }

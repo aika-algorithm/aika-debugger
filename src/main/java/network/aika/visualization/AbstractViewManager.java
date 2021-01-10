@@ -72,6 +72,7 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         Camera camera = graphView.getCamera();
         camera.setAutoFitView(false);
 
+
         // The default action when closing the view is to quit
         // the program.
         viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);

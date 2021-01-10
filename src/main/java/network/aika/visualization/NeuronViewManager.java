@@ -12,7 +12,6 @@ public class NeuronViewManager extends AbstractViewManager<NeuronConsole, Neuron
 
     private Model model;
 
-
     public NeuronViewManager(Model m) {
         super();
         this.model = m;
@@ -34,19 +33,13 @@ public class NeuronViewManager extends AbstractViewManager<NeuronConsole, Neuron
             if(neuron == null)
                 return;
 
-            console.setIgnoreRepaint(true);
-            console.clear();
-            console.addHeadline(headlinePrefix);
-
-            console.renderNeuronConsoleOutput(neuron);
-            console.setIgnoreRepaint(false);
-            console.repaint();
+            console.render(headlinePrefix, sDoc ->
+                    console.renderNeuronConsoleOutput(sDoc, neuron)
+            );
         }
     }
-
 
     public void viewClosed(String id) {
    //     loop = false;
     }
-
 }

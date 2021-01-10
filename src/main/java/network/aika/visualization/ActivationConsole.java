@@ -7,72 +7,76 @@ import network.aika.neuron.activation.Visitor;
 import network.aika.neuron.phase.Phase;
 import network.aika.visualization.layout.ActivationParticle;
 
+import javax.swing.text.StyledDocument;
+
 public class ActivationConsole extends AbstractConsole {
 
 // TODO: Remove Particle!
-    public void renderActivationConsoleOutput(Activation act, ActivationParticle ap) {
-        appendText("Activation\n\n", "headline");
-        appendEntry("Id: ", "" + act.getId());
-        appendEntry("Label: ", act.getLabel());
-        appendEntry("Phase: ", Phase.toString(act.getPhase()));
-        appendEntry("Value: ", "" + Utils.round(act.getValue()));
-        appendEntry("Gradient: ", "" + Utils.round(act.getGradient()));
-        appendEntry("Fired: ", "" + act.getFired());
-        appendEntry("Reference: ", "" + act.getReference());
+    public void renderActivationConsoleOutput(StyledDocument sDoc, Activation act, ActivationParticle ap) {
+
+        appendText(sDoc, "Activation\n\n", "headline");
+        appendEntry(sDoc, "Id: ", "" + act.getId());
+        appendEntry(sDoc, "Label: ", act.getLabel());
+        appendEntry(sDoc, "Phase: ", Phase.toString(act.getPhase()));
+        appendEntry(sDoc, "Value: ", "" + Utils.round(act.getValue()));
+        appendEntry(sDoc, "Gradient: ", "" + Utils.round(act.getGradient()));
+        appendEntry(sDoc, "Fired: ", "" + act.getFired());
+        appendEntry(sDoc, "Reference: ", "" + act.getReference());
 /*
             if(ap != null) {
                 appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
             }
  */
-        appendText("\n\n\n", "regular");
+        appendText(sDoc, "\n\n\n", "regular");
 
-        renderNeuronConsoleOutput(act.getNeuron());
+        renderNeuronConsoleOutput(sDoc, act.getNeuron());
+
     }
 
-    public void renderLinkConsoleOutput(Link l) {
-        appendText("Link\n\n", "headline");
-        appendEntry("IsSelfRef: ", "" + l.isSelfRef());
-        appendEntry("InputValue: ", "" + l.getInputValue());
-        appendEntry("Gradient: ", "" + l.getGradient());
+    public void renderLinkConsoleOutput(StyledDocument sDoc, Link l) {
+        appendText(sDoc, "Link\n\n", "headline");
+        appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
+        appendEntry(sDoc, "InputValue: ", "" + l.getInputValue());
+        appendEntry(sDoc, "Gradient: ", "" + l.getGradient());
 /*
             if(ap != null) {
                 appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
             }
  */
-        appendText("\n\n\n", "regular");
+        appendText(sDoc, "\n\n\n", "regular");
 
-        renderSynapseConsoleOutput(l.getSynapse());
+        renderSynapseConsoleOutput(sDoc, l.getSynapse());
     }
 
-    public void renderVisitorConsoleOutput(Visitor v, boolean dir) {
-        appendText("Visitor " + (dir ? "(up)" : "(down)") + "\n\n", "headline");
-        appendText("\n", "regular");
-        appendEntry("Origin:", v.origin.act.getShortString());
-        appendText("\n", "regular");
+    public void renderVisitorConsoleOutput(StyledDocument sDoc, Visitor v, boolean dir) {
+        appendText(sDoc, "Visitor " + (dir ? "(up)" : "(down)") + "\n\n", "headline");
+        appendText(sDoc, "\n", "regular");
+        appendEntry(sDoc, "Origin:", v.origin.act.getShortString());
+        appendText(sDoc, "\n", "regular");
 
         do {
-            renderVisitorStep(v);
+            renderVisitorStep(sDoc, v);
 
-            appendText("\n", "regular");
+            appendText(sDoc, "\n", "regular");
             v = v.previousStep;
         } while(v != null);
     }
 
-    public void renderVisitorStep(Visitor v) {
-        appendText(v.transition.name() + "\n", "bold");
+    public void renderVisitorStep(StyledDocument sDoc, Visitor v) {
+        appendText(sDoc, v.transition.name() + "\n", "bold");
 
         if(v.act != null) {
-            appendEntry("Current:", v.act.getShortString());
+            appendEntry(sDoc, "Current:", v.act.getShortString());
         } else if(v.link != null) {
-            appendEntry("Current:", v.link.toString());
+            appendEntry(sDoc, "Current:", v.link.toString());
         }
 
-        appendEntry("DownUp:", "" + v.downUpDir);
-        appendEntry("StartDir:", "" + v.startDir);
+        appendEntry(sDoc, "DownUp:", "" + v.downUpDir);
+        appendEntry(sDoc, "StartDir:", "" + v.startDir);
 
-        appendEntry("Scopes:", v.getScopes().toString());
-        appendEntry("DownSteps:", "" + v.downSteps);
-        appendEntry("UpSteps:", "" + v.upSteps);
+        appendEntry(sDoc, "Scopes:", v.getScopes().toString());
+        appendEntry(sDoc, "DownSteps:", "" + v.downSteps);
+        appendEntry(sDoc, "UpSteps:", "" + v.upSteps);
     }
 
 }
