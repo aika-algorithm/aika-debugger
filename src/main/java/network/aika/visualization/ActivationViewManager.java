@@ -26,6 +26,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     private VisitorManager visitorManager;
 
+    boolean linkStepMode;
+
     public ActivationViewManager(Document doc) {
         super();
         graphManager = new ActivationGraphManager(graph);
@@ -117,6 +119,11 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         return node;
     }
 
+
+    public void setLinkStepMode(boolean linkStepMode) {
+        this.linkStepMode = linkStepMode;
+    }
+
     private void highlightCurrentOnly(Element e) {
         if(lastHighlighted != e) {
             if(lastHighlighted != null) {
@@ -137,7 +144,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         console.addHeadline("New");
         console.renderLinkConsoleOutput(l);
 
-        pumpAndWaitForUserAction();
+        if(linkStepMode) {
+            pumpAndWaitForUserAction();
+        }
     }
 
     @Override
@@ -150,7 +159,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         console.addHeadline("Processed");
         console.renderLinkConsoleOutput(l);
 
-        pumpAndWaitForUserAction();
+        if(linkStepMode) {
+            pumpAndWaitForUserAction();
+        }
     }
 
     private Edge onLinkEvent(Link l) {

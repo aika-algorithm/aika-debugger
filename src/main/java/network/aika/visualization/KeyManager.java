@@ -20,21 +20,20 @@ public class KeyManager implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyChar() == ' ') {
+        if(e.getKeyChar() == 'a' || e.getKeyChar() == 'l') {
+            actViewManager.setLinkStepMode(e.getKeyChar() == 'l');
             if(visitorManager.isRegistered()) {
                 visitorManager.setVisitorMode(false);
-                visitorManager.click();
-            } else {
-                actViewManager.click();
             }
         } else if(e.getKeyChar() == 'v') {
+            actViewManager.setLinkStepMode(true);
             if(!visitorManager.isRegistered()) {
                 visitorManager.setVisitorMode(true);
-                actViewManager.click();
-            } else {
-                visitorManager.click();
             }
         }
+
+        actViewManager.click();
+        visitorManager.click();
     }
 
     @Override
