@@ -36,7 +36,10 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Label: ", act.getLabel());
         appendEntry(sDoc, "Phase: ", Phase.toString(act.getPhase()));
         appendEntry(sDoc, "Value: ", "" + Utils.round(act.getValue()));
+        appendEntry(sDoc, "f(net)': ", "" + Utils.round(act.getActFunctionDerivative()));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(act.getGradient()));
+        appendEntry(sDoc, "Gradient Sum: ", "" + Utils.round(act.getGradientSum()));
+        appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
 /*
