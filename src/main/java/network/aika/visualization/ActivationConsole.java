@@ -57,8 +57,8 @@ public class ActivationConsole extends AbstractConsole {
         appendText(sDoc, "Link\n\n", "headline");
         appendEntry(sDoc, "Phase: ", "" + l.getPhase());
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
-        appendEntry(sDoc, "InputValue: ", "" + l.getInputValue());
-        appendEntry(sDoc, "Gradient: ", "" + l.getGradient());
+        appendEntry(sDoc, "InputValue: ", "" + Utils.round(l.getInputValue()));
+        appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
 
         appendText(sDoc, "\n\n\n", "regular");
 
