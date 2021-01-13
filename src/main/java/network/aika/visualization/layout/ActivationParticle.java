@@ -32,6 +32,9 @@ import static network.aika.visualization.layout.AbstractLayout.*;
 
 public class ActivationParticle extends AbstractParticle {
 
+    public static double K1 = 0.12f;
+    public static double K2 = 0.03f;
+
     Activation act;
     Node node;
 
@@ -44,54 +47,88 @@ public class ActivationParticle extends AbstractParticle {
 
 
     @Override
-    protected void attraction(Vector3 delta) {
-        Boolean initNode = node.getAttribute("aika.init-node", Boolean.class);
+    protected void repulsionN2(Vector3 delta) {
+//        super.repulsionN2(delta);
+    }
 
-        double strength = initNode ? K1Init : K1Final;
+    @Override
+    protected void repulsionNLogN(Vector3 delta) {
+//        super.repulsionNLogN(delta);
+    }
+
+/*
+    public void moveTo(double x, double y, double z) {
+        super.moveTo(x, y, z);
+        System.out.println(act.getLabel() + " x:" + x + " y:" + y + " x:" + z);
+    }
+*/
+
+    @Override
+    protected void attraction(Vector3 delta) {
+//        Boolean initNode = node.getAttribute("aika.init-node", Boolean.class);
 
         SpringBox box = (SpringBox) this.box;
-        boolean is3D = box.is3D();
         Energies energies = box.getEnergies();
 
-        for (EdgeSpring edge : neighbours) {
-            if (!edge.ignored) {
-                edgeAttraction(delta, edge, strength, energies);
+        System.out.println(act.getLabel());
 
+        for (EdgeSpring edge : neighbours) {
+//            edgeAttraction(delta, edge, energies);
+
+            if (!edge.ignored) {
                 ActivationParticle other = (ActivationParticle) edge.getOpposite(this);
 
                 Point3 opos = other.getPosition();
-                double dx = opos.x - pos.x;
-                double dy = (opos.y + INITIAL_DISTANCE) - pos.y;
 
                 Link link = getLink(other.act, act);
+
                 if(link != null) {
                     Synapse s = link.getSynapse();
                     if (s instanceof PatternPartSynapse) {
                         PatternPartSynapse pps = (PatternPartSynapse) s;
                         boolean isRecurrent = pps.isRecurrent() && !s.getOutput().isInputNeuron();
 
-                        if(isRecurrent) {
-                            dy = 0.0;
+                        if (isRecurrent) {
+                            continue;
                         }
                     }
                 }
 
-                delta.set(dx, dy, is3D ? opos.z - pos.z : 0);
+                if(link == null)
+                    continue;
 
-//                double len = delta.normalize();
-//                double k = this.k * edge.weight;
-                double factor = strength;
+                double dy = 0.0;
 
-                delta.mult(new Vector2(factor * 0.2, factor));
+                if(act == link.getOutput()) {
+                    dy = (opos.y + STANDARD_DISTANCE) - pos.y;
+                    dy = Math.max(0.0, dy);
+                } else {
+                    dy = opos.y - (pos.y + STANDARD_DISTANCE);
+                    dy = Math.min(0.0, dy);
+                }
+
+                System.out.println("    " + other.act.getLabel() + " dy:" + dy);
+
+                delta.set(0.0, dy, 0.0);
+
+                delta.mult(new Vector2(0.0, K1));
 
                 disp.add(delta);
-                attE += factor;
-                energies.accumulateEnergy(factor);
+                attE += K1;
+                energies.accumulateEnergy(K1);
             }
         }
+    //    System.out.println(act.getLabel() + " : " + disp);
     }
 
-    private Link getLink(Activation iAct, Activation oAct) {
+    private Link getLink(Activation actA, Activation actB) {
+        Link l = getDirectedLink(actA, actB);
+        if(l != null)
+            return l;
+        return getDirectedLink(actB, actA);
+    }
+
+    private Link getDirectedLink(Activation iAct, Activation oAct) {
         return oAct.getInputLinks()
                 .filter(l -> l.getInput() == iAct)
                 .findFirst()

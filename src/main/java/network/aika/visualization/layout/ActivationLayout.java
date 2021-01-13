@@ -32,7 +32,7 @@ public class ActivationLayout extends AbstractLayout {
         this.avm = avm;
         this.graphManager = gm;
 
-        k = INITIAL_DISTANCE;
+        k = STANDARD_DISTANCE;
         K1Init = 0.06f;
         K1Final = 0.01f;
         K2 = 0.005f;
@@ -55,7 +55,7 @@ public class ActivationLayout extends AbstractLayout {
             Point3 originPos = originParticle.getPosition();
 
             x = originPos.x;
-            y = originPos.y + INITIAL_DISTANCE;
+            y = originPos.y + STANDARD_DISTANCE;
         } else {
             x = (Double) n.getAttribute("x");
             y = (Double) n.getAttribute("y");

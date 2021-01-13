@@ -23,10 +23,12 @@ import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBoxNodeParticle;
 import org.miv.pherd.geom.Point3;
 
-import static network.aika.visualization.layout.AbstractLayout.INITIAL_DISTANCE;
+import static network.aika.visualization.layout.AbstractLayout.STANDARD_DISTANCE;
 
 
 public abstract class AbstractParticle extends SpringBoxNodeParticle {
+
+    public static double K1Attr = 0.0001;
 
     public AbstractParticle(AbstractLayout layout, String id, double x, double y, double z) {
         super(layout, id, x, y, z);
@@ -49,7 +51,7 @@ public abstract class AbstractParticle extends SpringBoxNodeParticle {
 //            System.out.println(System.identityHashCode(this) + " " + act.getLabel() + "repulsionNLogN:" + delta + " disp:" + disp + " pos:" + pos);
     }
 
-    protected void edgeAttraction(Vector3 delta, EdgeSpring edge, double strength, Energies energies) {
+    protected void edgeAttraction(Vector3 delta, EdgeSpring edge, Energies energies) {
         int neighbourCount = neighbours.size();
 
         NodeParticle other = edge.getOpposite(this);
@@ -58,8 +60,7 @@ public abstract class AbstractParticle extends SpringBoxNodeParticle {
         delta.set(opos.x - pos.x, opos.y - pos.y, 0);
 
         double len = delta.normalize();
-        double k = INITIAL_DISTANCE * edge.weight;
-        double factor = strength * (len - k);
+        double factor = K1Attr;// * len;
 
         delta.scalarMult(factor * (1f / (neighbourCount * 0.1f)));
 

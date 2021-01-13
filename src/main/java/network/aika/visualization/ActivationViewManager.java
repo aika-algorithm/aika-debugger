@@ -35,7 +35,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
-import static network.aika.visualization.layout.AbstractLayout.INITIAL_DISTANCE;
+import static network.aika.visualization.layout.AbstractLayout.STANDARD_DISTANCE;
 
 
 public class ActivationViewManager extends AbstractViewManager<ActivationConsole, ActivationGraphManager> implements EventListener {
@@ -113,7 +113,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             }
             if(act.getNeuron().isInputNeuron() && act.getFired() != NOT_FIRED) {
                 Fired f = act.getFired();
-                n.setAttribute("x", f.getInputTimestamp() * INITIAL_DISTANCE);
+                n.setAttribute("x", f.getInputTimestamp() * STANDARD_DISTANCE);
             }
         });
 

@@ -36,7 +36,7 @@ public class NeuronParticle extends AbstractParticle {
 
         for (EdgeSpring edge : neighbours) {
             if (!edge.ignored) {
-                edgeAttraction(delta, edge, 1.0, energies);
+                edgeAttraction(delta, edge, energies);
             }
         }
     }

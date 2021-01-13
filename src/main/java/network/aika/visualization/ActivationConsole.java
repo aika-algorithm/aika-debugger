@@ -42,11 +42,11 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
-/*
+
             if(ap != null) {
                 appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
             }
- */
+
         appendText(sDoc, "\n\n\n", "regular");
 
         renderNeuronConsoleOutput(sDoc, act.getNeuron());

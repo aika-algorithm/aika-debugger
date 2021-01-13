@@ -112,6 +112,10 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         return graph;
     }
 
+    public Camera getCamera() {
+        return graphView.getCamera();
+    }
+
     public JSplitPane getView() {
         return splitPane;
     }

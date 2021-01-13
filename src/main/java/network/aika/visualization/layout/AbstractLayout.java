@@ -28,7 +28,7 @@ public abstract class AbstractLayout extends SpringBox {
     protected static double K1Final;
 
 
-    public static double INITIAL_DISTANCE = 1f;
+    public static double STANDARD_DISTANCE = 0.2f;
 
     @Override
     public String getLayoutAlgorithmName() {

@@ -36,6 +36,11 @@ public class KeyManager implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if(e.getKeyChar() == 'm') {
+            System.out.println("Metric: " + actViewManager.getCamera().getMetrics());
+            return;
+        }
+
         if(e.getKeyChar() == 'a' || e.getKeyChar() == 'l') {
             actViewManager.setLinkStepMode(e.getKeyChar() == 'l');
             if(visitorManager.isRegistered()) {
