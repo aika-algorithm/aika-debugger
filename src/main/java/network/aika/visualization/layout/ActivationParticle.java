@@ -17,9 +17,11 @@
 package network.aika.visualization.layout;
 
 import network.aika.neuron.Synapse;
+import network.aika.neuron.Templates;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.excitatory.PatternPartSynapse;
+import network.aika.neuron.inhibitory.InhibitoryNeuron;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.geom.Vector2;
 import org.graphstream.ui.geom.Vector3;
@@ -45,7 +47,7 @@ public class ActivationParticle extends AbstractParticle {
         this.node = node;
     }
 
-
+/*
     @Override
     protected void repulsionN2(Vector3 delta) {
 //        super.repulsionN2(delta);
@@ -55,7 +57,7 @@ public class ActivationParticle extends AbstractParticle {
     protected void repulsionNLogN(Vector3 delta) {
 //        super.repulsionNLogN(delta);
     }
-
+*/
 /*
     public void moveTo(double x, double y, double z) {
         super.moveTo(x, y, z);
@@ -89,6 +91,10 @@ public class ActivationParticle extends AbstractParticle {
                         boolean isRecurrent = pps.isRecurrent() && !s.getOutput().isInputNeuron();
 
                         if (isRecurrent) {
+                            continue;
+                        }
+
+                        if(link.getOutput().getNeuron().isInputNeuron() && link.getInput().getNeuron() instanceof InhibitoryNeuron) {
                             continue;
                         }
                     }
