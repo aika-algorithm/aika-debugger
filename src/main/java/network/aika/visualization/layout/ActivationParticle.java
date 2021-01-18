@@ -58,12 +58,12 @@ public class ActivationParticle extends AbstractParticle {
 //        super.repulsionNLogN(delta);
     }
 */
-/*
+
     public void moveTo(double x, double y, double z) {
         super.moveTo(x, y, z);
-        System.out.println(act.getLabel() + " x:" + x + " y:" + y + " x:" + z);
+  //      System.out.println(act.getLabel() + " x:" + x + " y:" + y + " x:" + z);
     }
-*/
+
 
     @Override
     protected void attraction(Vector3 delta) {
@@ -71,8 +71,6 @@ public class ActivationParticle extends AbstractParticle {
 
         SpringBox box = (SpringBox) this.box;
         Energies energies = box.getEnergies();
-
-        System.out.println(act.getLabel());
 
         for (EdgeSpring edge : neighbours) {
 //            edgeAttraction(delta, edge, energies);
@@ -113,8 +111,6 @@ public class ActivationParticle extends AbstractParticle {
                     dy = Math.min(0.0, dy);
                 }
 
-                System.out.println("    " + other.act.getLabel() + " dy:" + dy);
-
                 delta.set(0.0, dy, 0.0);
 
                 delta.mult(new Vector2(0.0, K1));
@@ -124,7 +120,6 @@ public class ActivationParticle extends AbstractParticle {
                 energies.accumulateEnergy(K1);
             }
         }
-    //    System.out.println(act.getLabel() + " : " + disp);
     }
 
     private Link getLink(Activation actA, Activation actB) {

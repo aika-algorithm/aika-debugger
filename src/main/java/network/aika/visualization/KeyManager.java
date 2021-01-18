@@ -41,7 +41,9 @@ public class KeyManager implements KeyListener {
             return;
         }
 
-        if(e.getKeyChar() == 'a' || e.getKeyChar() == 'l') {
+        if(e.getKeyChar() == 'f') {
+            actViewManager.setStopAfterProcessed(true);
+        } else if(e.getKeyChar() == 'a' || e.getKeyChar() == 'l') {
             actViewManager.setLinkStepMode(e.getKeyChar() == 'l');
             if(visitorManager.isRegistered()) {
                 visitorManager.setVisitorMode(false);

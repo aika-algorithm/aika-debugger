@@ -38,5 +38,8 @@ public abstract class AbstractLayout extends SpringBox {
     @Override
     protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
   //      super.chooseNodePosition(n0, n1);
+
+
     }
+
 }

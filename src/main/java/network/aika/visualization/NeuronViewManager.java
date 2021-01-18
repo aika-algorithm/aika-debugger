@@ -58,4 +58,9 @@ public class NeuronViewManager extends AbstractViewManager<NeuronConsole, Neuron
     public void viewClosed(String id) {
    //     loop = false;
     }
+
+    @Override
+    public void click(int x, int y) {
+
+    }
 }

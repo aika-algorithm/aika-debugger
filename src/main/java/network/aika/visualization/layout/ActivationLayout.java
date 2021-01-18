@@ -79,4 +79,14 @@ public class ActivationLayout extends AbstractLayout {
 
         return particle;
     }
+/*
+    public void particleMoved(Object id, double x, double y, double z) {
+        super.particleMoved(id, x, y, z);
+
+        Activation act = graphManager.getKey((String)id);
+        ActivationParticle ap = graphManager.getParticle(act);
+
+        System.out.println(act.getLabel() + " x:" + x + " y:" + y);
+    }
+ */
 }

@@ -39,6 +39,10 @@ public abstract class AbstractGraphManager<K, P> {
         return nodeIdToActivation.get(n.getId());
     }
 
+    public K getKey(String nodeId) {
+        return nodeIdToActivation.get(nodeId);
+    }
+
     public K getInputKey(Edge e) {
         return nodeIdToActivation.get(e.getId().substring(0, e.getId().indexOf("-")));
     }
@@ -53,6 +57,7 @@ public abstract class AbstractGraphManager<K, P> {
     public P getParticle(K key) {
         return getParticle(getKeyId(key));
     }
+
     public P getParticle(long keyId) {
         return keyIdToParticle.get(keyId);
     }

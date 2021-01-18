@@ -265,4 +265,5 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         System.out.println("Need the Mouse Options to be activated");
     }
 
+    public abstract void click(int x, int y);
 }

@@ -42,6 +42,7 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
+        appendEntry(sDoc, "Pending Phases: ", "" + act.pendingPhasesToString());
 
             if(ap != null) {
                 appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
@@ -59,6 +60,7 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
         appendEntry(sDoc, "InputValue: ", "" + Utils.round(l.getInputValue()));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
+        appendEntry(sDoc, "Pending Phases: ", "" + l.pendingPhasesToString());
 
         appendText(sDoc, "\n\n\n", "regular");
 

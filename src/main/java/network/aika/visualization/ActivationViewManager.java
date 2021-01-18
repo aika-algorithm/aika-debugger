@@ -45,6 +45,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     private VisitorManager visitorManager;
 
     boolean linkStepMode;
+    boolean stopAfterProcessed;
 
     public ActivationViewManager(Document doc) {
         super();
@@ -57,6 +58,21 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         viewer.enableAutoLayout(new ActivationLayout(this, graphManager));
 
         splitPane = initSplitPane();
+    }
+
+    public void click(int x, int y) {
+        graph.edges().filter(e -> checkBoundingBox(e, x, y)).forEach(e -> System.out.println(e.getId()));
+    }
+
+    private boolean checkBoundingBox(Edge e, int x, int y) {
+        Object[] xyz0 = (Object[]) e.getNode0().getAttribute("xyz");
+        Object[] xyz1 = (Object[]) e.getNode1().getAttribute("xyz");
+        Double x0 = (Double) xyz0[0];
+        Double y0 = (Double) xyz0[1];
+        Double x1 = (Double) xyz1[0];
+        Double y1 = (Double) xyz1[1];
+
+        return Math.min(x0, x1) <= x && Math.min(y0, y1) <= y;
     }
 
     public void showElementContext(String headlinePrefix, GraphicElement ge) {
@@ -101,6 +117,18 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         pumpAndWaitForUserAction();
     }
 
+    @Override
+    public void afterActivationProcessedEvent(Activation act) {
+        if(stopAfterProcessed) {
+            console.render("Processed", sDoc ->
+                    console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+            );
+
+            pumpAndWaitForUserAction();
+            stopAfterProcessed = false;
+        }
+    }
+
     private Node onActivationEvent(Activation act, Activation originAct) {
         Node node = graphManager.lookupNode(act, n -> {
             if(originAct != null) {
@@ -135,6 +163,10 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     public void setLinkStepMode(boolean linkStepMode) {
         this.linkStepMode = linkStepMode;
+    }
+
+    public void setStopAfterProcessed(boolean stopAfterProcessed) {
+        this.stopAfterProcessed = stopAfterProcessed;
     }
 
     private void highlightCurrentOnly(Element e) {
@@ -177,6 +209,23 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         if(linkStepMode) {
             pumpAndWaitForUserAction();
+        }
+    }
+
+    @Override
+    public void afterLinkProcessedEvent(Link l) {
+        if(stopAfterProcessed) {
+            DefaultStyledDocument sDoc = new DefaultStyledDocument();
+            console.addStylesToDocument(sDoc);
+            console.clear();
+            console.addHeadline(sDoc, "Processed");
+            console.renderLinkConsoleOutput(sDoc, l);
+            console.setStyledDocument(sDoc);
+
+            if(linkStepMode) {
+                pumpAndWaitForUserAction();
+            }
+            stopAfterProcessed = false;
         }
     }
 

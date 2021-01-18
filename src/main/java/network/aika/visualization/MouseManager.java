@@ -125,6 +125,9 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
     }
 
     public void mouseClicked(MouseEvent event) {
+        viewManager.click(event.getX(), event.getY());
+
+
     }
 
     public void mousePressed(MouseEvent event) {
