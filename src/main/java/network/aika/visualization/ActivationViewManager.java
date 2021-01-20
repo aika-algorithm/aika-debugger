@@ -28,6 +28,7 @@ import network.aika.visualization.layout.ActivationLayout;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Node;
+import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 
 import javax.swing.text.DefaultStyledDocument;
@@ -61,18 +62,33 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     public void click(int x, int y) {
-        graph.edges().filter(e -> checkBoundingBox(e, x, y)).forEach(e -> System.out.println(e.getId()));
+        graph.edges()
+                .filter(e ->
+                        checkBoundingBox(e, x, y)
+                )
+                .forEach(e ->
+                        System.out.println(e.getId())
+                );
     }
 
     private boolean checkBoundingBox(Edge e, int x, int y) {
+        Point3 mousePos = getCamera().transformPxToGu(x, y);
+
         Object[] xyz0 = (Object[]) e.getNode0().getAttribute("xyz");
         Object[] xyz1 = (Object[]) e.getNode1().getAttribute("xyz");
+        if(xyz0 == null || xyz1 == null) {
+            return false;
+        }
+
         Double x0 = (Double) xyz0[0];
         Double y0 = (Double) xyz0[1];
         Double x1 = (Double) xyz1[0];
         Double y1 = (Double) xyz1[1];
 
-        return Math.min(x0, x1) <= x && Math.min(y0, y1) <= y;
+        return Math.min(x0, x1) <= mousePos.x &&
+                Math.min(y0, y1) <= mousePos.y &&
+                Math.max(x0, x1) >= mousePos.x &&
+                Math.max(y0, y1) >= mousePos.y;
     }
 
     public void showElementContext(String headlinePrefix, GraphicElement ge) {
