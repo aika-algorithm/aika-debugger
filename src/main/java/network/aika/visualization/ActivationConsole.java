@@ -34,15 +34,15 @@ public class ActivationConsole extends AbstractConsole {
         appendText(sDoc, "Activation\n\n", "headline");
         appendEntry(sDoc, "Id: ", "" + act.getId());
         appendEntry(sDoc, "Label: ", act.getLabel());
-        appendEntry(sDoc, "Phase: ", Phase.toString(act.getPhase()));
-        appendEntry(sDoc, "Value: ", "" + Utils.round(act.getValue()));
+//        appendEntry(sDoc, "Phase: ", Phase.toString(act.getPhase()));
+        appendEntry(sDoc, "Value: ", act.getValue() != null ? "" + Utils.round(act.getValue()) : "X");
         appendEntry(sDoc, "f(net)': ", "" + Utils.round(act.getActFunctionDerivative()));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(act.getGradient()));
         appendEntry(sDoc, "Gradient Sum: ", "" + Utils.round(act.getGradientSum()));
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
-        appendEntry(sDoc, "Pending Phases: ", "" + act.pendingPhasesToString());
+   //     appendEntry(sDoc, "Pending Phases: ", "" + act..pendingPhasesToString());
 
             if(ap != null) {
                 appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
@@ -56,11 +56,11 @@ public class ActivationConsole extends AbstractConsole {
 
     public void renderLinkConsoleOutput(StyledDocument sDoc, Link l) {
         appendText(sDoc, "Link\n\n", "headline");
-        appendEntry(sDoc, "Phase: ", "" + l.getPhase());
+//        appendEntry(sDoc, "Phase: ", "" + l.getPhase());
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
         appendEntry(sDoc, "InputValue: ", "" + Utils.round(l.getInputValue()));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
-        appendEntry(sDoc, "Pending Phases: ", "" + l.pendingPhasesToString());
+//        appendEntry(sDoc, "Pending Phases: ", "" + l.pendingPhasesToString());
 
         appendText(sDoc, "\n\n\n", "regular");
 
