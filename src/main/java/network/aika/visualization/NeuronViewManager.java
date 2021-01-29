@@ -18,20 +18,29 @@ package network.aika.visualization;
 
 import network.aika.Model;
 import network.aika.neuron.Neuron;
+import network.aika.neuron.activation.Activation;
+import network.aika.text.Document;
 import network.aika.visualization.layout.NeuronGraphManager;
 import network.aika.visualization.layout.NeuronLayout;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
 
 public class NeuronViewManager extends AbstractViewManager<NeuronConsole, NeuronGraphManager> {
 
     private Model model;
+    private Document document;
 
-    public NeuronViewManager(Model m) {
+    public NeuronViewManager(Model m, Document document) {
         super();
+        graphManager = new NeuronGraphManager(graph);
         this.model = m;
-        console=new NeuronConsole();
+        this.document = document;
+        console = new NeuronConsole();
         viewer.enableAutoLayout(new NeuronLayout(this, graphManager));
 
         splitPane = initSplitPane();
@@ -42,11 +51,11 @@ public class NeuronViewManager extends AbstractViewManager<NeuronConsole, Neuron
     }
 
     public void showElementContext(String headlinePrefix, GraphicElement ge) {
-        if(ge instanceof Node) {
+        if (ge instanceof Node) {
             Node n = (Node) ge;
 
             Neuron neuron = graphManager.getKey(n);
-            if(neuron == null)
+            if (neuron == null)
                 return;
 
             console.render(headlinePrefix, sDoc ->
@@ -56,11 +65,26 @@ public class NeuronViewManager extends AbstractViewManager<NeuronConsole, Neuron
     }
 
     public void viewClosed(String id) {
-   //     loop = false;
+        //     loop = false;
     }
 
     @Override
     public void click(int x, int y) {
+
+    }
+
+    public void initGraphNeurons() {
+        Set<Neuron> neurons = document.getActivations()
+                .stream()
+                .map(Activation::getNeuron)
+                .collect(Collectors.toSet());
+        neurons.stream()
+                .forEach(neuron ->
+                        graphManager.lookupNode(neuron,
+                                node -> {
+                                    node.setAttribute("aika.neuronId", neuron.getId());
+                                }));
+
 
     }
 }

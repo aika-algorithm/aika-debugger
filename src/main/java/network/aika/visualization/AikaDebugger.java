@@ -16,29 +16,35 @@
  */
 package network.aika.visualization;
 
+import network.aika.Model;
 import network.aika.text.Document;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 public class AikaDebugger extends JPanel {
 
     JTabbedPane tabbedPane;
 
     Document doc;
+    Model model;
 
     ActivationViewManager actViewManager;
     NeuronViewManager neuronViewManager;
 
     KeyManager keyManager;
 
-    public AikaDebugger(Document doc) {
+    final static Integer ACTIVATION_TAB_INDEX=0;
+    final static Integer NEURON_TAB_INDEX=1;
+
+    public AikaDebugger(Document doc,Model model) {
         super(new GridLayout(1, 1));
 
         this.doc = doc;
+        this.model=model;
 
         tabbedPane = new JTabbedPane();
 //        ImageIcon icon = createImageIcon("images/middle.gif");
@@ -80,11 +86,21 @@ public class AikaDebugger extends JPanel {
         });
 
         actViewManager = new ActivationViewManager(doc);
+        neuronViewManager =new NeuronViewManager(model,doc);
         keyManager = new KeyManager(actViewManager);
 
-        tabbedPane.addKeyListener(keyManager);
 
-        addTab(0, "Activations", KeyEvent.VK_A, actViewManager.getView());
+
+        addTab(ACTIVATION_TAB_INDEX, "Activations", KeyEvent.VK_A, actViewManager.getView());
+        addTab(NEURON_TAB_INDEX, "Neurons", KeyEvent.VK_N, neuronViewManager.getView());
+
+        tabbedPane.addKeyListener(keyManager);
+        tabbedPane.addChangeListener(event-> {
+            if(tabbedPane.getSelectedIndex()==NEURON_TAB_INDEX){
+                neuronViewManager.initGraphNeurons();
+            }
+
+        });
     }
 
     public void addTab(int tabIndex, String label, int ke, JComponent panel) {
@@ -93,7 +109,7 @@ public class AikaDebugger extends JPanel {
         tabbedPane.setMnemonicAt(tabIndex, ke);
     }
 
-    public static void createAndShowGUI(Document doc) {
+    public static void createAndShowGUI(Document doc, Model model) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
@@ -111,8 +127,7 @@ public class AikaDebugger extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Add content to the window.
-        frame.add(new AikaDebugger(doc), BorderLayout.CENTER);
-
+        frame.add(new AikaDebugger(doc,model), BorderLayout.CENTER);
         frame.setSize( 800, 600 );
         frame.setVisible(true);
     }

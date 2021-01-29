@@ -49,7 +49,7 @@ public class GradientTest {
         m.setN(912);
 
         Document doc = new Document("A B ");
-        AikaDebugger.createAndShowGUI(doc);
+        AikaDebugger.createAndShowGUI(doc,m);
 
         int i = 0;
         TextReference lastRef = null;

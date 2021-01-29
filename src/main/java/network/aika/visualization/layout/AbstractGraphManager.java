@@ -28,7 +28,7 @@ public abstract class AbstractGraphManager<K, P> {
 
 
     private Graph graph;
-    private Map<String, K> nodeIdToActivation = new TreeMap<>();
+    private Map<String, K> nodeIdToAikaNode = new TreeMap<>();
     private Map<Long, P> keyIdToParticle = new TreeMap<>();
 
     public AbstractGraphManager(Graph graph) {
@@ -36,19 +36,19 @@ public abstract class AbstractGraphManager<K, P> {
     }
 
     public K getKey(Node n) {
-        return nodeIdToActivation.get(n.getId());
+        return nodeIdToAikaNode.get(n.getId());
     }
 
     public K getKey(String nodeId) {
-        return nodeIdToActivation.get(nodeId);
+        return nodeIdToAikaNode.get(nodeId);
     }
 
     public K getInputKey(Edge e) {
-        return nodeIdToActivation.get(e.getId().substring(0, e.getId().indexOf("-")));
+        return nodeIdToAikaNode.get(e.getId().substring(0, e.getId().indexOf("-")));
     }
 
     public K getOutputKey(Edge e) {
-        return nodeIdToActivation.get(e.getId().substring(e.getId().indexOf("-") + 1));
+        return nodeIdToAikaNode.get(e.getId().substring(e.getId().indexOf("-") + 1));
     }
 
     protected abstract long getKeyId(K key);
@@ -84,7 +84,7 @@ public abstract class AbstractGraphManager<K, P> {
             onCreate.accept(node);
         }
 
-        nodeIdToActivation.put(node.getId(), key);
+        nodeIdToAikaNode.put(node.getId(), key);
 
         return node;
     }
