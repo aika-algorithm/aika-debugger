@@ -41,6 +41,7 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Gradient Sum: ", "" + Utils.round(act.getGradientSum()));
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
+        appendEntry(sDoc, "Norm: ", "" + Utils.round(act.getNorm()));
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
 /*
 // TODO: Remove Particle!
