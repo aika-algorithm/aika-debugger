@@ -67,6 +67,7 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
         appendEntry(sDoc, "InputValue: ", "" + Utils.round(l.getInputValue()));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
+        appendEntry(sDoc, "f(net)': ", "" + Utils.round(oAct.getActFunctionDerivative()));
         appendEntry(sDoc, "f(net - (xi * wi))': ", "" + Utils.round(l.getActFunctionDerivative()));
 
         appendText(sDoc, "\n\n\n", "regular");
