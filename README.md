@@ -5,10 +5,10 @@ is to add the following option during the startup. -Dsun.java2d.uiScale=100%
 
 
 ## Stepping Modes:
-'a' : stop before processing an activation
-'l' : stop before processing a link
-'v' : stop before each visitor step
-'e' : stop after the current operation
+* 'a' : stop before processing an activation
+* 'l' : stop before processing a link
+* 'v' : stop before each visitor step
+* 'e' : stop after the current operation
 
 
 ## Phases:
