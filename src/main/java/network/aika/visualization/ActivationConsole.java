@@ -20,7 +20,6 @@ import network.aika.Utils;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.activation.Visitor;
-import network.aika.neuron.phase.Phase;
 import network.aika.visualization.layout.ActivationParticle;
 
 import javax.swing.text.StyledDocument;
@@ -70,7 +69,7 @@ public class ActivationConsole extends AbstractConsole {
     public void renderVisitorConsoleOutput(StyledDocument sDoc, Visitor v, boolean dir) {
         appendText(sDoc, "Visitor " + (dir ? "(up)" : "(down)") + "\n\n", "headline");
         appendText(sDoc, "\n", "regular");
-        appendEntry(sDoc, "Origin:", v.origin.act.getShortString());
+        appendEntry(sDoc, "Origin:", v.origin.act.toShortString());
         appendText(sDoc, "\n", "regular");
 
         do {
@@ -85,7 +84,7 @@ public class ActivationConsole extends AbstractConsole {
         appendText(sDoc, v.transition.name() + "\n", "bold");
 
         if(v.act != null) {
-            appendEntry(sDoc, "Current:", v.act.getShortString());
+            appendEntry(sDoc, "Current:", v.act.toShortString());
         } else if(v.link != null) {
             appendEntry(sDoc, "Current:", v.link.toString());
         }

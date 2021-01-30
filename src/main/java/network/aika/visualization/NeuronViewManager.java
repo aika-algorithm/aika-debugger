@@ -25,6 +25,8 @@ import network.aika.visualization.layout.NeuronLayout;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -62,6 +64,18 @@ public class NeuronViewManager extends AbstractViewManager<NeuronConsole, Neuron
                     console.renderNeuronConsoleOutput(sDoc, neuron)
             );
         }
+    }
+
+
+    @Override
+    public JComponent getConsolePane() {
+        JScrollPane paneScrollPane = new JScrollPane(console);
+        paneScrollPane.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        paneScrollPane.setPreferredSize(new Dimension(250, 155));
+        paneScrollPane.setMinimumSize(new Dimension(10, 10));
+
+        return new JSplitPane(JSplitPane.VERTICAL_SPLIT, console, paneScrollPane);
     }
 
     public void viewClosed(String id) {

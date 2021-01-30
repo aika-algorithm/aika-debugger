@@ -125,18 +125,14 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
     }
 
     protected JSplitPane initSplitPane() {
-        JScrollPane paneScrollPane = new JScrollPane(console);
-        paneScrollPane.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        paneScrollPane.setPreferredSize(new Dimension(250, 155));
-        paneScrollPane.setMinimumSize(new Dimension(10, 10));
-
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphView, paneScrollPane);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphView, getConsolePane());
         splitPane.setOneTouchExpandable(true);
         splitPane.setResizeWeight(0.7);
 
         return splitPane;
     }
+
+    public abstract JComponent getConsolePane();
 
     private Graph initGraph() {
         //        System.setProperty("org.graphstream.ui", "org.graphstream.ui.swing.util.Display");
