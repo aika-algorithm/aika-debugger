@@ -51,3 +51,34 @@ if the synapse is incapable to completely suppress the activation of this neuron
 template activations and links.
 19. **Template-INPUT:** Uses the Template Network defined in the class *network.aika.neuron.Templates* to induce new template activations and links.
 20. **Template-OUTPUT:**
+
+## Activation Console Frame
+**Before / After** Debugger stopping point relative to the current queue entry.
+
+### Activation Phase
+**Activation**  (*Phase*)
+
+* Id: *Activation Id*
+* Label: *Neuron Label*
+* Value: *Activation Value*
+* f(net)': *Derivative of the activation function*
+* net\[initial\]: *Initial net value where all positive recurrent synapses are assumed to be active*
+* net\[final\]: *The final net value*
+* Gradient: *The current gradient, which still needs to be propagated.*
+* Gradient Sum: *The sum of all gradient computed during training.*
+* Branch-Probability: *The probability of the mutually exclusive branches induced by negative recurrent synapses.*
+* Fired: \[0,0\] *The exact point in time when this activation has been fired.*
+* Norm: *Normalization factor taking the 'age' of a neuron into account.*
+* Reference: *The ground input information referenced by this activation. Usually specified as char range. *
+
+**Neuron**
+* Id: 3
+* Label: P-A
+* Is Input Neuron: true
+* Bias: 0.0
+* Bias (final): 0.0
+* Frequency: *The counted activation frequency of this neuron.*
+* N: *The number of instances in the sample space.* 
+* LastPos: *The last time this sample space has been updated.*
+* P(POS): *The activation probability of this neuron.*
+* P(NEG): *The inverse activation probability of this neuron.*

@@ -29,8 +29,8 @@ import javax.swing.text.StyledDocument;
 public class ActivationConsole extends AbstractConsole {
 
 
-    public void renderActivationConsoleOutput(StyledDocument sDoc, Phase p, Activation act, ActivationParticle ap) {
-        appendText(sDoc, "Activation " + Phase.toString(p) + "\n\n", "headline");
+    public void renderActivationConsoleOutput(StyledDocument sDoc, Activation act, ActivationParticle ap) {
+        appendText(sDoc, "Activation " + "\n\n", "headline");
         appendEntry(sDoc, "Id: ", "" + act.getId());
         appendEntry(sDoc, "Label: ", act.getLabel());
         appendEntry(sDoc, "Value: ", act.getValue() != null ? "" + Utils.round(act.getValue()) : "X");
@@ -54,8 +54,8 @@ public class ActivationConsole extends AbstractConsole {
         renderNeuronConsoleOutput(sDoc, act.getNeuron());
     }
 
-    public void renderLinkConsoleOutput(StyledDocument sDoc, Phase p, Link l) {
-        appendText(sDoc, "Link" + Phase.toString(p) + "\n\n", "headline");
+    public void renderLinkConsoleOutput(StyledDocument sDoc, Link l) {
+        appendText(sDoc, "Link" + "\n\n", "headline");
 
         Activation oAct = l.getOutput();
         appendEntry(sDoc, "Output-Value: ", oAct.getValue() != null ? "" + Utils.round(oAct.getValue()) : "X");
@@ -65,6 +65,7 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
         appendEntry(sDoc, "InputValue: ", "" + Utils.round(l.getInputValue()));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
+        appendEntry(sDoc, "f(net - (xi * wi))': ", "" + Utils.round(l.getActFunctionDerivative()));
 
         appendText(sDoc, "\n\n\n", "regular");
 

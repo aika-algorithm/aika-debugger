@@ -129,7 +129,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
                 return;
 
             console.render(headlinePrefix, sDoc ->
-                    console.renderActivationConsoleOutput(sDoc, null, act, graphManager.getParticle(act))
+                    console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
             );
         } else if(ge instanceof Edge) {
             Edge e = (Edge) ge;
@@ -161,7 +161,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         n.setAttribute("aika.init-node", true);
 
         console.render("New", sDoc ->
-                console.renderActivationConsoleOutput(sDoc,  null, act, graphManager.getParticle(act))
+                console.renderActivationConsoleOutput(sDoc,  act, graphManager.getParticle(act))
         );
 
         pumpAndWaitForUserAction();
@@ -174,8 +174,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
 
-        console.render("Before", sDoc ->
-                console.renderActivationConsoleOutput(sDoc, p, act, graphManager.getParticle(act))
+        console.render("Before " + Phase.toString(p), sDoc ->
+                console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
         );
 
         pumpAndWaitForUserAction();
@@ -184,8 +184,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     @Override
     public void afterActivationProcessedEvent(Phase p, Activation act) {
         if(stopAfterProcessed) {
-            console.render("After", sDoc ->
-                    console.renderActivationConsoleOutput(sDoc, p, act, graphManager.getParticle(act))
+            console.render("After " + Phase.toString(p), sDoc ->
+                    console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
             );
 
             pumpAndWaitForUserAction();
@@ -250,7 +250,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         e.setAttribute("aika.init-node", true);
 
         console.render("New", sDoc ->
-                console.renderLinkConsoleOutput(sDoc, null, l)
+                console.renderLinkConsoleOutput(sDoc, l)
         );
 
         if(linkStepMode) {
@@ -269,8 +269,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         console.addStylesToDocument(sDoc);
         console.clear();
-        console.addHeadline(sDoc, "Before");
-        console.renderLinkConsoleOutput(sDoc, p, l);
+        console.addHeadline(sDoc, "Before " + Phase.toString(p));
+        console.renderLinkConsoleOutput(sDoc, l);
         console.setStyledDocument(sDoc);
 
         if(linkStepMode) {
@@ -284,8 +284,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             DefaultStyledDocument sDoc = new DefaultStyledDocument();
             console.addStylesToDocument(sDoc);
             console.clear();
-            console.addHeadline(sDoc, "After");
-            console.renderLinkConsoleOutput(sDoc, p, l);
+            console.addHeadline(sDoc, "After " + Phase.toString(p));
+            console.renderLinkConsoleOutput(sDoc, l);
             console.setStyledDocument(sDoc);
 
             if(linkStepMode) {

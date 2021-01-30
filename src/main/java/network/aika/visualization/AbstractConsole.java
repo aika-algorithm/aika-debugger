@@ -83,7 +83,6 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, "Id: ", "" + n.getId());
         appendEntry(sDoc, "Label: ", n.getLabel());
         appendEntry(sDoc, "Is Input Neuron: ", "" + n.isInputNeuron());
-        appendEntry(sDoc, "Is Template: ", "" + n.isTemplate());
         appendEntry(sDoc, "Bias: ", "" + Utils.round(n.getBias(false)));
         appendEntry(sDoc, "Bias (final): ", "" + Utils.round(n.getBias(true)));
         appendEntry(sDoc, "Frequency: ", "" + Utils.round(n.getFrequency()));
@@ -91,6 +90,8 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, "LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X"));
         appendEntry(sDoc, "P(POS): ", "" + Utils.round(n.getP(Sign.POS, n.getSampleSpace().getN())));
         appendEntry(sDoc, "P(NEG): ", "" + Utils.round(n.getP(Sign.NEG, n.getSampleSpace().getN())));
+        appendEntry(sDoc, "Surprisal(POS): ", "" + Utils.round(n.getSurprisal(Sign.POS)));
+        appendEntry(sDoc, "Surprisal(NEG): ", "" + Utils.round(n.getSurprisal(Sign.NEG)));
     }
 
     public void renderSynapseConsoleOutput(StyledDocument sDoc, Synapse s) {
@@ -107,6 +108,10 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, "P(POS, NEG) :", "" + Utils.round(s.getP(Sign.POS, Sign.NEG, s.getSampleSpace().getN())));
         appendEntry(sDoc, "P(NEG, POS) :", "" + Utils.round(s.getP(Sign.NEG, Sign.POS, s.getSampleSpace().getN())));
         appendEntry(sDoc, "P(NEG, NEG) :", "" + Utils.round(s.getP(Sign.NEG, Sign.NEG, s.getSampleSpace().getN())));
+        appendEntry(sDoc, "Surprisal(POS, POS): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.POS)));
+        appendEntry(sDoc, "Surprisal(POS, NEG): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.NEG)));
+        appendEntry(sDoc, "Surprisal(NEG, POS): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.POS)));
+        appendEntry(sDoc, "Surprisal(NEG, NEG): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.NEG)));
     }
 
     public void appendEntry(StyledDocument sDoc, String fieldName, String fieldValue) {
