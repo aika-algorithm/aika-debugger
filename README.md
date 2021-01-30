@@ -10,3 +10,4 @@ Stepping Modes:
 'a' : stop before processing an activation
 'l' : stop before processing a link
 'v' : stop before each visitor step
+'e' : stop after the current operation

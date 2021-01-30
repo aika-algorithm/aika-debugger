@@ -174,7 +174,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
 
-        console.render("Processed", sDoc ->
+        console.render("Before", sDoc ->
                 console.renderActivationConsoleOutput(sDoc, p, act, graphManager.getParticle(act))
         );
 
@@ -184,7 +184,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     @Override
     public void afterActivationProcessedEvent(Phase p, Activation act) {
         if(stopAfterProcessed) {
-            console.render("Processed", sDoc ->
+            console.render("After", sDoc ->
                     console.renderActivationConsoleOutput(sDoc, p, act, graphManager.getParticle(act))
             );
 

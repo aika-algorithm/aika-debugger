@@ -96,7 +96,7 @@ public abstract class AbstractConsole extends JTextPane {
     public void renderSynapseConsoleOutput(StyledDocument sDoc, Synapse s) {
         appendText(sDoc, "Synapse\n\n", "headline");
 
-        appendEntry(sDoc, "Weight: ", "" + s.getWeight());
+        appendEntry(sDoc, "Weight: ", "" + Utils.round(s.getWeight()));
         appendEntry(sDoc, "Frequency(POS, POS): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.POS, s.getSampleSpace().getN())));
         appendEntry(sDoc, "Frequency(POS, NEG): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.NEG, s.getSampleSpace().getN())));
         appendEntry(sDoc, "Frequency(NEG, POS): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.POS, s.getSampleSpace().getN())));

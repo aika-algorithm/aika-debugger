@@ -21,7 +21,6 @@ import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.activation.Visitor;
 import network.aika.neuron.phase.Phase;
-import network.aika.neuron.phase.activation.ActivationPhase;
 import network.aika.visualization.layout.ActivationParticle;
 
 import javax.swing.text.StyledDocument;
@@ -31,18 +30,18 @@ public class ActivationConsole extends AbstractConsole {
 
 
     public void renderActivationConsoleOutput(StyledDocument sDoc, Phase p, Activation act, ActivationParticle ap) {
-
         appendText(sDoc, "Activation " + Phase.toString(p) + "\n\n", "headline");
         appendEntry(sDoc, "Id: ", "" + act.getId());
         appendEntry(sDoc, "Label: ", act.getLabel());
         appendEntry(sDoc, "Value: ", act.getValue() != null ? "" + Utils.round(act.getValue()) : "X");
         appendEntry(sDoc, "f(net)': ", "" + Utils.round(act.getActFunctionDerivative()));
+        appendEntry(sDoc, "net[initial]: ", "" + Utils.round(act.getNet(false)));
+        appendEntry(sDoc, "net[final]: ", "" + Utils.round(act.getNet(true)));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(act.getGradient()));
         appendEntry(sDoc, "Gradient Sum: ", "" + Utils.round(act.getGradientSum()));
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
-   //     appendEntry(sDoc, "Pending Phases: ", "" + act..pendingPhasesToString());
 /*
 // TODO: Remove Particle!
             if(ap != null) {
@@ -52,16 +51,19 @@ public class ActivationConsole extends AbstractConsole {
         appendText(sDoc, "\n\n\n", "regular");
 
         renderNeuronConsoleOutput(sDoc, act.getNeuron());
-
     }
 
     public void renderLinkConsoleOutput(StyledDocument sDoc, Phase p, Link l) {
         appendText(sDoc, "Link" + Phase.toString(p) + "\n\n", "headline");
-//        appendEntry(sDoc, "Phase: ", "" + l.getPhase());
+
+        Activation oAct = l.getOutput();
+        appendEntry(sDoc, "Output-Value: ", oAct.getValue() != null ? "" + Utils.round(oAct.getValue()) : "X");
+        appendEntry(sDoc, "Output-net[initial]: ", "" + Utils.round(oAct.getNet(false)));
+        appendEntry(sDoc, "Output-net[final]: ", "" + Utils.round(oAct.getNet(true)));
+
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
         appendEntry(sDoc, "InputValue: ", "" + Utils.round(l.getInputValue()));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
-//        appendEntry(sDoc, "Pending Phases: ", "" + l.pendingPhasesToString());
 
         appendText(sDoc, "\n\n\n", "regular");
 
@@ -98,5 +100,4 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "DownSteps:", "" + v.downSteps);
         appendEntry(sDoc, "UpSteps:", "" + v.upSteps);
     }
-
 }
