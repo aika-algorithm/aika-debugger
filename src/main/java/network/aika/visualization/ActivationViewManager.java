@@ -22,6 +22,7 @@ import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Fired;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.excitatory.PatternNeuron;
+import network.aika.neuron.phase.Phase;
 import network.aika.text.Document;
 import network.aika.visualization.layout.ActivationGraphManager;
 import network.aika.visualization.layout.ActivationLayout;
@@ -128,7 +129,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
                 return;
 
             console.render(headlinePrefix, sDoc ->
-                    console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+                    console.renderActivationConsoleOutput(sDoc, null, act, graphManager.getParticle(act))
             );
         } else if(ge instanceof Edge) {
             Edge e = (Edge) ge;
@@ -160,31 +161,31 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         n.setAttribute("aika.init-node", true);
 
         console.render("New", sDoc ->
-                console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+                console.renderActivationConsoleOutput(sDoc,  null, act, graphManager.getParticle(act))
         );
 
         pumpAndWaitForUserAction();
     }
 
     @Override
-    public void onActivationProcessedEvent(Activation act) {
+    public void onActivationProcessedEvent(Phase p, Activation act) {
         queueConsole.renderQueue(act.getThought());
 
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
 
         console.render("Processed", sDoc ->
-                console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+                console.renderActivationConsoleOutput(sDoc, p, act, graphManager.getParticle(act))
         );
 
         pumpAndWaitForUserAction();
     }
 
     @Override
-    public void afterActivationProcessedEvent(Activation act) {
+    public void afterActivationProcessedEvent(Phase p, Activation act) {
         if(stopAfterProcessed) {
             console.render("Processed", sDoc ->
-                    console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+                    console.renderActivationConsoleOutput(sDoc, p, act, graphManager.getParticle(act))
             );
 
             pumpAndWaitForUserAction();
@@ -249,7 +250,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         e.setAttribute("aika.init-node", true);
 
         console.render("New", sDoc ->
-                console.renderLinkConsoleOutput(sDoc, l)
+                console.renderLinkConsoleOutput(sDoc, null, l)
         );
 
         if(linkStepMode) {
@@ -258,7 +259,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     @Override
-    public void onLinkProcessedEvent(Link l) {
+    public void onLinkProcessedEvent(Phase p, Link l) {
         queueConsole.renderQueue(l.getThought());
 
         Edge e = onLinkEvent(l);
@@ -268,8 +269,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         console.addStylesToDocument(sDoc);
         console.clear();
-        console.addHeadline(sDoc, "Processed");
-        console.renderLinkConsoleOutput(sDoc, l);
+        console.addHeadline(sDoc, "Before");
+        console.renderLinkConsoleOutput(sDoc, p, l);
         console.setStyledDocument(sDoc);
 
         if(linkStepMode) {
@@ -278,13 +279,13 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     @Override
-    public void afterLinkProcessedEvent(Link l) {
+    public void afterLinkProcessedEvent(Phase p, Link l) {
         if(stopAfterProcessed) {
             DefaultStyledDocument sDoc = new DefaultStyledDocument();
             console.addStylesToDocument(sDoc);
             console.clear();
-            console.addHeadline(sDoc, "Processed");
-            console.renderLinkConsoleOutput(sDoc, l);
+            console.addHeadline(sDoc, "After");
+            console.renderLinkConsoleOutput(sDoc, p, l);
             console.setStyledDocument(sDoc);
 
             if(linkStepMode) {

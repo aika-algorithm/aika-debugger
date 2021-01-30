@@ -20,6 +20,8 @@ import network.aika.Utils;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.activation.Visitor;
+import network.aika.neuron.phase.Phase;
+import network.aika.neuron.phase.activation.ActivationPhase;
 import network.aika.visualization.layout.ActivationParticle;
 
 import javax.swing.text.StyledDocument;
@@ -27,13 +29,12 @@ import javax.swing.text.StyledDocument;
 
 public class ActivationConsole extends AbstractConsole {
 
-// TODO: Remove Particle!
-    public void renderActivationConsoleOutput(StyledDocument sDoc, Activation act, ActivationParticle ap) {
 
-        appendText(sDoc, "Activation\n\n", "headline");
+    public void renderActivationConsoleOutput(StyledDocument sDoc, Phase p, Activation act, ActivationParticle ap) {
+
+        appendText(sDoc, "Activation " + Phase.toString(p) + "\n\n", "headline");
         appendEntry(sDoc, "Id: ", "" + act.getId());
         appendEntry(sDoc, "Label: ", act.getLabel());
-//        appendEntry(sDoc, "Phase: ", Phase.toString(act.getPhase()));
         appendEntry(sDoc, "Value: ", act.getValue() != null ? "" + Utils.round(act.getValue()) : "X");
         appendEntry(sDoc, "f(net)': ", "" + Utils.round(act.getActFunctionDerivative()));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(act.getGradient()));
@@ -42,19 +43,20 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
    //     appendEntry(sDoc, "Pending Phases: ", "" + act..pendingPhasesToString());
-
+/*
+// TODO: Remove Particle!
             if(ap != null) {
                 appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
             }
-
+*/
         appendText(sDoc, "\n\n\n", "regular");
 
         renderNeuronConsoleOutput(sDoc, act.getNeuron());
 
     }
 
-    public void renderLinkConsoleOutput(StyledDocument sDoc, Link l) {
-        appendText(sDoc, "Link\n\n", "headline");
+    public void renderLinkConsoleOutput(StyledDocument sDoc, Phase p, Link l) {
+        appendText(sDoc, "Link" + Phase.toString(p) + "\n\n", "headline");
 //        appendEntry(sDoc, "Phase: ", "" + l.getPhase());
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
         appendEntry(sDoc, "InputValue: ", "" + Utils.round(l.getInputValue()));
