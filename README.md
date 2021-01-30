@@ -35,15 +35,19 @@ If that is not the case, updates of the affected activations are required.
 7. **Link-Positive Feedback Loop Update:**
 8. **Determine Branch Probability:** If there are multiple mutually exclusive branches, then the softmax function will be used, to 
 assign a probability to each branch.
-9. **Counting:**
-10. **Link-Counting:**
-11. **Link-Shadow Factor:**
-12. **Entropy Gradient:**
-13. **Information-Gain Gradient:**
+9. **Counting:** Counts the number of activations a particular neuron has encountered.
+10. **Link-Counting:** Counts the number of input or output activations a particular synapse has encountered. The four 
+different cases are counted separately.
+11. **Link-Shadow Factor:** Avoid that synapses which access the same source information generate twice the gradient.
+12. **Entropy Gradient:** Computes the gradient of the entropy function for this activation.
+13. **Information-Gain Gradient:** Computes the gradient of the information gain function for this activation.
 14. **PropagateGradient:** Propagate the gradient backwards through the network.
-15. **Propagate Gradients:**
-16. **Link-Update Weight:**
-17. **Update Synapse Input Links:**
-18. **Link-Template:**
-19. **Template-INPUT:**
+15. **Propagate Gradients:** Propagates the gradient of this activation backwards to all its input links.
+16. **Link-Update Weight:** Use the link gradient to update the synapse weight.
+17. **Update Synapse Input Links:** Determines which input synapses of this activations neuron should be linked to the 
+input neuron. Connecting a synapse to its input neuron is not necessary if the synapse weight is weak. That is the case 
+if the synapse is incapable to completely suppress the activation of this neuron.
+18. **Link-Template:** Uses the Template Network defined in the class *network.aika.neuron.Templates* to induce new 
+template activations and links.
+19. **Template-INPUT:** Uses the Template Network defined in the class *network.aika.neuron.Templates* to induce new template activations and links.
 20. **Template-OUTPUT:**
