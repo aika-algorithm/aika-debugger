@@ -57,10 +57,10 @@ template activations and links.
 20. **Template-OUTPUT:**
 
 ## Activation Console Frame
-**Before / After** Debugger stopping point relative to the current queue entry.
+**New / Before / After** (*Phase*) Debugger stopping point relative to the current queue entry.
 
 ### Activation Phase
-**Activation**  (*Phase*)
+**Activation**  
 
 * Id: *Activation Id*
 * Label: *Neuron Label*
@@ -76,13 +76,53 @@ template activations and links.
 * Reference: *The ground input information referenced by this activation. Usually specified as char range. *
 
 **Neuron**
-* Id: 3
-* Label: P-A
-* Is Input Neuron: true
-* Bias: 0.0
-* Bias (final): 0.0
+* Id: *Neuron Id*
+* Label: *Neuron Label*
+* Is Input Neuron: *Input Neuron*
+* Bias: 0.0 *The initial bias, where all positive recurrent synapses are assumed to be active*
+* Bias (final): *The final bias*
 * Frequency: *The counted activation frequency of this neuron.*
 * N: *The number of instances in the sample space.* 
 * LastPos: *The last time this sample space has been updated.*
 * P(POS): *The activation probability of this neuron.*
 * P(NEG): *The inverse activation probability of this neuron.*
+* Surprisal(POS): *The [Surprisal](https://en.wikipedia.org/wiki/Information_content) originates from the derivative of the entropy function.*
+* Surprisal(NEG): *The [Surprisal](https://en.wikipedia.org/wiki/Information_content) originates from the derivative of the entropy function.*
+
+*Note that the Probabilities P(POS) and P(NEG). The reason for that is that are basically an upper bound on the 
+probability, which lead to a conservative estimate for the corresponding surprisal values.*
+
+
+### Link Phase
+**New / Before / After** (*Phase*) Debugger stopping point relative to the current queue entry.
+
+**Link**
+
+Input-Value: *The activation value of the input activation*
+Output-Value: *The activation value of the output activation*
+Output-net\[initial\]: *The initial net value  of the output activation*
+Output-net\[final\]: *The final net value  of the output activation*
+IsSelfRef: *True if this link closes a recurrent loop.*
+Gradient: *The gradient, that is propagated backwards through this link.*
+f(net)': *The derivative of the activation function of the output activation.*
+f(net - (xi * wi))': *This term is used for two purposes. Firstly, it limits the influence that weak synapses have on neighbouring 
+synapses of the same output neuron. Secondly, it bootstraps the training of a weak synapse.*
+
+
+**Synapse**
+
+Weight: *The weight of the synapse.*
+Frequency(POS, POS): *The number of instances where both input and output neuron have been activated simultaneously.*
+Frequency(POS, NEG): *The number of instances where only the input neuron has been activated.*
+Frequency(NEG, POS): *The number of instances where only the output neuron has been activated.*
+Frequency(NEG, NEG): *The number of instances where neither the input, nor the output neuron have been activated.*
+N: *The total number of trainings instances in the sample space of this synapse.*
+LastPos: X
+P(POS, POS): *The probability computed from the frequency (POS, POS)*
+P(POS, NEG): *The probability computed from the frequency (POS, NEG)*
+P(NEG, POS): *The probability computed from the frequency (NEG, POS)*
+P(NEG, NEG): *The probability computed from the frequency (NEG, NEG)*
+Surprisal(POS, POS): *The surprisal computed from the probability (POS, POS)*
+Surprisal(POS, NEG): *The surprisal computed from the probability (POS, NEG)*
+Surprisal(NEG, POS): *The surprisal computed from the probability (NEG, POS)*
+Surprisal(NEG, NEG): *The surprisal computed from the probability (NEG, NEG)*

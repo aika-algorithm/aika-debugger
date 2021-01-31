@@ -58,13 +58,12 @@ public class ActivationConsole extends AbstractConsole {
 
         Activation iAct = l.getInput();
         Activation oAct = l.getOutput();
-        appendEntry(sDoc, "Input-Value: ", iAct.getValue() != null ? "" + Utils.round(iAct.getValue()) : "X");
+        appendEntry(sDoc, "Input-Value: ", "" + Utils.round(l.getInputValue()));
         appendEntry(sDoc, "Output-Value: ", oAct.getValue() != null ? "" + Utils.round(oAct.getValue()) : "X");
         appendEntry(sDoc, "Output-net[initial]: ", "" + Utils.round(oAct.getNet(false)));
         appendEntry(sDoc, "Output-net[final]: ", "" + Utils.round(oAct.getNet(true)));
 
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
-        appendEntry(sDoc, "InputValue: ", "" + Utils.round(l.getInputValue()));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
         appendEntry(sDoc, "f(net)': ", "" + Utils.round(oAct.getActFunctionDerivative()));
         appendEntry(sDoc, "f(net - (xi * wi))': ", "" + Utils.round(l.getActFunctionDerivative()));
