@@ -92,6 +92,14 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, "P(NEG): ", "" + Utils.round(n.getP(Sign.NEG, n.getSampleSpace().getN())));
         appendEntry(sDoc, "Surprisal(POS): ", "" + Utils.round(n.getSurprisal(Sign.POS)));
         appendEntry(sDoc, "Surprisal(NEG): ", "" + Utils.round(n.getSurprisal(Sign.NEG)));
+        appendEntry(sDoc, "Template Neuron: ", templatesToString(n));
+
+    }
+
+    private String templatesToString(Neuron<?> n) {
+        StringBuilder sb = new StringBuilder();
+        n.getTemplates().forEach(tn -> sb.append(tn.getId() + ":" + tn.getLabel() + ", "));
+        return sb.toString();
     }
 
     public void renderSynapseConsoleOutput(StyledDocument sDoc, Synapse s) {
@@ -112,6 +120,7 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, "Surprisal(POS, NEG): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.NEG)));
         appendEntry(sDoc, "Surprisal(NEG, POS): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.POS)));
         appendEntry(sDoc, "Surprisal(NEG, NEG): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.NEG)));
+        appendEntry(sDoc, "Template: ", s.getTemplate().toString());
     }
 
     public void appendEntry(StyledDocument sDoc, String fieldName, String fieldValue) {
