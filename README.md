@@ -98,31 +98,31 @@ probability, which lead to a conservative estimate for the corresponding surpris
 
 **Link**
 
-Input-Value: *The activation value of the input activation*
-Output-Value: *The activation value of the output activation*
-Output-net\[initial\]: *The initial net value  of the output activation*
-Output-net\[final\]: *The final net value  of the output activation*
-IsSelfRef: *True if this link closes a recurrent loop.*
-Gradient: *The gradient, that is propagated backwards through this link.*
-f(net)': *The derivative of the activation function of the output activation.*
-f(net - (xi * wi))': *This term is used for two purposes. Firstly, it limits the influence that weak synapses have on neighbouring 
+* Input-Value: *The activation value of the input activation*
+* Output-Value: *The activation value of the output activation*
+* Output-net\[initial\]: *The initial net value  of the output activation*
+* Output-net\[final\]: *The final net value  of the output activation*
+* IsSelfRef: *True if this link closes a recurrent loop.*
+* Gradient: *The gradient, that is propagated backwards through this link.*
+* f(net)': *The derivative of the activation function of the output activation.*
+* f(net - (xi * wi))': *This term is used for two purposes. Firstly, it limits the influence that weak synapses have on neighbouring 
 synapses of the same output neuron. Secondly, it bootstraps the training of a weak synapse.*
 
 
 **Synapse**
 
-Weight: *The weight of the synapse.*
-Frequency(POS, POS): *The number of instances where both input and output neuron have been activated simultaneously.*
-Frequency(POS, NEG): *The number of instances where only the input neuron has been activated.*
-Frequency(NEG, POS): *The number of instances where only the output neuron has been activated.*
-Frequency(NEG, NEG): *The number of instances where neither the input, nor the output neuron have been activated.*
-N: *The total number of trainings instances in the sample space of this synapse.*
-LastPos: X
-P(POS, POS): *The probability computed from the frequency (POS, POS)*
-P(POS, NEG): *The probability computed from the frequency (POS, NEG)*
-P(NEG, POS): *The probability computed from the frequency (NEG, POS)*
-P(NEG, NEG): *The probability computed from the frequency (NEG, NEG)*
-Surprisal(POS, POS): *The surprisal computed from the probability (POS, POS)*
-Surprisal(POS, NEG): *The surprisal computed from the probability (POS, NEG)*
-Surprisal(NEG, POS): *The surprisal computed from the probability (NEG, POS)*
-Surprisal(NEG, NEG): *The surprisal computed from the probability (NEG, NEG)*
+* Weight: *The weight of the synapse.*
+* Frequency(POS, POS): *The number of instances where both input and output neuron have been activated simultaneously.*
+* Frequency(POS, NEG): *The number of instances where only the input neuron has been activated.*
+* Frequency(NEG, POS): *The number of instances where only the output neuron has been activated.*
+* Frequency(NEG, NEG): *The number of instances where neither the input, nor the output neuron have been activated.*
+* N: *The total number of trainings instances in the sample space of this synapse.*
+* LastPos: X
+* P(POS, POS): *The probability computed from the frequency (POS, POS)*
+* P(POS, NEG): *The probability computed from the frequency (POS, NEG)*
+* P(NEG, POS): *The probability computed from the frequency (NEG, POS)*
+* P(NEG, NEG): *The probability computed from the frequency (NEG, NEG)*
+* Surprisal(POS, POS): *The surprisal computed from the probability (POS, POS)*
+* Surprisal(POS, NEG): *The surprisal computed from the probability (POS, NEG)*
+* Surprisal(NEG, POS): *The surprisal computed from the probability (NEG, POS)*
+* Surprisal(NEG, NEG): *The surprisal computed from the probability (NEG, NEG)*
