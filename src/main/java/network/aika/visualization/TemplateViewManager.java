@@ -27,19 +27,17 @@ import org.graphstream.ui.graphicGraph.GraphicElement;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Collection;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 
-public class NeuronViewManager extends AbstractNeuronViewManager {
+public class TemplateViewManager extends AbstractNeuronViewManager {
 
-    private Document document;
-
-    public NeuronViewManager(Model m, Document document) {
+    public TemplateViewManager(Model m) {
         super(m);
         graphManager = new NeuronGraphManager(graph);
-        this.document = document;
+
         console = new NeuronConsole();
         viewer.enableAutoLayout(new NeuronLayout(this, graphManager));
 
@@ -81,10 +79,7 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
     }
 
     public void initGraphNeurons() {
-        Set<Neuron> neurons = document.getActivations()
-                .stream()
-                .map(Activation::getNeuron)
-                .collect(Collectors.toSet());
+        Collection<Neuron> neurons = getModel().getTemplates().getAllTemplates();
         neurons.stream()
                 .forEach(neuron ->
                         graphManager.lookupNode(neuron,

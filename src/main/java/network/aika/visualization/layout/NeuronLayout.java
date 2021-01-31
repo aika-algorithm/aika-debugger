@@ -18,16 +18,17 @@ package network.aika.visualization.layout;
 
 import network.aika.Model;
 import network.aika.neuron.NeuronProvider;
+import network.aika.visualization.AbstractNeuronViewManager;
 import network.aika.visualization.NeuronViewManager;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.miv.pherd.geom.Point3;
 
 public class NeuronLayout extends AbstractLayout {
-    NeuronViewManager nvm;
+    AbstractNeuronViewManager nvm;
     NeuronGraphManager graphManager;
 
-    public NeuronLayout(NeuronViewManager nvm, NeuronGraphManager gm) {
+    public NeuronLayout(AbstractNeuronViewManager nvm, NeuronGraphManager gm) {
         this.nvm = nvm;
         this.graphManager = gm;
 
@@ -36,7 +37,6 @@ public class NeuronLayout extends AbstractLayout {
         K1Final = 0.01f;
         K2 = 0.005f;
     }
-
 
     @Override
     public NodeParticle newNodeParticle(String id) {
@@ -80,5 +80,4 @@ public class NeuronLayout extends AbstractLayout {
 
         return particle;
     }
-
 }

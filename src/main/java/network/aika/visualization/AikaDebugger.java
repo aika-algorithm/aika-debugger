@@ -34,11 +34,13 @@ public class AikaDebugger extends JPanel {
 
     ActivationViewManager actViewManager;
     NeuronViewManager neuronViewManager;
+    TemplateViewManager templateViewManager;
 
     KeyManager keyManager;
 
-    final static Integer ACTIVATION_TAB_INDEX=0;
-    final static Integer NEURON_TAB_INDEX=1;
+    final static Integer ACTIVATION_TAB_INDEX = 0;
+    final static Integer NEURON_TAB_INDEX = 1;
+    final static Integer TEMPLATE_TAB_INDEX = 2;
 
     public AikaDebugger(Document doc,Model model) {
         super(new GridLayout(1, 1));
@@ -86,20 +88,22 @@ public class AikaDebugger extends JPanel {
         });
 
         actViewManager = new ActivationViewManager(doc);
-        neuronViewManager =new NeuronViewManager(model,doc);
+        neuronViewManager =new NeuronViewManager(model, doc);
+        templateViewManager =new TemplateViewManager(model);
+
         keyManager = new KeyManager(actViewManager);
-
-
 
         addTab(ACTIVATION_TAB_INDEX, "Activations", KeyEvent.VK_A, actViewManager.getView());
         addTab(NEURON_TAB_INDEX, "Neurons", KeyEvent.VK_N, neuronViewManager.getView());
+        addTab(TEMPLATE_TAB_INDEX, "Templates", KeyEvent.VK_N, templateViewManager.getView());
 
         tabbedPane.addKeyListener(keyManager);
         tabbedPane.addChangeListener(event-> {
             if(tabbedPane.getSelectedIndex()==NEURON_TAB_INDEX){
                 neuronViewManager.initGraphNeurons();
+            } else if(tabbedPane.getSelectedIndex()==TEMPLATE_TAB_INDEX){
+                templateViewManager.initGraphNeurons();
             }
-
         });
     }
 
