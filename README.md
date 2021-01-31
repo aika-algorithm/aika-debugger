@@ -73,7 +73,7 @@ template activations and links.
 * Branch-Probability: *The probability of the mutually exclusive branches induced by negative recurrent synapses.*
 * Fired: \[0,0\] *The exact point in time when this activation has been fired.*
 * Norm: *Normalization factor taking the 'age' of a neuron into account.*
-* Reference: *The ground input information referenced by this activation. Usually specified as char range. *
+* Reference: *The ground input information referenced by this activation. Usually specified as char range.*
 
 **Neuron**
 * Id: *Neuron Id*
