@@ -28,6 +28,7 @@ import org.graphstream.ui.graphicGraph.GraphicElement;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 
 public class TemplateViewManager extends AbstractNeuronViewManager {
@@ -77,12 +78,9 @@ public class TemplateViewManager extends AbstractNeuronViewManager {
     }
 
     public void initGraphNeurons() {
-        Collection<Neuron> neurons = getModel().getTemplates().getAllTemplates();
-        neurons.stream()
-                .forEach(neuron ->
-                        graphManager.lookupNode(neuron,
-                                node -> {
-                                    node.setAttribute("aika.neuronId", neuron.getId());
-                                }));
+        getModel()
+                .getTemplates()
+                .getAllTemplates()
+                .forEach(n -> drawNeuron(n));
     }
 }

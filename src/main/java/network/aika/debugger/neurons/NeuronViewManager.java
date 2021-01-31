@@ -26,6 +26,7 @@ import org.graphstream.ui.graphicGraph.GraphicElement;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
@@ -78,15 +79,11 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
     }
 
     public void initGraphNeurons() {
-        Set<Neuron> neurons = document.getActivations()
+        document.getActivations()
                 .stream()
                 .map(Activation::getNeuron)
-                .collect(Collectors.toSet());
-        neurons.stream()
-                .forEach(neuron ->
-                        graphManager.lookupNode(neuron,
-                                node -> {
-                                    node.setAttribute("aika.neuronId", neuron.getId());
-                                }));
+                .collect(Collectors.toSet())
+                .stream()
+                .forEach(n -> drawNeuron(n));
     }
 }
