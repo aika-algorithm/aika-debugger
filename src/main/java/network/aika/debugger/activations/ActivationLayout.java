@@ -14,22 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization.layout;
+package network.aika.debugger.activations;
 
-import network.aika.Model;
-import network.aika.neuron.NeuronProvider;
-import network.aika.visualization.AbstractNeuronViewManager;
-import network.aika.visualization.NeuronViewManager;
+import network.aika.neuron.activation.Activation;
+import network.aika.text.Document;
+import network.aika.debugger.AbstractLayout;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.miv.pherd.geom.Point3;
 
-public class NeuronLayout extends AbstractLayout {
-    AbstractNeuronViewManager nvm;
-    NeuronGraphManager graphManager;
 
-    public NeuronLayout(AbstractNeuronViewManager nvm, NeuronGraphManager gm) {
-        this.nvm = nvm;
+public class ActivationLayout extends AbstractLayout {
+    ActivationViewManager avm;
+    ActivationGraphManager graphManager;
+
+    public ActivationLayout(ActivationViewManager avm, ActivationGraphManager gm) {
+        this.avm = avm;
         this.graphManager = gm;
 
         k = STANDARD_DISTANCE;
@@ -40,19 +40,18 @@ public class NeuronLayout extends AbstractLayout {
 
     @Override
     public NodeParticle newNodeParticle(String id) {
-        Model model = nvm.getModel();
+        Document doc = avm.getDocument();
         Node n = graphManager.getNode(id);
+        Activation act = doc.getActivation(n.getAttribute("aika.id", Integer.class));
 
-        NeuronProvider np = model.lookupNeuron(n.getAttribute("aika.neuronId", Long.class));
-
-        Long originNeuronId = n.getAttribute("aika.originNeuronId", Long.class);
+        Integer originActId = n.getAttribute("aika.originActId", Integer.class);
 
         Double x;
         Double y;
 
-        NeuronParticle particle;
-        if(originNeuronId != null) {
-            NeuronParticle originParticle = graphManager.getParticle(originNeuronId);
+        ActivationParticle particle;
+        if(originActId != null) {
+            ActivationParticle originParticle = graphManager.getParticle(originActId);
             Point3 originPos = originParticle.getPosition();
 
             x = originPos.x;
@@ -74,10 +73,20 @@ public class NeuronLayout extends AbstractLayout {
             y += randomValue;
         }
 
-        particle = new NeuronParticle(this, id, x, y, 0);
+        particle = new ActivationParticle(this, n, act, id, x, y, 0);
 
-        graphManager.setParticle(np.getNeuron(), particle);
+        graphManager.setParticle(act, particle);
 
         return particle;
     }
+/*
+    public void particleMoved(Object id, double x, double y, double z) {
+        super.particleMoved(id, x, y, z);
+
+        Activation act = graphManager.getKey((String)id);
+        ActivationParticle ap = graphManager.getParticle(act);
+
+        System.out.println(act.getLabel() + " x:" + x + " y:" + y);
+    }
+ */
 }

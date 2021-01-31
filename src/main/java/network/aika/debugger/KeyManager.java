@@ -14,7 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization;
+package network.aika.debugger;
+
+import network.aika.debugger.activations.ActivationViewManager;
+import network.aika.debugger.activations.VisitorManager;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

@@ -1,9 +1,3 @@
-package network.aika.visualization.layout;
-
-import network.aika.neuron.activation.Activation;
-import network.aika.neuron.activation.Link;
-import org.graphstream.graph.Edge;
-import org.graphstream.graph.Graph;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,26 +14,33 @@ import org.graphstream.graph.Graph;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.graphstream.graph.Node;
+package network.aika.debugger.neurons;
 
+import network.aika.neuron.Neuron;
+import network.aika.neuron.Synapse;
+import network.aika.debugger.AbstractGraphManager;
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 
 import java.util.function.Consumer;
 
-public class ActivationGraphManager extends AbstractGraphManager<Activation, ActivationParticle> {
+public class NeuronGraphManager extends AbstractGraphManager<Neuron, NeuronParticle> {
 
-    public ActivationGraphManager(Graph graph) {
+    public NeuronGraphManager(Graph graph) {
         super(graph);
     }
 
-    protected long getKeyId(Activation act) {
-        return act.getId();
+    @Override
+    protected long getKeyId(Neuron n) {
+        return n.getId();
     }
 
-    public Edge lookupEdge(Link l, Consumer<Node> onCreate) {
-        return lookupEdge(l.getInput(), l.getOutput(), onCreate);
+    public Edge lookupEdge(Synapse s, Consumer<Node> onCreate) {
+        return lookupEdge(s.getInput(), s.getOutput(), onCreate);
     }
 
-    public Edge getEdge(Link l) {
-        return getEdge(l.getInput(), l.getOutput());
+    public Edge getEdge(Synapse s) {
+        return getEdge(s.getInput(), s.getOutput());
     }
 }

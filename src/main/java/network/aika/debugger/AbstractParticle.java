@@ -14,14 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization.layout;
+package network.aika.debugger;
 
 import org.graphstream.ui.geom.Vector3;
 import org.graphstream.ui.layout.springbox.EdgeSpring;
 import org.graphstream.ui.layout.springbox.Energies;
 import org.graphstream.ui.layout.springbox.GraphCellData;
 import org.graphstream.ui.layout.springbox.NodeParticle;
-import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.layout.springbox.implementations.SpringBoxNodeParticle;
 import org.miv.pherd.Particle;
 import org.miv.pherd.ParticleBox;
@@ -29,8 +28,6 @@ import org.miv.pherd.geom.Point3;
 import org.miv.pherd.ntree.Cell;
 
 import java.util.Iterator;
-
-import static network.aika.visualization.layout.AbstractLayout.STANDARD_DISTANCE;
 
 
 public abstract class AbstractParticle extends SpringBoxNodeParticle {

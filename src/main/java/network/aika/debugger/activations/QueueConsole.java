@@ -14,32 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization.layout;
+package network.aika.debugger.activations;
 
-import org.graphstream.ui.layout.springbox.NodeParticle;
-import org.graphstream.ui.layout.springbox.implementations.SpringBox;
+import network.aika.Thought;
+import network.aika.neuron.activation.QueueEntry;
+import network.aika.debugger.AbstractConsole;
 
-
-public abstract class AbstractLayout extends SpringBox {
-
-    protected static double k = 1f;
-
-    protected static double K1Init;
-    protected static double K1Final;
+import javax.swing.text.DefaultStyledDocument;
 
 
-    public static double STANDARD_DISTANCE = 0.2f;
+public class QueueConsole extends AbstractConsole {
 
-    @Override
-    public String getLayoutAlgorithmName() {
-        return "AikaLayout";
+    public void renderQueue(Thought t) {
+        DefaultStyledDocument sDoc = new DefaultStyledDocument();
+        addStylesToDocument(sDoc);
+        clear();
+        setStyledDocument(sDoc);
+
+        appendText(sDoc, "Queue\n\n", "headline");
+
+        for(QueueEntry qe: t.getQueue()) {
+           appendEntry(sDoc, qe.getPhase() + " ", qe.getElement().toShortString());
+        }
+
+        appendText(sDoc, "\n\n\n", "regular");
     }
-
-    @Override
-    protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
-  //      super.chooseNodePosition(n0, n1);
-
-
-    }
-
 }

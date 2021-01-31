@@ -1,7 +1,7 @@
-package network.aika.visualization;
+package network.aika.debugger.neurons;
 
 import network.aika.Model;
-import network.aika.visualization.layout.NeuronGraphManager;
+import network.aika.debugger.AbstractViewManager;
 
 public abstract class AbstractNeuronViewManager extends AbstractViewManager<NeuronConsole, NeuronGraphManager> {
 

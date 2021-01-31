@@ -14,9 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization;
+package network.aika.debugger;
+
+import org.graphstream.ui.layout.springbox.NodeParticle;
+import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 
 
-public class NeuronConsole extends AbstractConsole {
+public abstract class AbstractLayout extends SpringBox {
+
+    protected static double k = 1f;
+
+    protected static double K1Init;
+    protected static double K1Final;
+
+
+    public static double STANDARD_DISTANCE = 0.2f;
+
+    @Override
+    public String getLayoutAlgorithmName() {
+        return "AikaLayout";
+    }
+
+    @Override
+    protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
+  //      super.chooseNodePosition(n0, n1);
+
+
+    }
 
 }

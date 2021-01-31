@@ -14,14 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization;
+package network.aika.debugger.activations;
 
 import network.aika.Utils;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.activation.Visitor;
-import network.aika.neuron.phase.Phase;
-import network.aika.visualization.layout.ActivationParticle;
+import network.aika.debugger.AbstractConsole;
 
 import javax.swing.text.StyledDocument;
 

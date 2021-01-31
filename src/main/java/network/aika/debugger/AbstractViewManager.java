@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization;
+package network.aika.debugger;
 
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
@@ -25,7 +25,6 @@ import network.aika.neuron.excitatory.PatternSynapse;
 import network.aika.neuron.inhibitory.InhibitoryNeuron;
 import network.aika.neuron.inhibitory.InhibitorySynapse;
 import network.aika.neuron.inhibitory.PrimaryInhibitorySynapse;
-import network.aika.visualization.layout.AbstractGraphManager;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
@@ -43,7 +42,6 @@ import org.graphstream.ui.view.ViewerPipe;
 import org.graphstream.ui.view.camera.Camera;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;

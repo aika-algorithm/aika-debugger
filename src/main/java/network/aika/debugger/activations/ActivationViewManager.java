@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization;
+package network.aika.debugger.activations;
 
 import network.aika.EventListener;
 import network.aika.neuron.Synapse;
@@ -24,8 +24,7 @@ import network.aika.neuron.activation.Link;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.phase.Phase;
 import network.aika.text.Document;
-import network.aika.visualization.layout.ActivationGraphManager;
-import network.aika.visualization.layout.ActivationLayout;
+import network.aika.debugger.AbstractViewManager;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Node;
@@ -43,7 +42,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
-import static network.aika.visualization.layout.AbstractLayout.STANDARD_DISTANCE;
+import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE;
 
 
 public class ActivationViewManager extends AbstractViewManager<ActivationConsole, ActivationGraphManager> implements EventListener {

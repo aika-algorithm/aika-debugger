@@ -14,14 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization;
+package network.aika.debugger;
 
 import network.aika.Model;
 import network.aika.text.Document;
+import network.aika.debugger.activations.ActivationViewManager;
+import network.aika.debugger.neurons.NeuronViewManager;
+import network.aika.debugger.neurons.templates.TemplateViewManager;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 

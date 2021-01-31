@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization;
+package network.aika.debugger.activations;
 
 import network.aika.VisitorEventListener;
 import network.aika.neuron.activation.Visitor;
-import network.aika.visualization.layout.ActivationGraphManager;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 

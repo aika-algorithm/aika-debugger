@@ -14,21 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization;
+package network.aika.debugger.neurons;
 
 import network.aika.Model;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.activation.Activation;
 import network.aika.text.Document;
-import network.aika.visualization.layout.NeuronGraphManager;
-import network.aika.visualization.layout.NeuronLayout;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 

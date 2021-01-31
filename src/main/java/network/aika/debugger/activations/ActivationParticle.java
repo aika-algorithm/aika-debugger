@@ -14,14 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization.layout;
+package network.aika.debugger.activations;
 
 import network.aika.neuron.Synapse;
-import network.aika.neuron.Templates;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.excitatory.PatternPartSynapse;
 import network.aika.neuron.inhibitory.InhibitoryNeuron;
+import network.aika.debugger.AbstractLayout;
+import network.aika.debugger.AbstractParticle;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.geom.Vector2;
 import org.graphstream.ui.geom.Vector3;
@@ -30,7 +31,7 @@ import org.graphstream.ui.layout.springbox.Energies;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.miv.pherd.geom.Point3;
 
-import static network.aika.visualization.layout.AbstractLayout.*;
+import static network.aika.debugger.AbstractLayout.*;
 
 public class ActivationParticle extends AbstractParticle {
 

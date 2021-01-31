@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.aika.visualization.layout;
+package network.aika.debugger;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;

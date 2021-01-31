@@ -1,4 +1,4 @@
-package network.aika.visualization;
+package network.aika.debugger;
 
 import network.aika.Config;
 import network.aika.neuron.Neuron;
