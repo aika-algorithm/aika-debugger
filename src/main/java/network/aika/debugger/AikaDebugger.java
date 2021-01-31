@@ -133,7 +133,8 @@ public class AikaDebugger extends JPanel {
 
         //Add content to the window.
         frame.add(new AikaDebugger(doc,model), BorderLayout.CENTER);
-        frame.setSize( 800, 600 );
+  //      frame.setSize( 800, 600 );
         frame.setVisible(true);
+        frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
     }
 }
