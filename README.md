@@ -1,7 +1,9 @@
 # A visual debugger for the Aika Neural Network
 
-**Hint:** There is a scaling issue with some Java Versions on high resolution displays. A workaround
+**Hints:** 
+* There is a scaling issue with some Java Versions on high resolution displays. A workaround
 is to add the following option during the startup. -Dsun.java2d.uiScale=100%
+* The debugger uses a fork of the gs-ui-swing library which contains a modified edge drawing function. https://github.com/aika-algorithm/gs-ui-swing.git
 
 
 ## Stepping Modes:
