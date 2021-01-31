@@ -60,13 +60,7 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
 
     @Override
     public JComponent getConsolePane() {
-        JScrollPane paneScrollPane = new JScrollPane(console);
-        paneScrollPane.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        paneScrollPane.setPreferredSize(new Dimension(250, 155));
-        paneScrollPane.setMinimumSize(new Dimension(10, 10));
-
-        return new JSplitPane(JSplitPane.VERTICAL_SPLIT, console, paneScrollPane);
+        return console;
     }
 
     public void viewClosed(String id) {

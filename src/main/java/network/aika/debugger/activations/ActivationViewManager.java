@@ -150,7 +150,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         queuePaneScrollPane.setPreferredSize(new Dimension(250, 155));
         queuePaneScrollPane.setMinimumSize(new Dimension(10, 10));
 
-        return new JSplitPane(JSplitPane.VERTICAL_SPLIT, console, queuePaneScrollPane);
+        JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, console, queuePaneScrollPane);
+        sp.setResizeWeight(0.5);
+        return sp;
     }
 
     @Override
