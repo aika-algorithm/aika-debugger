@@ -19,6 +19,7 @@ package network.aika.debugger.neurons;
 import network.aika.Model;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.activation.Activation;
+import network.aika.neuron.inhibitory.InhibitoryNeuron;
 import network.aika.text.Document;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
@@ -73,11 +74,18 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
     }
 
     public void initGraphNeurons() {
-        document.getActivations()
+        Set<Neuron> neurons = document.getActivations()
                 .stream()
                 .map(Activation::getNeuron)
-                .collect(Collectors.toSet())
-                .stream()
+                .collect(Collectors.toSet());
+
+        // Inhibitory Neurons don't necessarily know their input and output synapses.
+        neurons.stream()
+                .filter(n -> n instanceof InhibitoryNeuron)
+                .forEach(n -> drawNeuron(n));
+
+        neurons.stream()
+                .filter(n -> !(n instanceof InhibitoryNeuron))
                 .forEach(n -> drawNeuron(n));
     }
 }
