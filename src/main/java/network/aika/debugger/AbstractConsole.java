@@ -82,6 +82,7 @@ public abstract class AbstractConsole extends JTextPane {
 
         appendEntry(sDoc, "Id: ", "" + n.getId());
         appendEntry(sDoc, "Label: ", n.getLabel());
+        appendEntry(sDoc, "Type: ", n.getClass().getSimpleName());
         appendEntry(sDoc, "Is Input Neuron: ", "" + n.isInputNeuron());
         appendEntry(sDoc, "Bias: ", "" + Utils.round(n.getBias(false)));
         appendEntry(sDoc, "Bias (final): ", "" + Utils.round(n.getBias(true)));
@@ -105,6 +106,7 @@ public abstract class AbstractConsole extends JTextPane {
     public void renderSynapseConsoleOutput(StyledDocument sDoc, Synapse s) {
         appendText(sDoc, "Synapse\n\n", "headline");
 
+        appendEntry(sDoc, "Type: ", s.getClass().getSimpleName());
         appendEntry(sDoc, "Weight: ", "" + Utils.round(s.getWeight()));
         appendEntry(sDoc, "Frequency(POS, POS): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.POS, s.getSampleSpace().getN())));
         appendEntry(sDoc, "Frequency(POS, NEG): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.NEG, s.getSampleSpace().getN())));
