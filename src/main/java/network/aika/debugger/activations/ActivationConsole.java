@@ -56,7 +56,6 @@ public class ActivationConsole extends AbstractConsole {
     public void renderLinkConsoleOutput(StyledDocument sDoc, Link l) {
         appendText(sDoc, "Link" + "\n\n", "headline");
 
-        Activation iAct = l.getInput();
         Activation oAct = l.getOutput();
         appendEntry(sDoc, "Input-Value: ", "" + Utils.round(l.getInputValue()));
         appendEntry(sDoc, "Output-Value: ", oAct.getValue() != null ? "" + Utils.round(oAct.getValue()) : "X");

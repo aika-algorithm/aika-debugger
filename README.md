@@ -78,6 +78,7 @@ template activations and links.
 **Neuron**
 * Id: *Neuron Id*
 * Label: *Neuron Label*
+* Type: *Neuron Type (Class name)*
 * Is Input Neuron: *Input Neuron*
 * Bias: 0.0 *The initial bias, where all positive recurrent synapses are assumed to be active*
 * Bias (final): *The final bias*
@@ -111,6 +112,7 @@ synapses of the same output neuron. Secondly, it bootstraps the training of a we
 
 **Synapse**
 
+* Type: *Synapse Type (Class name)*
 * Weight: *The weight of the synapse.*
 * Frequency(POS, POS): *The number of instances where both input and output neuron have been activated simultaneously.*
 * Frequency(POS, NEG): *The number of instances where only the input neuron has been activated.*
