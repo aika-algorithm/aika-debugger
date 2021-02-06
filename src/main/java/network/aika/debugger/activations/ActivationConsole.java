@@ -33,9 +33,9 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Id: ", "" + act.getId());
         appendEntry(sDoc, "Label: ", act.getLabel());
         appendEntry(sDoc, "Value: ", act.getValue() != null ? "" + Utils.round(act.getValue()) : "X");
-        appendEntry(sDoc, "f(net)': ", "" + Utils.round(act.getActFunctionDerivative()));
         appendEntry(sDoc, "net[initial]: ", "" + Utils.round(act.getNet(false)));
         appendEntry(sDoc, "net[final]: ", "" + Utils.round(act.getNet(true)));
+        appendEntry(sDoc, "f(net)': ", "" + Utils.round(act.getNeuron().getActivationFunction().outerGrad(act.getNet(true))));
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(act.getGradient()));
         appendEntry(sDoc, "Gradient Sum: ", "" + Utils.round(act.getGradientSum()));
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
@@ -64,8 +64,7 @@ public class ActivationConsole extends AbstractConsole {
 
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
-        appendEntry(sDoc, "f(net)': ", "" + Utils.round(oAct.getActFunctionDerivative()));
-        appendEntry(sDoc, "f(net - (xi * wi))': ", "" + Utils.round(l.getActFunctionDerivative()));
+        appendEntry(sDoc, "f(net)': ", "" + Utils.round(oAct.getNeuron().getActivationFunction().outerGrad(oAct.getNet(true))));
 
         appendText(sDoc, "\n\n\n", "regular");
 

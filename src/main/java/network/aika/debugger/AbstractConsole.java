@@ -122,7 +122,7 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, "Surprisal(POS, NEG): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.NEG)));
         appendEntry(sDoc, "Surprisal(NEG, POS): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.POS)));
         appendEntry(sDoc, "Surprisal(NEG, NEG): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.NEG)));
-        appendEntry(sDoc, "Template: ", s.getTemplate().toString());
+        appendEntry(sDoc, "Template: ", s.getTemplate() != null ? s.getTemplate().toString() : null);
     }
 
     public void appendEntry(StyledDocument sDoc, String fieldName, String fieldValue) {
