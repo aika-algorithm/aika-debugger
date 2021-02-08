@@ -21,6 +21,7 @@ import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.activation.Visitor;
 import network.aika.debugger.AbstractConsole;
+import network.aika.neuron.sign.Sign;
 
 import javax.swing.text.StyledDocument;
 
@@ -57,7 +58,7 @@ public class ActivationConsole extends AbstractConsole {
         appendText(sDoc, "Link" + "\n\n", "headline");
 
         Activation oAct = l.getOutput();
-        appendEntry(sDoc, "Input-Value: ", "" + Utils.round(l.getInputValue()));
+        appendEntry(sDoc, "Input-Value: ", "" + Utils.round(l.getInputValue(Sign.POS)));
         appendEntry(sDoc, "Output-Value: ", oAct.getValue() != null ? "" + Utils.round(oAct.getValue()) : "X");
         appendEntry(sDoc, "Output-net[initial]: ", "" + Utils.round(oAct.getNet(false)));
         appendEntry(sDoc, "Output-net[final]: ", "" + Utils.round(oAct.getNet(true)));

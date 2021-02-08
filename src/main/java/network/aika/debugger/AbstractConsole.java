@@ -18,8 +18,8 @@ package network.aika.debugger;
 
 import network.aika.Utils;
 import network.aika.neuron.Neuron;
-import network.aika.neuron.Sign;
 import network.aika.neuron.Synapse;
+import network.aika.neuron.sign.Sign;
 
 import javax.swing.*;
 import javax.swing.text.*;
