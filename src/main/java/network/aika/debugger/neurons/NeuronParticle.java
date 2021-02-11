@@ -35,11 +35,11 @@ public class NeuronParticle extends AbstractParticle {
     protected void attraction(Vector3 delta) {
         SpringBox box = (SpringBox) this.box;
         Energies energies = box.getEnergies();
-
+/*
         for (EdgeSpring edge : neighbours) {
             if (!edge.ignored) {
                 edgeAttraction(delta, edge, energies);
             }
-        }
+        }*/
     }
 }

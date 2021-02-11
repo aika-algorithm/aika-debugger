@@ -60,12 +60,6 @@ public class ActivationParticle extends AbstractParticle {
     }
 */
 
-    public void moveTo(double x, double y, double z) {
-        super.moveTo(x, y, z);
-  //      System.out.println(act.getLabel() + " x:" + x + " y:" + y + " x:" + z);
-    }
-
-
     @Override
     protected void attraction(Vector3 delta) {
 //        Boolean initNode = node.getAttribute("aika.init-node", Boolean.class);

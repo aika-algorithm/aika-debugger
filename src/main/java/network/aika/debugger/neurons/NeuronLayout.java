@@ -67,10 +67,9 @@ public class NeuronLayout extends AbstractLayout {
                 y = 0.0;
         }
 
-        if(Math.abs(x) > 0.01 || Math.abs(y) > 0.01) {
-            double randomValue = (random.nextDouble() - 0.5) * 0.02;
-            x += randomValue;
-            y += randomValue;
+        if(Math.abs(x) < 0.01 && Math.abs(y) < 0.01) {
+            x += (random.nextDouble() - 0.5) * 0.02;
+            y += (random.nextDouble() - 0.5) * 0.02;
         }
 
         particle = new NeuronParticle(this, id, x, y, 0);
