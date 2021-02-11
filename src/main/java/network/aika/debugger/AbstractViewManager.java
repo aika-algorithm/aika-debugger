@@ -231,12 +231,14 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
 
     public void unhighlightElement(Element ge) {
         ge.removeAttribute("ui.selected");
-        System.out.println("unhighlightElement" + ge.getId());
+        fromViewer.pump();
+//        System.out.println("unhighlightElement" + ge.getId());
     }
 
     public void highlightElement(Element ge) {
         ge.setAttribute("ui.selected");
-        System.out.println("highlightElement" + ge.getId());
+        fromViewer.pump();
+//        System.out.println("highlightElement" + ge.getId());
     }
 
     public void viewClosed(String id) {
