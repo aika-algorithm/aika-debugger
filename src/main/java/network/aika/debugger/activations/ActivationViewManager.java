@@ -170,7 +170,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     @Override
     public void onActivationProcessedEvent(Phase p, Activation act) {
-        queueConsole.renderQueue(act.getThought());
+        queueConsole.render("Queue", sDoc ->
+                queueConsole.renderQueue(sDoc, act.getThought())
+        );
 
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
@@ -261,7 +263,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     @Override
     public void onLinkProcessedEvent(Phase p, Link l) {
-        queueConsole.renderQueue(l.getThought());
+        queueConsole.render("Queue", sDoc ->
+                queueConsole.renderQueue(sDoc, l.getThought())
+        );
 
         Edge e = onLinkEvent(l);
 

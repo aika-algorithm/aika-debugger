@@ -20,19 +20,12 @@ import network.aika.Thought;
 import network.aika.neuron.activation.QueueEntry;
 import network.aika.debugger.AbstractConsole;
 
-import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyledDocument;
 
 
 public class QueueConsole extends AbstractConsole {
 
-    public void renderQueue(Thought t) {
-        DefaultStyledDocument sDoc = new DefaultStyledDocument();
-        addStylesToDocument(sDoc);
-        clear();
-        setStyledDocument(sDoc);
-
-        appendText(sDoc, "Queue\n\n", "headline");
-
+    public void renderQueue(StyledDocument sDoc, Thought t) {
         for(QueueEntry qe: t.getQueue()) {
            appendEntry(sDoc, qe.getPhase() + " ", qe.getElement().toShortString());
         }
