@@ -17,6 +17,7 @@
 package network.aika.debugger.activations;
 
 import network.aika.EventListener;
+import network.aika.debugger.StepManager;
 import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Fired;
@@ -41,6 +42,9 @@ import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static network.aika.debugger.StepManager.EventType.ACT;
+import static network.aika.debugger.StepManager.EventType.LINK;
+import static network.aika.debugger.StepManager.When.*;
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
 import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE;
 
@@ -53,11 +57,13 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     private QueueConsole queueConsole;
 
-    boolean linkStepMode;
-    boolean stopAfterProcessed;
+    protected StepManager stepManager;
 
     public ActivationViewManager(Document doc) {
         super();
+
+        this.stepManager = new StepManager();
+
         graphManager = new ActivationGraphManager(graph);
 
         this.doc = doc;
@@ -68,6 +74,19 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         viewer.enableAutoLayout(new ActivationLayout(this, graphManager));
 
         splitPane = initSplitPane();
+    }
+
+
+    public StepManager getStepManager() {
+        return stepManager;
+    }
+
+    public void pumpAndWaitForUserAction() {
+        pump();
+
+        System.out.println("Viewport: " + graphView.getCamera().getViewCenter() + " Zoom:" + graphView.getCamera().getViewPercent());
+
+        stepManager.waitForClick();
     }
 
     public void click(int x, int y) {
@@ -159,6 +178,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     public void onActivationCreationEvent(Activation act, Activation originAct) {
         Node n = onActivationEvent(act, originAct);
 
+        if(!stepManager.stopHere(NEW, ACT))
+            return;
+
         n.setAttribute("aika.init-node", true);
 
         console.render("New", sDoc ->
@@ -177,6 +199,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
 
+        if (!stepManager.stopHere(BEFORE, ACT))
+            return;
+
         console.render("Before " + Phase.toString(p), sDoc ->
                 console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
         );
@@ -186,14 +211,14 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     @Override
     public void afterActivationProcessedEvent(Phase p, Activation act) {
-        if(stopAfterProcessed) {
-            console.render("After " + Phase.toString(p), sDoc ->
-                    console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
-            );
+        if (!stepManager.stopHere(AFTER, ACT))
+            return;
 
-            pumpAndWaitForUserAction();
-            stopAfterProcessed = false;
-        }
+        console.render("After " + Phase.toString(p), sDoc ->
+                console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+        );
+
+        pumpAndWaitForUserAction();
     }
 
     private Node onActivationEvent(Activation act, Activation originAct) {
@@ -228,13 +253,6 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         return node;
     }
 
-    public void setLinkStepMode(boolean linkStepMode) {
-        this.linkStepMode = linkStepMode;
-    }
-
-    public void setStopAfterProcessed(boolean stopAfterProcessed) {
-        this.stopAfterProcessed = stopAfterProcessed;
-    }
 
     private void highlightCurrentOnly(Element e) {
         if(lastHighlighted != e) {
@@ -252,13 +270,14 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         e.setAttribute("aika.init-node", true);
 
+        if (!stepManager.stopHere(NEW, LINK))
+            return;
+
         console.render("New", sDoc ->
                 console.renderLinkConsoleOutput(sDoc, l)
         );
 
-        if(linkStepMode) {
-            pumpAndWaitForUserAction();
-        }
+        pumpAndWaitForUserAction();
     }
 
     @Override
@@ -271,6 +290,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         e.setAttribute("aika.init-node", false);
 
+        if (!stepManager.stopHere(BEFORE, LINK))
+            return;
+
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         console.addStylesToDocument(sDoc);
         console.clear();
@@ -278,26 +300,23 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         console.renderLinkConsoleOutput(sDoc, l);
         console.setStyledDocument(sDoc);
 
-        if(linkStepMode) {
-            pumpAndWaitForUserAction();
-        }
+        pumpAndWaitForUserAction();
     }
 
     @Override
     public void afterLinkProcessedEvent(Phase p, Link l) {
-        if(stopAfterProcessed) {
-            DefaultStyledDocument sDoc = new DefaultStyledDocument();
-            console.addStylesToDocument(sDoc);
-            console.clear();
-            console.addHeadline(sDoc, "After " + Phase.toString(p));
-            console.renderLinkConsoleOutput(sDoc, l);
-            console.setStyledDocument(sDoc);
+        if (!stepManager.stopHere(AFTER, LINK))
+            return;
 
-            if(linkStepMode) {
-                pumpAndWaitForUserAction();
-            }
-            stopAfterProcessed = false;
-        }
+        DefaultStyledDocument sDoc = new DefaultStyledDocument();
+        console.addStylesToDocument(sDoc);
+        console.clear();
+        console.addHeadline(sDoc, "After " + Phase.toString(p));
+        console.renderLinkConsoleOutput(sDoc, l);
+        console.setStyledDocument(sDoc);
+
+
+        pumpAndWaitForUserAction();
     }
 
     private Edge onLinkEvent(Link l) {

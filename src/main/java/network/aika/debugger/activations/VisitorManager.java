@@ -21,33 +21,19 @@ import network.aika.neuron.activation.Visitor;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
+import static network.aika.debugger.StepManager.EventType.VISITOR;
+import static network.aika.debugger.StepManager.When.BEFORE;
+
 public class VisitorManager implements VisitorEventListener {
 
     private boolean isRegistered = false;
 
     private ActivationViewManager avm;
 
-    private boolean clicked;
-
     public VisitorManager(ActivationViewManager avm) {
         this.avm = avm;
     }
 
-    public synchronized void click() {
-        clicked = true;
-        notifyAll();
-    }
-
-    private synchronized void waitForClick() {
-        try {
-            while(!clicked) {
-                wait();
-            }
-            clicked = false;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     public boolean isRegistered() {
         return isRegistered;
@@ -69,6 +55,9 @@ public class VisitorManager implements VisitorEventListener {
 
     @Override
     public void onVisitorEvent(Visitor v, boolean dir) {
+        if(!avm.stepManager.stopHere(BEFORE, VISITOR))
+            return;
+
         avm.getConsole().render("Visitor", sDoc ->
                 avm.getConsole().renderVisitorConsoleOutput(sDoc, v, dir)
         );
@@ -98,6 +87,6 @@ public class VisitorManager implements VisitorEventListener {
 
         avm.pump();
 
-        waitForClick();
+        avm.stepManager.waitForClick();
     }
 }

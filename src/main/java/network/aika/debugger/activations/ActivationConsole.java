@@ -37,8 +37,8 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "net[initial]: ", "" + Utils.round(act.getNet(false)));
         appendEntry(sDoc, "net[final]: ", "" + Utils.round(act.getNet(true)));
         appendEntry(sDoc, "f(net)': ", "" + Utils.round(act.getNeuron().getActivationFunction().outerGrad(act.getNet(true))));
-        appendEntry(sDoc, "Gradient: ", "" + Utils.round(act.getGradient()));
-        appendEntry(sDoc, "Gradient Sum: ", "" + Utils.round(act.getGradientSum()));
+        appendEntry(sDoc, "Input-Gradient: ", "" + Utils.round(act.getInputGradient()));
+        appendEntry(sDoc, "Output-Gradient-Sum: ", "" + Utils.round(act.getOutputGradientSum()));
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
         appendEntry(sDoc, "Norm: ", "" + Utils.round(act.getNorm()));

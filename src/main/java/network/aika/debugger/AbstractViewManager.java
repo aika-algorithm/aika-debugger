@@ -66,8 +66,6 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
 
     protected C console;
 
-    protected boolean clicked;
-
     protected Element lastHighlighted;
 
     public AbstractViewManager(){
@@ -200,33 +198,10 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         synapseTypeModifiers.put(PatternSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(0,130,0);"));
     }
 
-    public void pumpAndWaitForUserAction() {
-        pump();
-
-        System.out.println("Viewport: " + graphView.getCamera().getViewCenter() + " Zoom:" + graphView.getCamera().getViewPercent());
-
-        waitForClick();
-    }
 
     public void pump() {
         fromViewer.pump();
         // fromViewer.blockingPump();
-    }
-
-    public synchronized void click() {
-        clicked = true;
-        notifyAll();
-    }
-
-    private synchronized void waitForClick() {
-        try {
-            while(!clicked) {
-                wait();
-            }
-            clicked = false;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     public void unhighlightElement(Element ge) {
@@ -262,4 +237,5 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
     }
 
     public abstract void click(int x, int y);
+
 }

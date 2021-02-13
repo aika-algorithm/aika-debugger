@@ -22,6 +22,8 @@ import network.aika.debugger.activations.VisitorManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import static network.aika.debugger.StepManager.EventType.*;
+
 public class KeyManager implements KeyListener {
 
     ActivationViewManager actViewManager;
@@ -39,27 +41,37 @@ public class KeyManager implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        StepManager sm = actViewManager.getStepManager();
+
         if(e.getKeyChar() == 'm') {
             System.out.println("Metric: " + actViewManager.getCamera().getMetrics());
             return;
         }
 
         if(e.getKeyChar() == 'e') {
-            actViewManager.setStopAfterProcessed(true);
-        } else if(e.getKeyChar() == 'a' || e.getKeyChar() == 'l') {
-            actViewManager.setLinkStepMode(e.getKeyChar() == 'l');
+            sm.setStopAfterProcessed(true);
+        } else if(e.getKeyChar() == 'r') {
+            sm.setMode(null);
+        } else if(e.getKeyChar() == 'a') {
+            sm.setMode(ACT);
+
+            if(visitorManager.isRegistered()) {
+                visitorManager.setVisitorMode(false);
+            }
+        } else if(e.getKeyChar() == 'l') {
+            sm.setMode(LINK);
             if(visitorManager.isRegistered()) {
                 visitorManager.setVisitorMode(false);
             }
         } else if(e.getKeyChar() == 'v') {
-            actViewManager.setLinkStepMode(true);
+            sm.setMode(VISITOR);
+
             if(!visitorManager.isRegistered()) {
                 visitorManager.setVisitorMode(true);
             }
         }
 
-        actViewManager.click();
-        visitorManager.click();
+        sm.click();
     }
 
     @Override
