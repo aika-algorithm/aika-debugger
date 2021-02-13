@@ -89,7 +89,6 @@ public abstract class AbstractGraphManager<K, P> {
         return node;
     }
 
-
     public Node getNode(K key) {
         String id = getNodeId(key);
         return graph.getNode(id);
