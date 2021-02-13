@@ -16,6 +16,8 @@
  */
 package network.aika.debugger;
 
+import network.aika.debugger.activations.VisitorManager;
+
 import static network.aika.debugger.StepManager.EventType.*;
 
 public class StepManager {
@@ -40,12 +42,30 @@ public class StepManager {
         VISITOR
     }
 
+
+    private VisitorManager visitorManager;
+
+
+    public StepManager(VisitorManager visitorManager) {
+        this.visitorManager = visitorManager;
+    }
+
     public void setStopAfterProcessed(boolean b) {
         stopAfterProcessed = b;
     }
 
     public void setMode(EventType mode) {
         this.mode = mode;
+
+        if(mode == ACT || mode == LINK) {
+            if(visitorManager.isRegistered()) {
+                visitorManager.setVisitorMode(false);
+            }
+        } else if(mode == VISITOR) {
+            if(!visitorManager.isRegistered()) {
+                visitorManager.setVisitorMode(true);
+            }
+        }
     }
 
     public synchronized void click() {
@@ -55,9 +75,9 @@ public class StepManager {
 
     public boolean stopHere(When w, EventType et) {
         if(mode == null) {
-            if(lastTimestamp != null && System.currentTimeMillis() - lastTimestamp > 2000) {
+            if(lastTimestamp != null && System.currentTimeMillis() - lastTimestamp > 1000) {
                 if(mode == null) {
-                    mode = VISITOR;
+                    setMode(VISITOR);
                 }
             } else {
                 lastTimestamp = System.currentTimeMillis();

@@ -61,9 +61,6 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     public ActivationViewManager(Document doc) {
         super();
-
-        this.stepManager = new StepManager();
-
         graphManager = new ActivationGraphManager(graph);
 
         this.doc = doc;
@@ -74,6 +71,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         viewer.enableAutoLayout(new ActivationLayout(this, graphManager));
 
         splitPane = initSplitPane();
+
+        this.stepManager = new StepManager(visitorManager);
     }
 
 

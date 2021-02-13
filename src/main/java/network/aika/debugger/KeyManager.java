@@ -27,11 +27,9 @@ import static network.aika.debugger.StepManager.EventType.*;
 public class KeyManager implements KeyListener {
 
     ActivationViewManager actViewManager;
-    VisitorManager visitorManager;
 
     public KeyManager(ActivationViewManager actViewManager) {
         this.actViewManager = actViewManager;
-        visitorManager = actViewManager.getVisitorManager();
     }
 
     @Override
@@ -54,21 +52,10 @@ public class KeyManager implements KeyListener {
             sm.setMode(null);
         } else if(e.getKeyChar() == 'a') {
             sm.setMode(ACT);
-
-            if(visitorManager.isRegistered()) {
-                visitorManager.setVisitorMode(false);
-            }
         } else if(e.getKeyChar() == 'l') {
             sm.setMode(LINK);
-            if(visitorManager.isRegistered()) {
-                visitorManager.setVisitorMode(false);
-            }
         } else if(e.getKeyChar() == 'v') {
             sm.setMode(VISITOR);
-
-            if(!visitorManager.isRegistered()) {
-                visitorManager.setVisitorMode(true);
-            }
         }
 
         sm.click();
