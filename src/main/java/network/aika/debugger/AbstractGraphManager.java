@@ -53,7 +53,6 @@ public abstract class AbstractGraphManager<K, P> {
 
     protected abstract long getKeyId(K key);
 
-
     public P getParticle(K key) {
         return getParticle(getKeyId(key));
     }
@@ -65,7 +64,6 @@ public abstract class AbstractGraphManager<K, P> {
     public void setParticle(K key, P particle) {
         keyIdToParticle.put(getKeyId(key), particle);
     }
-
 
     public String getNodeId(K key) {
         return "" + getKeyId(key);

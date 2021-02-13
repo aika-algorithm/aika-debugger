@@ -19,6 +19,9 @@ package network.aika.debugger.neurons;
 
 import network.aika.debugger.AbstractLayout;
 import network.aika.debugger.AbstractParticle;
+import network.aika.neuron.Neuron;
+import network.aika.neuron.NeuronProvider;
+import network.aika.neuron.Synapse;
 import org.graphstream.ui.geom.Vector3;
 import org.graphstream.ui.layout.springbox.EdgeSpring;
 import org.graphstream.ui.layout.springbox.Energies;
@@ -27,19 +30,37 @@ import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 
 public class NeuronParticle extends AbstractParticle {
 
-    public NeuronParticle(AbstractLayout layout, String id, double x, double y, double z) {
+    Neuron neuron;
+
+    public NeuronParticle(AbstractLayout layout, String id, Neuron n, double x, double y, double z) {
         super(layout, id, x, y, z);
+
+        neuron = n;
     }
 
     @Override
     protected void attraction(Vector3 delta) {
         SpringBox box = (SpringBox) this.box;
         Energies energies = box.getEnergies();
-/*
+
         for (EdgeSpring edge : neighbours) {
             if (!edge.ignored) {
-                edgeAttraction(delta, edge, energies);
+                Synapse s = lookupSynapse(edge);
+
+                System.out.println("Layout synapse " + s.toString());
+
+               // edgeAttraction(delta, edge, energies);
             }
-        }*/
+        }
+    }
+
+    private Synapse lookupSynapse(EdgeSpring edge) {
+        NeuronParticle linkedNP = (NeuronParticle) edge.getOpposite(this);
+
+        Synapse os = neuron.getOutputSynapse(linkedNP.neuron.getProvider());
+        if(os != null)
+            return os;
+
+        return neuron.getInputSynapse(linkedNP.neuron.getProvider());
     }
 }

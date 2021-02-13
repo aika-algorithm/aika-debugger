@@ -72,7 +72,7 @@ public class NeuronLayout extends AbstractLayout {
             y += (random.nextDouble() - 0.5) * 0.02;
         }
 
-        particle = new NeuronParticle(this, id, x, y, 0);
+        particle = new NeuronParticle(this, id, np.getNeuron(), x, y, 0);
 
         graphManager.setParticle(np.getNeuron(), particle);
 
