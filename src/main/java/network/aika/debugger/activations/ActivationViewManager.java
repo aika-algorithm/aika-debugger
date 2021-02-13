@@ -16,7 +16,7 @@
  */
 package network.aika.debugger.activations;
 
-import network.aika.EventListener;
+import network.aika.callbacks.EventListener;
 import network.aika.debugger.StepManager;
 import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;

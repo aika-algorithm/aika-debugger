@@ -30,7 +30,6 @@ public class StepManager {
         this.mode = mode;
     }
 
-
     public synchronized void click() {
         clicked = true;
         notifyAll();
@@ -57,10 +56,17 @@ public class StepManager {
 
     public synchronized void waitForClick() {
         try {
+            long waitBegin = System.currentTimeMillis();
             while(!clicked) {
                 wait();
             }
             clicked = false;
+
+            if(System.currentTimeMillis() - waitBegin > 1000) {
+                if(mode == null) {
+                    mode = VISITOR;
+                }
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

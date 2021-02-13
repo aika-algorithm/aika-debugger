@@ -16,7 +16,7 @@
  */
 package network.aika.debugger.activations;
 
-import network.aika.Utils;
+import network.aika.utils.Utils;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.activation.Visitor;

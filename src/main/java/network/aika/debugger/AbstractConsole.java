@@ -16,7 +16,7 @@
  */
 package network.aika.debugger;
 
-import network.aika.Utils;
+import network.aika.utils.Utils;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
 import network.aika.neuron.sign.Sign;

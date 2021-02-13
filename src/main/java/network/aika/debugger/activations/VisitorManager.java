@@ -16,7 +16,7 @@
  */
 package network.aika.debugger.activations;
 
-import network.aika.VisitorEventListener;
+import network.aika.callbacks.VisitorEventListener;
 import network.aika.neuron.activation.Visitor;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
