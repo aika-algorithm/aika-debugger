@@ -56,16 +56,6 @@ public class StepManager {
 
     public void setMode(EventType mode) {
         this.mode = mode;
-
-        if(mode == ACT || mode == LINK) {
-            if(visitorManager.isRegistered()) {
-                visitorManager.setVisitorMode(false);
-            }
-        } else if(mode == VISITOR) {
-            if(!visitorManager.isRegistered()) {
-                visitorManager.setVisitorMode(true);
-            }
-        }
     }
 
     public synchronized void click() {

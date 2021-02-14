@@ -26,31 +26,11 @@ import static network.aika.debugger.StepManager.When.BEFORE;
 
 public class VisitorManager implements VisitorEventListener {
 
-    private boolean isRegistered = false;
-
     private ActivationViewManager avm;
 
     public VisitorManager(ActivationViewManager avm) {
         this.avm = avm;
-    }
-
-
-    public boolean isRegistered() {
-        return isRegistered;
-    }
-
-    public void setVisitorMode(boolean active) {
-        if(active) {
-            if(!isRegistered) {
-                avm.getDocument().addVisitorEventListener(this);
-                isRegistered = true;
-            }
-        } else {
-            if(isRegistered) {
-                avm.getDocument().removeVisitorEventListener(this);
-                isRegistered = false;
-            }
-        }
+        avm.getDocument().addVisitorEventListener(this);
     }
 
     @Override
