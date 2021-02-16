@@ -16,11 +16,13 @@
  */
 package network.aika.debugger;
 
+import network.aika.debugger.activations.ActivationParticle;
+import network.aika.neuron.activation.Activation;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 
 
-public abstract class AbstractLayout extends SpringBox {
+public abstract class AbstractLayout<G extends AbstractGraphManager> extends SpringBox {
 
     protected static double k = 1f;
 
@@ -29,6 +31,8 @@ public abstract class AbstractLayout extends SpringBox {
 
 
     public static double STANDARD_DISTANCE = 0.2f;
+
+    protected G graphManager;
 
     @Override
     public String getLayoutAlgorithmName() {
@@ -39,7 +43,15 @@ public abstract class AbstractLayout extends SpringBox {
     protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
   //      super.chooseNodePosition(n0, n1);
 
+    }
 
+    public void particleMoved(Object id, double x, double y, double z) {
+        super.particleMoved(id, x, y, z);
+
+        AbstractParticle ap = graphManager.getParticle(graphManager.getAikaNode((String)id));
+
+        ap.x = x;
+        ap.y = y;
     }
 
 }

@@ -49,7 +49,7 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
         if (ge instanceof Node) {
             Node n = (Node) ge;
 
-            Neuron neuron = graphManager.getKey(n);
+            Neuron neuron = graphManager.getAikaNode(n);
             if (neuron == null)
                 return;
 

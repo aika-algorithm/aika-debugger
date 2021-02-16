@@ -24,9 +24,8 @@ import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.miv.pherd.geom.Point3;
 
 
-public class ActivationLayout extends AbstractLayout {
+public class ActivationLayout extends AbstractLayout<ActivationGraphManager> {
     ActivationViewManager avm;
-    ActivationGraphManager graphManager;
 
     public ActivationLayout(ActivationViewManager avm, ActivationGraphManager gm) {
         this.avm = avm;
@@ -78,14 +77,5 @@ public class ActivationLayout extends AbstractLayout {
 
         return particle;
     }
-/*
-    public void particleMoved(Object id, double x, double y, double z) {
-        super.particleMoved(id, x, y, z);
 
-        Activation act = graphManager.getKey((String)id);
-        ActivationParticle ap = graphManager.getParticle(act);
-
-        System.out.println(act.getLabel() + " x:" + x + " y:" + y);
-    }
- */
 }

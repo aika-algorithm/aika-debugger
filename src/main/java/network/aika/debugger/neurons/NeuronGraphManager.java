@@ -25,16 +25,17 @@ import org.graphstream.graph.Node;
 
 import java.util.function.Consumer;
 
-public class NeuronGraphManager extends AbstractGraphManager<Neuron, NeuronParticle> {
+public class NeuronGraphManager extends AbstractGraphManager<Neuron, Synapse, NeuronParticle> {
 
     public NeuronGraphManager(Graph graph) {
         super(graph);
     }
 
     @Override
-    protected long getKeyId(Neuron n) {
+    protected long getAikaNodeId(Neuron n) {
         return n.getId();
     }
+
 
     public Edge lookupEdge(Synapse s, Consumer<Node> onCreate) {
         return lookupEdge(s.getInput(), s.getOutput(), onCreate);
@@ -42,5 +43,10 @@ public class NeuronGraphManager extends AbstractGraphManager<Neuron, NeuronParti
 
     public Edge getEdge(Synapse s) {
         return getEdge(s.getInput(), s.getOutput());
+    }
+
+    @Override
+    public Synapse getLink(Edge e) {
+        return null;
     }
 }

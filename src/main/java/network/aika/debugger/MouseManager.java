@@ -16,6 +16,8 @@
  */
 package network.aika.debugger;
 
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Node;
 import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
@@ -35,8 +37,6 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
     protected GraphicGraph graph;
     private final EnumSet<InteractiveElement> types;
     protected GraphicElement curElement;
-    protected float x1;
-    protected float y1;
 
     private AbstractViewManager viewManager;
     private MouseEvent lastMouseDragEvent;
@@ -121,13 +121,10 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
         if (event.getButton() != 3) {
             element.removeAttribute("ui.clicked");
         }
-
     }
 
     public void mouseClicked(MouseEvent event) {
         viewManager.click(event.getX(), event.getY());
-
-
     }
 
     public void mousePressed(MouseEvent event) {
@@ -140,13 +137,47 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
 //                System.out.println("Click");
 //                viewManager.click();
             }
- /*           this.x1 = (float)event.getX();
-            this.y1 = (float)event.getY();
-            this.mouseButtonPress(event);
-            this.view.beginSelectionAt((double)this.x1, (double)this.y1);
-  */
+            float x = (float)event.getX();
+            float y = (float)event.getY();
+//            this.mouseButtonPress(event);
+//            this.view.beginSelectionAt((double)this.x1, (double)this.y1);
+
+            Camera camera = view.getCamera();
+            Point3 pointGU = camera.transformPxToGu(x, y);
+
+            System.out.println("Clicked: " + " x:" + pointGU.x + " y:" + pointGU.y);
+
+            graph.edges()
+                    .filter(e -> withinEdgeBoundingBox(e, pointGU))
+                    .filter(e -> edgeSelected(e, pointGU))
+                    .forEach(e -> System.out.println("Selected edge candidate: " + e.getId()));
         }
 
+    }
+
+
+    private boolean withinEdgeBoundingBox(Edge e, Point3 pointGU) {
+        double[] ps = getCoords(e.getSourceNode());
+        double[] pt = getCoords(e.getTargetNode());
+
+        double minX = Math.min(ps[0], pt[0]);
+        double minY = Math.min(ps[1], pt[1]);
+        double maxX = Math.max(ps[0], pt[0]);
+        double maxY = Math.max(ps[1], pt[1]);
+
+        return minX <= pointGU.x && pointGU.x <= maxX && minY <= pointGU.y && pointGU.y <= maxY;
+    }
+
+    private double[] getCoords(Node n) {
+        AbstractParticle ap = viewManager.graphManager.getParticle(n);
+        return new double[] {
+                ap.x,
+                ap.y
+        };
+    }
+
+    private boolean edgeSelected(Edge e, Point3 p) {
+        return false;
     }
 
     public void mouseDragged(MouseEvent event) {

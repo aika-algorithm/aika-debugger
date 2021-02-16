@@ -24,56 +24,59 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
-public abstract class AbstractGraphManager<K, P> {
-
+public abstract class AbstractGraphManager<N, L, P extends AbstractParticle> {
 
     private Graph graph;
-    private Map<String, K> nodeIdToAikaNode = new TreeMap<>();
+    private Map<String, N> nodeIdToAikaNode = new TreeMap<>();
     private Map<Long, P> keyIdToParticle = new TreeMap<>();
 
     public AbstractGraphManager(Graph graph) {
         this.graph = graph;
     }
 
-    public K getKey(Node n) {
+    public N getAikaNode(Node n) {
         return nodeIdToAikaNode.get(n.getId());
     }
 
-    public K getKey(String nodeId) {
+    public N getAikaNode(String nodeId) {
         return nodeIdToAikaNode.get(nodeId);
     }
 
-    public K getInputKey(Edge e) {
+    public N getInputKey(Edge e) {
         return nodeIdToAikaNode.get(e.getId().substring(0, e.getId().indexOf("-")));
     }
 
-    public K getOutputKey(Edge e) {
+    public N getOutputKey(Edge e) {
         return nodeIdToAikaNode.get(e.getId().substring(e.getId().indexOf("-") + 1));
     }
 
-    protected abstract long getKeyId(K key);
+    protected abstract long getAikaNodeId(N key);
 
-    public P getParticle(K key) {
-        return getParticle(getKeyId(key));
+    public P getParticle(Node n) {
+        return getParticle(Long.valueOf(n.getId()));
+    }
+
+    public P getParticle(N key) {
+        return getParticle(getAikaNodeId(key));
     }
 
     public P getParticle(long keyId) {
         return keyIdToParticle.get(keyId);
     }
 
-    public void setParticle(K key, P particle) {
-        keyIdToParticle.put(getKeyId(key), particle);
+    public void setParticle(N key, P particle) {
+        keyIdToParticle.put(getAikaNodeId(key), particle);
     }
 
-    public String getNodeId(K key) {
-        return "" + getKeyId(key);
+    public String getNodeId(N key) {
+        return "" + getAikaNodeId(key);
     }
 
-    public String getEdgeId(K iKey, K oKey) {
-        return getKeyId(iKey) + "-" + getKeyId(oKey);
+    public String getEdgeId(N iKey, N oKey) {
+        return getAikaNodeId(iKey) + "-" + getAikaNodeId(oKey);
     }
 
-    public Node lookupNode(K key, Consumer<Node> onCreate) {
+    public Node lookupNode(N key, Consumer<Node> onCreate) {
         String id = getNodeId(key);
         Node node = graph.getNode(id);
 
@@ -87,12 +90,12 @@ public abstract class AbstractGraphManager<K, P> {
         return node;
     }
 
-    public Node getNode(K key) {
+    public Node getNode(N key) {
         String id = getNodeId(key);
         return graph.getNode(id);
     }
 
-    public Edge lookupEdge(K iKey, K oKey, Consumer<Node> onCreate) {
+    public Edge lookupEdge(N iKey, N oKey, Consumer<Node> onCreate) {
         String edgeId = getEdgeId(iKey, oKey);
         Edge edge = graph.getEdge(edgeId);
         if (edge == null) {
@@ -101,7 +104,7 @@ public abstract class AbstractGraphManager<K, P> {
         return edge;
     }
 
-    public Edge getEdge(K iKey, K oKey) {
+    public Edge getEdge(N iKey, N oKey) {
         String edgeId = getEdgeId(iKey, oKey);
         return graph.getEdge(edgeId);
     }
@@ -110,4 +113,9 @@ public abstract class AbstractGraphManager<K, P> {
         return graph.getNode(nodeId);
     }
 
+    public abstract Edge lookupEdge(L l, Consumer<Node> onCreate);
+
+    public abstract Edge getEdge(L l);
+
+    public abstract L getLink(Edge e);
 }

@@ -141,7 +141,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         if(ge instanceof Node) {
             Node n = (Node) ge;
 
-            Activation act = graphManager.getKey(n);
+            Activation act = graphManager.getAikaNode(n);
             if(act == null)
                 return;
 

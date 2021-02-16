@@ -26,13 +26,13 @@ import org.graphstream.graph.Node;
 
 import java.util.function.Consumer;
 
-public class ActivationGraphManager extends AbstractGraphManager<Activation, ActivationParticle> {
+public class ActivationGraphManager extends AbstractGraphManager<Activation, Link, ActivationParticle> {
 
     public ActivationGraphManager(Graph graph) {
         super(graph);
     }
 
-    protected long getKeyId(Activation act) {
+    protected long getAikaNodeId(Activation act) {
         return act.getId();
     }
 
@@ -42,5 +42,16 @@ public class ActivationGraphManager extends AbstractGraphManager<Activation, Act
 
     public Edge getEdge(Link l) {
         return getEdge(l.getInput(), l.getOutput());
+    }
+
+    @Override
+    public Link getLink(Edge e) {
+        Activation iAct = getAikaNode(e.getSourceNode());
+        Activation oAct = getAikaNode(e.getTargetNode());
+
+        return oAct.getInputLinks()
+                .filter(l -> l.getInput() == iAct)
+                .findAny()
+                .orElseGet(null);
     }
 }

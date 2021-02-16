@@ -34,6 +34,9 @@ public abstract class AbstractParticle extends SpringBoxNodeParticle {
 
     public static double K1Attr = 0.0001;
 
+    public double x;
+    public double y;
+
     /**
      * Default repulsion.
      */
