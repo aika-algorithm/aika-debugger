@@ -58,7 +58,9 @@ public class ActivationConsole extends AbstractConsole {
         appendText(sDoc, "Link" + "\n\n", "headline");
 
         Activation oAct = l.getOutput();
+        appendEntry(sDoc, "Input: ", l.getInput().toShortString());
         appendEntry(sDoc, "Input-Value: ", "" + Utils.round(l.getInputValue(Sign.POS)));
+        appendEntry(sDoc, "Output: ", l.getOutput().toShortString());
         appendEntry(sDoc, "Output-Value: ", oAct.getValue() != null ? "" + Utils.round(oAct.getValue()) : "X");
         appendEntry(sDoc, "Output-net[initial]: ", "" + Utils.round(oAct.getNet(false)));
         appendEntry(sDoc, "Output-net[final]: ", "" + Utils.round(oAct.getNet(true)));

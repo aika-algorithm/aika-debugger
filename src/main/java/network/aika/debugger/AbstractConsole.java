@@ -37,6 +37,7 @@ public abstract class AbstractConsole extends JTextPane {
         setDoubleBuffered(true);
         setOpaque(false);
         setEnabled(false);
+        setVisible(false);
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         addStylesToDocument(sDoc);
         clear();
@@ -44,6 +45,7 @@ public abstract class AbstractConsole extends JTextPane {
 
         content.accept(sDoc);
         setStyledDocument(sDoc);
+        setVisible(true);
         setEnabled(true);
     }
 
@@ -108,6 +110,8 @@ public abstract class AbstractConsole extends JTextPane {
 
         appendEntry(sDoc, "Type: ", s.getClass().getSimpleName());
         appendEntry(sDoc, "Weight: ", "" + Utils.round(s.getWeight()));
+        appendEntry(sDoc, "Input: ", s.getInput().toString());
+        appendEntry(sDoc, "Output: ", s.getOutput().toString());
         appendEntry(sDoc, "Frequency(POS, POS): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.POS, s.getSampleSpace().getN())));
         appendEntry(sDoc, "Frequency(POS, NEG): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.NEG, s.getSampleSpace().getN())));
         appendEntry(sDoc, "Frequency(NEG, POS): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.POS, s.getSampleSpace().getN())));
