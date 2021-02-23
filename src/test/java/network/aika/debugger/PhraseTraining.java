@@ -10,8 +10,12 @@ import network.aika.text.TextModel;
 import network.aika.text.TextReference;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.util.TreeMap;
 
-public class GradientTest {
+import static org.junit.platform.commons.util.StringUtils.isBlank;
+
+public class PhraseTraining {
 
 
     private String trimPrefix(String l) {
@@ -19,7 +23,7 @@ public class GradientTest {
     }
 
     @Test
-    public void gradientAndInduction() throws InterruptedException {
+    public void trainPhrases() throws IOException {
         TextModel m = new TextModel();
         m.setConfig(
                 new Config() {
@@ -46,33 +50,36 @@ public class GradientTest {
                         .setGradientInductionThreshold(0.0)
         );
 
-        m.setN(912);
+    //    m.setN(912);
 
-        Document doc = new Document("A B ");
-        AikaDebugger.createAndShowGUI(doc,m);
+        Util.loadExamplePhrases("phrases.txt")
+                .stream()
+                .filter(p -> !isBlank(p))
+                .forEach(p -> {
+                            Document doc = new Document(p);
+ //                           AikaDebugger.createAndShowGUI(doc, m);
 
-        int i = 0;
-        TextReference lastRef = null;
-        for(String t: doc.getContent().split(" ")) {
-            int j = i + t.length();
-            lastRef = doc.processToken(m, lastRef, i, j, t).getReference();
+                            int i = 0;
+                            TextReference lastRef = null;
+                            for (String t : doc.getContent().split(" ")) {
+                                int j = i + t.length();
+                                lastRef = doc.processToken(m, lastRef, i, j, t).getReference();
 
-            i = j + 1;
-        }
+                                i = j + 1;
+                            }
+/*
+                            Neuron nA = m.getNeuron("A");
+                            nA.setFrequency(53.0);
+                            nA.getSampleSpace().setN(299);
+                            nA.getSampleSpace().setLastPos(899);
 
-        Neuron nA = m.getNeuron("A");
-        nA.setFrequency(53.0);
-        nA.getSampleSpace().setN(299);
-        nA.getSampleSpace().setLastPos(899);
-
-        Neuron nB = m.getNeuron("B");
-        nB.setFrequency(10.0);
-        nB.getSampleSpace().setN(121);
-        nB.getSampleSpace().setLastPos(739);
-
-        doc.process(m);
-
-
-        System.out.println();
+                            Neuron nB = m.getNeuron("B");
+                            nB.setFrequency(10.0);
+                            nB.getSampleSpace().setN(121);
+                            nB.getSampleSpace().setLastPos(739);
+*/
+                            doc.process(m);
+                        }
+                );
     }
 }

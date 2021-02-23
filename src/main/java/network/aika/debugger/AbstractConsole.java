@@ -16,6 +16,7 @@
  */
 package network.aika.debugger;
 
+import network.aika.neuron.excitatory.PatternPartSynapse;
 import network.aika.utils.Utils;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
@@ -112,6 +113,15 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, "Weight: ", "" + Utils.round(s.getWeight()));
         appendEntry(sDoc, "Input: ", s.getInput().toString());
         appendEntry(sDoc, "Output: ", s.getOutput().toString());
+        if(s instanceof PatternPartSynapse) {
+            PatternPartSynapse pps = (PatternPartSynapse) s;
+
+            appendEntry(sDoc, "InputScope: ", "" + pps.isInputScope());
+            appendEntry(sDoc, "SamePattern: ", "" + pps.isSamePattern());
+            appendEntry(sDoc, "Recurrent: ", "" + pps.isRecurrent());
+            appendEntry(sDoc, "is Negative: ", "" + pps.isNegative());
+        }
+
         appendEntry(sDoc, "Frequency(POS, POS): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.POS, s.getSampleSpace().getN())));
         appendEntry(sDoc, "Frequency(POS, NEG): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.NEG, s.getSampleSpace().getN())));
         appendEntry(sDoc, "Frequency(NEG, POS): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.POS, s.getSampleSpace().getN())));
