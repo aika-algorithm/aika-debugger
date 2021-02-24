@@ -5,6 +5,9 @@ import network.aika.neuron.Neuron;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.excitatory.PatternPartNeuron;
+import network.aika.neuron.phase.Phase;
+import network.aika.neuron.phase.activation.ActivationPhase;
+import network.aika.neuron.phase.link.LinkPhase;
 import network.aika.text.Document;
 import network.aika.text.TextModel;
 import network.aika.text.TextReference;
@@ -52,12 +55,30 @@ public class PhraseTraining {
 
     //    m.setN(912);
 
+        Phase[] countingOnlyFilters = new Phase[] {
+                ActivationPhase.TEMPLATE_OUTPUT,
+                ActivationPhase.TEMPLATE_INPUT,
+                ActivationPhase.ENTROPY_GRADIENT,
+                ActivationPhase.PROPAGATE_GRADIENTS_NET,
+                ActivationPhase.PROPAGATE_GRADIENTS_SUM,
+                ActivationPhase.INDUCTION,
+                ActivationPhase.UPDATE_BIAS,
+                LinkPhase.TEMPLATE,
+                LinkPhase.INDUCTION,
+                LinkPhase.INFORMATION_GAIN_GRADIENT
+        };
+
         Util.loadExamplePhrases("phrases.txt")
                 .stream()
                 .filter(p -> !isBlank(p))
                 .forEach(p -> {
+                            System.out.println(p);
                             Document doc = new Document(p);
- //                           AikaDebugger.createAndShowGUI(doc, m);
+                            doc.addFilters(countingOnlyFilters);
+
+                            if(p.split(" ").length > 2) {
+                                AikaDebugger.createAndShowGUI(doc, m);
+                            }
 
                             int i = 0;
                             TextReference lastRef = null;
@@ -67,17 +88,7 @@ public class PhraseTraining {
 
                                 i = j + 1;
                             }
-/*
-                            Neuron nA = m.getNeuron("A");
-                            nA.setFrequency(53.0);
-                            nA.getSampleSpace().setN(299);
-                            nA.getSampleSpace().setLastPos(899);
 
-                            Neuron nB = m.getNeuron("B");
-                            nB.setFrequency(10.0);
-                            nB.getSampleSpace().setN(121);
-                            nB.getSampleSpace().setLastPos(739);
-*/
                             doc.process(m);
                         }
                 );
