@@ -42,6 +42,8 @@ import org.graphstream.ui.view.ViewerPipe;
 import org.graphstream.ui.view.camera.Camera;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -236,4 +238,14 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
 
     public abstract void click(int x, int y);
 
+    public Point2D transformCoords(double x, double y) {
+        Point2D mPos = new Point2D.Double(x, y);
+        Point2D transformedPos = new Point2D.Double();
+
+        DefaultView view = (DefaultView) viewer.getView(viewer.getDefaultID());
+        Graphics2D d2D = (Graphics2D) view.getGraphics();
+        d2D.getTransform().transform(mPos, transformedPos);
+
+        return transformedPos;
+    }
 }
