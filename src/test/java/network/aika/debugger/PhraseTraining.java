@@ -37,10 +37,10 @@ public class PhraseTraining {
                                 .map(l -> l.getInput())
                                 .orElse(null);
 
-                        if(n instanceof PatternPartNeuron) {
+                        if (n instanceof PatternPartNeuron) {
                             return "PP-" + trimPrefix(iAct.getLabel());
                         } else if (n instanceof PatternNeuron) {
-                            return "P-" + ((Document)act.getThought()).getContent();
+                            return "P-" + ((Document) act.getThought()).getContent();
                         } else {
                             return "I-" + trimPrefix(iAct.getLabel());
                         }
@@ -53,9 +53,16 @@ public class PhraseTraining {
                         .setGradientInductionThreshold(0.0)
         );
 
-    //    m.setN(912);
+        //    m.setN(912);
 
-        Phase[] countingOnlyFilters = new Phase[] {
+        for (int round = 0; round < 2; round++) {
+            process(m, round);
+        }
+    }
+
+
+    private void process(TextModel m, int round) throws IOException {
+        Phase[] countingOnlyFilters = new Phase[]{
                 ActivationPhase.TEMPLATE_OUTPUT,
                 ActivationPhase.TEMPLATE_INPUT,
                 ActivationPhase.ENTROPY_GRADIENT,
@@ -67,30 +74,32 @@ public class PhraseTraining {
                 LinkPhase.INDUCTION,
                 LinkPhase.INFORMATION_GAIN_GRADIENT
         };
-
         Util.loadExamplePhrases("phrases.txt")
                 .stream()
                 .filter(p -> !isBlank(p))
                 .forEach(p -> {
                             System.out.println(p);
                             Document doc = new Document(p);
-                            doc.addFilters(countingOnlyFilters);
-
-                            if(p.split(" ").length > 2) {
+                            if (round == 0) {
+                                doc.addFilters(countingOnlyFilters);
+                            } else {
                                 AikaDebugger.createAndShowGUI(doc, m);
                             }
 
                             int i = 0;
                             TextReference lastRef = null;
                             for (String t : doc.getContent().split(" ")) {
-                                int j = i + t.length();
-                                lastRef = doc.processToken(m, lastRef, i, j, t).getReference();
+                                if(!isBlank(t)) {
+                                    int j = i + t.length();
+                                    lastRef = doc.processToken(m, lastRef, i, j, t).getReference();
 
-                                i = j + 1;
+                                    i = j + 1;
+                                }
                             }
 
                             doc.process(m);
                         }
                 );
     }
+
 }
