@@ -19,6 +19,7 @@ package network.aika.debugger;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.geom.Point3;
+import org.graphstream.ui.graphicGraph.GraphicEdge;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.View;
@@ -134,23 +135,25 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
             if (this.curElement != null) {
                 this.mouseButtonPressOnElement(this.curElement, event);
             } else {
-//                System.out.println("Click");
-//                viewManager.click();
+                float x = (float)event.getX();
+                float y = (float)event.getY();
+
+                Camera camera = view.getCamera();
+                Point3 pointGU = camera.transformPxToGu(x, y);
+
+                GraphicEdge selectedEdge = (GraphicEdge) graph.edges()
+                        .filter(e -> withinEdgeBoundingBox(e, pointGU))
+                        .filter(e -> edgeSelected(e, pointGU))
+                        .findAny().orElseGet(null);
+
+                this.curElement = selectedEdge;
             }
-            float x = (float)event.getX();
-            float y = (float)event.getY();
-//            this.mouseButtonPress(event);
-//            this.view.beginSelectionAt((double)this.x1, (double)this.y1);
 
-            Camera camera = view.getCamera();
-            Point3 pointGU = camera.transformPxToGu(x, y);
+            if (this.curElement != null) {
+                this.mouseButtonPressOnElement(this.curElement, event);
+            } else {
 
-            System.out.println("Clicked: " + " x:" + pointGU.x + " y:" + pointGU.y);
-
-            graph.edges()
-                    .filter(e -> withinEdgeBoundingBox(e, pointGU))
-                    .filter(e -> edgeSelected(e, pointGU))
-                    .forEach(e -> System.out.println("Selected edge candidate: " + e.getId()));
+            }
         }
 
     }
@@ -177,9 +180,62 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
     }
 
     private boolean edgeSelected(Edge e, Point3 p) {
-        return false;
+        double[] ps = getCoords(e.getSourceNode());
+        double[] pt = getCoords(e.getTargetNode());
+
+        // Todo: Implement Splines
+        double dist = pDistance(p.x, p.y, ps[0], ps[1], pt[0], pt[1]);
+
+        return Math.abs(dist) < 0.005;
     }
 
+    private double pDistance(double x, double y, double x1, double y1, double x2, double y2) {
+        double A = x - x1;
+        double B = y - y1;
+        double C = x2 - x1;
+        double D = y2 - y1;
+
+        double dot = A * C + B * D;
+        double len_sq = C * C + D * D;
+        double param = -1;
+        if (len_sq != 0) //in case of 0 length line
+            param = dot / len_sq;
+
+        double xx, yy;
+
+        if (param < 0) {
+            xx = x1;
+            yy = y1;
+        }
+        else if (param > 1) {
+            xx = x2;
+            yy = y2;
+        }
+        else {
+            xx = x1 + param * C;
+            yy = y1 + param * D;
+        }
+
+        var dx = x - xx;
+        var dy = y - yy;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /*
+    private boolean edgeSelected(Edge e, Point3 p) {
+        double[] ps = getCoords(e.getSourceNode());
+        double[] pt = getCoords(e.getTargetNode());
+        double[] mouseP = new double[] {p.x, p.y};
+
+        double margin = Math.abs((distance(ps,mouseP) + distance(mouseP,pt)) - distance(ps,pt));
+
+        return margin < 10.0;
+    }
+
+    private double distance(double[] a, double[] b) {
+        return Math.sqrt(Math.pow(a[0] - b[0], 2.0) + Math.pow(a[1] - b[1], 2.0));
+    }
+*/
     public void mouseDragged(MouseEvent event) {
 //        if(event.isShiftDown()) {
             if (this.curElement != null) {

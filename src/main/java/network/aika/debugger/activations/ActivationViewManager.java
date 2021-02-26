@@ -36,6 +36,7 @@ import org.graphstream.ui.view.camera.DefaultCamera2D;
 
 import javax.swing.*;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.lang.reflect.Field;
@@ -151,6 +152,13 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         } else if(ge instanceof Edge) {
             Edge e = (Edge) ge;
 
+            Link l = graphManager.getLink(e);
+            if(l == null)
+                return;
+
+            console.render(headlinePrefix, sDoc ->
+                    console.renderLinkConsoleOutput(sDoc, l)
+            );
         }
     }
 
