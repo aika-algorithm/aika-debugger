@@ -82,6 +82,7 @@ public class PhraseTraining {
                             Document doc = new Document(p);
                             if (round == 0) {
                                 doc.addFilters(countingOnlyFilters);
+                             //   AikaDebugger.createAndShowGUI(doc, m);
                             } else {
                                 AikaDebugger.createAndShowGUI(doc, m);
                             }

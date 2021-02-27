@@ -52,7 +52,7 @@ public class TemplateViewManager extends AbstractNeuronViewManager {
                 return;
 
             console.render(headlinePrefix, sDoc ->
-                    console.renderNeuronConsoleOutput(sDoc, neuron)
+                    console.renderNeuronConsoleOutput(sDoc, neuron, null)
             );
         }
     }

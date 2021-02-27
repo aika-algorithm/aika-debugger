@@ -144,7 +144,8 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
                 GraphicEdge selectedEdge = (GraphicEdge) graph.edges()
                         .filter(e -> withinEdgeBoundingBox(e, pointGU))
                         .filter(e -> edgeSelected(e, pointGU))
-                        .findAny().orElseGet(null);
+                        .findAny()
+                        .orElse(null);
 
                 this.curElement = selectedEdge;
             }

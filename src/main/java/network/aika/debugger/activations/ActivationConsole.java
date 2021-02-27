@@ -41,7 +41,9 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Output-Gradient-Sum: ", "" + Utils.round(act.getOutputGradientSum()));
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
-        appendEntry(sDoc, "Norm: ", "" + Utils.round(act.getNorm()));
+        if(!act.getNeuron().isTemplate()) {
+            appendEntry(sDoc, "Norm: ", "" + Utils.round(act.getNorm()));
+        }
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
 /*
 // TODO: Remove Particle!
@@ -51,7 +53,7 @@ public class ActivationConsole extends AbstractConsole {
 */
         appendText(sDoc, "\n\n\n", "regular");
 
-        renderNeuronConsoleOutput(sDoc, act.getNeuron());
+        renderNeuronConsoleOutput(sDoc, act.getNeuron(), act.getReference());
     }
 
     public void renderLinkConsoleOutput(StyledDocument sDoc, Link l) {
@@ -71,7 +73,7 @@ public class ActivationConsole extends AbstractConsole {
 
         appendText(sDoc, "\n\n\n", "regular");
 
-        renderSynapseConsoleOutput(sDoc, l.getSynapse());
+        renderSynapseConsoleOutput(sDoc, l.getSynapse(), l.getInput().getReference());
     }
 
     public void renderVisitorConsoleOutput(StyledDocument sDoc, Visitor v, boolean dir) {

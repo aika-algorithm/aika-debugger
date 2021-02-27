@@ -16,6 +16,7 @@
  */
 package network.aika.debugger;
 
+import network.aika.neuron.activation.Reference;
 import network.aika.neuron.excitatory.PatternPartSynapse;
 import network.aika.utils.Utils;
 import network.aika.neuron.Neuron;
@@ -80,7 +81,7 @@ public abstract class AbstractConsole extends JTextPane {
         }
     }
 
-    public void renderNeuronConsoleOutput(StyledDocument sDoc, Neuron n) {
+    public void renderNeuronConsoleOutput(StyledDocument sDoc, Neuron n, Reference ref) {
         appendText(sDoc, "Neuron\n\n", "headline");
 
         appendEntry(sDoc, "Id: ", "" + n.getId());
@@ -89,15 +90,16 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, "Is Input Neuron: ", "" + n.isInputNeuron());
         appendEntry(sDoc, "Bias: ", "" + Utils.round(n.getBias(false)));
         appendEntry(sDoc, "Bias (final): ", "" + Utils.round(n.getBias(true)));
-        appendEntry(sDoc, "Frequency: ", "" + Utils.round(n.getFrequency()));
-        appendEntry(sDoc, "N: ", "" + Utils.round(n.getSampleSpace().getN()));
-        appendEntry(sDoc, "LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X"));
-        appendEntry(sDoc, "P(POS): ", "" + Utils.round(n.getP(Sign.POS, n.getSampleSpace().getN())));
-        appendEntry(sDoc, "P(NEG): ", "" + Utils.round(n.getP(Sign.NEG, n.getSampleSpace().getN())));
-        appendEntry(sDoc, "Surprisal(POS): ", "" + Utils.round(n.getSurprisal(Sign.POS)));
-        appendEntry(sDoc, "Surprisal(NEG): ", "" + Utils.round(n.getSurprisal(Sign.NEG)));
-        appendEntry(sDoc, "Template Neuron: ", templatesToString(n));
-
+        if(!n.isTemplate()) {
+            appendEntry(sDoc, "Frequency: ", "" + Utils.round(n.getFrequency()));
+            appendEntry(sDoc, "N: ", "" + Utils.round(n.getSampleSpace().getN(ref)));
+            appendEntry(sDoc, "LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X"));
+            appendEntry(sDoc, "P(POS): ", "" + Utils.round(n.getP(Sign.POS, n.getSampleSpace().getN(ref))));
+            appendEntry(sDoc, "P(NEG): ", "" + Utils.round(n.getP(Sign.NEG, n.getSampleSpace().getN(ref))));
+            appendEntry(sDoc, "Surprisal(POS): ", "" + Utils.round(n.getSurprisal(Sign.POS, ref)));
+            appendEntry(sDoc, "Surprisal(NEG): ", "" + Utils.round(n.getSurprisal(Sign.NEG, ref)));
+            appendEntry(sDoc, "Template Neuron: ", templatesToString(n));
+        }
     }
 
     private String templatesToString(Neuron<?> n) {
@@ -106,7 +108,7 @@ public abstract class AbstractConsole extends JTextPane {
         return sb.toString();
     }
 
-    public void renderSynapseConsoleOutput(StyledDocument sDoc, Synapse s) {
+    public void renderSynapseConsoleOutput(StyledDocument sDoc, Synapse s, Reference ref) {
         appendText(sDoc, "Synapse\n\n", "headline");
 
         appendEntry(sDoc, "Type: ", s.getClass().getSimpleName());
@@ -122,20 +124,20 @@ public abstract class AbstractConsole extends JTextPane {
             appendEntry(sDoc, "is Negative: ", "" + pps.isNegative());
         }
 
-        appendEntry(sDoc, "Frequency(POS, POS): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.POS, s.getSampleSpace().getN())));
-        appendEntry(sDoc, "Frequency(POS, NEG): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.NEG, s.getSampleSpace().getN())));
-        appendEntry(sDoc, "Frequency(NEG, POS): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.POS, s.getSampleSpace().getN())));
-        appendEntry(sDoc, "Frequency(NEG, NEG): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.NEG, s.getSampleSpace().getN())));
-        appendEntry(sDoc, "N: ", "" + Utils.round(s.getSampleSpace().getN()));
+        appendEntry(sDoc, "Frequency(POS, POS): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.POS, s.getSampleSpace().getN(ref))));
+        appendEntry(sDoc, "Frequency(POS, NEG): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.NEG, s.getSampleSpace().getN(ref))));
+        appendEntry(sDoc, "Frequency(NEG, POS): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.POS, s.getSampleSpace().getN(ref))));
+        appendEntry(sDoc, "Frequency(NEG, NEG): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.NEG, s.getSampleSpace().getN(ref))));
+        appendEntry(sDoc, "N: ", "" + Utils.round(s.getSampleSpace().getN(ref)));
         appendEntry(sDoc, "LastPos: ", "" + (s.getSampleSpace().getLastPos() != null ? Utils.round(s.getSampleSpace().getLastPos()) : "X"));
-        appendEntry(sDoc, "P(POS, POS) :", "" + Utils.round(s.getP(Sign.POS, Sign.POS, s.getSampleSpace().getN())));
-        appendEntry(sDoc, "P(POS, NEG) :", "" + Utils.round(s.getP(Sign.POS, Sign.NEG, s.getSampleSpace().getN())));
-        appendEntry(sDoc, "P(NEG, POS) :", "" + Utils.round(s.getP(Sign.NEG, Sign.POS, s.getSampleSpace().getN())));
-        appendEntry(sDoc, "P(NEG, NEG) :", "" + Utils.round(s.getP(Sign.NEG, Sign.NEG, s.getSampleSpace().getN())));
-        appendEntry(sDoc, "Surprisal(POS, POS): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.POS)));
-        appendEntry(sDoc, "Surprisal(POS, NEG): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.NEG)));
-        appendEntry(sDoc, "Surprisal(NEG, POS): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.POS)));
-        appendEntry(sDoc, "Surprisal(NEG, NEG): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.NEG)));
+        appendEntry(sDoc, "P(POS, POS) :", "" + Utils.round(s.getP(Sign.POS, Sign.POS, s.getSampleSpace().getN(ref))));
+        appendEntry(sDoc, "P(POS, NEG) :", "" + Utils.round(s.getP(Sign.POS, Sign.NEG, s.getSampleSpace().getN(ref))));
+        appendEntry(sDoc, "P(NEG, POS) :", "" + Utils.round(s.getP(Sign.NEG, Sign.POS, s.getSampleSpace().getN(ref))));
+        appendEntry(sDoc, "P(NEG, NEG) :", "" + Utils.round(s.getP(Sign.NEG, Sign.NEG, s.getSampleSpace().getN(ref))));
+        appendEntry(sDoc, "Surprisal(POS, POS): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.POS, ref)));
+        appendEntry(sDoc, "Surprisal(POS, NEG): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.NEG, ref)));
+        appendEntry(sDoc, "Surprisal(NEG, POS): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.POS, ref)));
+        appendEntry(sDoc, "Surprisal(NEG, NEG): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.NEG, ref)));
         appendEntry(sDoc, "Template: ", s.getTemplate() != null ? s.getTemplate().toString() : null);
     }
 
