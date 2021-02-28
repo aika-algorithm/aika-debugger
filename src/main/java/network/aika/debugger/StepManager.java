@@ -73,8 +73,10 @@ public class StepManager {
                 return false;
         }
 
-        if(w == When.AFTER && stopAfterProcessed)
+        if(w == When.AFTER && stopAfterProcessed) {
+            stopAfterProcessed = false;
             return true;
+        }
 
         if(mode == ACT && et == ACT)
             return true;
