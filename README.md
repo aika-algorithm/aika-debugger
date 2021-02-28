@@ -2,8 +2,6 @@
 
 **Hints:** 
 * A good starting point is the GradientTest.
-* There is a scaling issue with some Java Versions on high resolution displays. A workaround
-is to add the following option during the startup. -Dsun.java2d.uiScale=100%
 * The debugger uses a fork of the gs-ui-swing library which contains a modified edge drawing function. https://github.com/aika-algorithm/gs-ui-swing.git
 
 
@@ -12,6 +10,7 @@ is to add the following option during the startup. -Dsun.java2d.uiScale=100%
 * 'l' : stop before processing a link
 * 'v' : stop before each visitor step
 * 'e' : stop after the current operation
+* 'r' : run mode
 
 (Zoom: Mouse Wheel)
 

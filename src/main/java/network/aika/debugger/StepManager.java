@@ -65,14 +65,12 @@ public class StepManager {
 
     public boolean stopHere(When w, EventType et) {
         if(mode == null) {
-            if(lastTimestamp != null && System.currentTimeMillis() - lastTimestamp > 1000) {
-                if(mode == null) {
-                    setMode(VISITOR);
-                }
-            } else {
-                lastTimestamp = System.currentTimeMillis();
+            long diff = lastTimestamp != null ? System.currentTimeMillis() - lastTimestamp : 0;
+            lastTimestamp = System.currentTimeMillis();
+            if(diff > 1000) {
+                setMode(VISITOR);
+            } else
                 return false;
-            }
         }
 
         if(w == When.AFTER && stopAfterProcessed)
