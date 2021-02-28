@@ -84,58 +84,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     public void pumpAndWaitForUserAction() {
         pump();
 
-        System.out.println("Viewport: " + graphView.getCamera().getViewCenter() + " Zoom:" + graphView.getCamera().getViewPercent());
-
         stepManager.waitForClick();
-    }
-
-    public void click(int x, int y) {
-        graph.edges()
-                .filter(e ->
-                        checkBoundingBox(e, x, y)
-                )
-                .forEach(e ->
-                        System.out.println(e.getId())
-                );
-    }
-
-    private boolean checkBoundingBox(Edge e, int x, int y) {
-        Point3 mousePos = getCamera().transformPxToGu(x, y);
-
-        Object[] xyz0 = (Object[]) e.getNode0().getAttribute("xyz");
-        Object[] xyz1 = (Object[]) e.getNode1().getAttribute("xyz");
-        if(xyz0 == null || xyz1 == null) {
-            return false;
-        }
-
-        Double x0 = (Double) xyz0[0];
-        Double y0 = (Double) xyz0[1];
-        Double x1 = (Double) xyz1[0];
-        Double y1 = (Double) xyz1[1];
-
-        DefaultCamera2D cam = (DefaultCamera2D) getCamera();
-
-        Graphics2D g = null;
-        try {
-            Field f = cam.getClass().getDeclaredField("bck");
-            f.setAccessible(true);
-            g = ((Backend) f.get(cam)).graphics2D();
-        } catch (NoSuchFieldException noSuchFieldException) {
-            noSuchFieldException.printStackTrace();
-        } catch (IllegalAccessException illegalAccessException) {
-            illegalAccessException.printStackTrace();
-        }
-
-        g.draw(new Ellipse2D.Double(x0, y0, 0.01, 0.01));
-        g.draw(new Ellipse2D.Double(x1, y1, 0.01, 0.01));
-        g.draw(new Ellipse2D.Double(x, y, 0.01, 0.01));
-        g.draw(new Ellipse2D.Double(mousePos.x, mousePos.y, 0.01, 0.01));
-
-
-        return Math.min(x0, x1) <= mousePos.x &&
-                Math.min(y0, y1) <= mousePos.y &&
-                Math.max(x0, x1) >= mousePos.x &&
-                Math.max(y0, y1) >= mousePos.y;
     }
 
     public void showElementContext(String headlinePrefix, GraphicElement ge) {
@@ -341,6 +290,15 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     public void viewClosed(String id) {
    //     loop = false;
+    }
+
+    @Override
+    public void click(int x, int y) {
+        DefaultCamera2D camera = (DefaultCamera2D) getCamera();
+
+        Point3 guPoint = camera.transformPxToGuSwing(x, y);
+
+        System.out.println("x:" + x + " y:" + y + " guX:" + guPoint.x + " guY:" + guPoint.y);
     }
 
     public Document getDocument() {

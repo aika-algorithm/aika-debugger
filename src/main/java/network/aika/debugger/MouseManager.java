@@ -70,36 +70,11 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
 
     protected void mouseButtonPress(MouseEvent event) {
         this.view.requireFocus();
-/*        if (!event.isShiftDown()) {
-            this.graph.nodes().filter((n) -> {
-                return n.hasAttribute("ui.selected");
-            }).forEach((n) -> {
-                n.removeAttribute("ui.selected");
-            });
-            this.graph.sprites().filter((s) -> {
-                return s.hasAttribute("ui.selected");
-            }).forEach((s) -> {
-                s.removeAttribute("ui.selected");
-            });
-            this.graph.edges().filter((e) -> {
-                return e.hasAttribute("ui.selected");
-            }).forEach((e) -> {
-                e.removeAttribute("ui.selected");
-            });
-        }*/
     }
 
 
     protected void mouseButtonRelease(MouseEvent event, Iterable<GraphicElement> elementsInArea) {
         Iterator var3 = elementsInArea.iterator();
-/*
-        while(var3.hasNext()) {
-            GraphicElement element = (GraphicElement)var3.next();
-            if (!element.hasAttribute("ui.selected")) {
-                element.setAttribute("ui.selected", new Object[0]);
-            }
-        }
-*/
     }
 
     protected void mouseButtonPressOnElement(GraphicElement element, MouseEvent event) {
@@ -124,17 +99,14 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
         }
     }
 
-    public void mouseClicked(MouseEvent event) {
+    public void mouseClicked(MouseEvent event) { ;
         viewManager.click(event.getX(), event.getY());
     }
 
     public void mousePressed(MouseEvent event) {
         if(!event.isShiftDown()) {
-            this.curElement = view.findGraphicElementAt(this.types, event.getX() /* * 2.0  */, event.getY() /* * 2.0 */); // oder -Dsun.java2d.uiScale=100%
-
-            if (this.curElement != null) {
-                this.mouseButtonPressOnElement(this.curElement, event);
-            } else {
+            this.curElement = view.findGraphicElementAt(this.types, event.getX(), event.getY());
+            if (this.curElement == null) {
                 float x = (float)event.getX();
                 float y = (float)event.getY();
 
@@ -152,11 +124,8 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
 
             if (this.curElement != null) {
                 this.mouseButtonPressOnElement(this.curElement, event);
-            } else {
-
             }
         }
-
     }
 
 
