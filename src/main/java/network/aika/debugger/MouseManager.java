@@ -114,7 +114,7 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
     }
 
     protected void elementMoving(GraphicElement element, MouseEvent event) {
-        this.view.moveElementAtPx(element, (double)event.getX(), (double)event.getY());
+        this.view.moveElementAtPx(element, event.getX(), event.getY());
     }
 
     protected void mouseButtonReleaseOffElement(GraphicElement element, MouseEvent event) {

@@ -57,7 +57,7 @@ public abstract class AbstractConsole extends JTextPane {
 
         Style regular = doc.addStyle("regular", def);
         StyleConstants.setFontFamily(def, "SansSerif");
-        StyleConstants.setFontSize(regular, 20);
+        StyleConstants.setFontSize(regular, 10);
 
         Style s = doc.addStyle("italic", regular);
         StyleConstants.setItalic(s, true);
@@ -66,10 +66,10 @@ public abstract class AbstractConsole extends JTextPane {
         StyleConstants.setBold(s, true);
 
         s = doc.addStyle("small", regular);
-        StyleConstants.setFontSize(s, 14);
+        StyleConstants.setFontSize(s, 10);
 
         s = doc.addStyle("headline", regular);
-        StyleConstants.setFontSize(s, 24);
+        StyleConstants.setFontSize(s, 14);
     }
 
     public void clear() {
