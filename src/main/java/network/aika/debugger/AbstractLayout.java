@@ -30,7 +30,8 @@ public abstract class AbstractLayout<G extends AbstractGraphManager> extends Spr
     protected static double K1Final;
 
 
-    public static double STANDARD_DISTANCE = 0.2f;
+    public static double STANDARD_DISTANCE_X = 0.2f;
+    public static double STANDARD_DISTANCE_Y = 0.2f;
 
     protected G graphManager;
 

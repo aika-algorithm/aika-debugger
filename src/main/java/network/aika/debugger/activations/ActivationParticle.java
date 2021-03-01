@@ -48,28 +48,13 @@ public class ActivationParticle extends AbstractParticle {
         this.node = node;
     }
 
-/*
-    @Override
-    protected void repulsionN2(Vector3 delta) {
-//        super.repulsionN2(delta);
-    }
-
-    @Override
-    protected void repulsionNLogN(Vector3 delta) {
-//        super.repulsionNLogN(delta);
-    }
-*/
 
     @Override
     protected void attraction(Vector3 delta) {
-//        Boolean initNode = node.getAttribute("aika.init-node", Boolean.class);
-
         SpringBox box = (SpringBox) this.box;
         Energies energies = box.getEnergies();
 
         for (EdgeSpring edge : neighbours) {
-//            edgeAttraction(delta, edge, energies);
-
             if (!edge.ignored) {
                 ActivationParticle other = (ActivationParticle) edge.getOpposite(this);
 
@@ -99,10 +84,10 @@ public class ActivationParticle extends AbstractParticle {
                 double dy = 0.0;
 
                 if(act == link.getOutput()) {
-                    dy = (opos.y + STANDARD_DISTANCE) - pos.y;
+                    dy = (opos.y + STANDARD_DISTANCE_Y) - pos.y;
                     dy = Math.max(0.0, dy);
                 } else {
-                    dy = opos.y - (pos.y + STANDARD_DISTANCE);
+                    dy = opos.y - (pos.y + STANDARD_DISTANCE_Y);
                     dy = Math.min(0.0, dy);
                 }
 

@@ -43,11 +43,11 @@ import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static network.aika.debugger.AbstractLayout.*;
 import static network.aika.debugger.StepManager.EventType.ACT;
 import static network.aika.debugger.StepManager.EventType.LINK;
 import static network.aika.debugger.StepManager.When.*;
 import static network.aika.neuron.activation.Fired.NOT_FIRED;
-import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE;
 
 
 public class ActivationViewManager extends AbstractViewManager<ActivationConsole, ActivationGraphManager> implements EventListener {
@@ -62,6 +62,13 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     public ActivationViewManager(Document doc) {
         super();
+
+        double width = doc.length() * STANDARD_DISTANCE_X;
+        double height = 3 * STANDARD_DISTANCE_Y;
+
+        getCamera().setGraphViewport(-(width / 2), -(height / 2), (width / 2), (height / 2));
+        getCamera().setViewCenter(0.20, 0.20, 0.0);
+
         graphManager = new ActivationGraphManager(graph);
 
         this.doc = doc;
@@ -189,7 +196,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             }
             if(act.getNeuron().isInputNeuron() && act.getFired() != NOT_FIRED) {
                 Fired f = act.getFired();
-                n.setAttribute("x", f.getInputTimestamp() * STANDARD_DISTANCE);
+                n.setAttribute("x", f.getInputTimestamp() * STANDARD_DISTANCE_X);
             }
         });
 
@@ -289,7 +296,6 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     public void viewClosed(String id) {
-   //     loop = false;
     }
 
     @Override
@@ -297,8 +303,6 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         DefaultCamera2D camera = (DefaultCamera2D) getCamera();
 
         Point3 guPoint = camera.transformPxToGuSwing(x, y);
-
-        System.out.println("x:" + x + " y:" + y + " guX:" + guPoint.x + " guY:" + guPoint.y);
     }
 
     public Document getDocument() {

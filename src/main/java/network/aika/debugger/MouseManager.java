@@ -24,6 +24,7 @@ import org.graphstream.ui.graphicGraph.GraphicElement;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.camera.Camera;
+import org.graphstream.ui.view.camera.DefaultCamera2D;
 import org.graphstream.ui.view.util.InteractiveElement;
 
 import javax.swing.event.MouseInputListener;
@@ -66,15 +67,6 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
     public void release() {
         this.view.removeListener("Mouse", this);
         this.view.removeListener("MouseMotion", this);
-    }
-
-    protected void mouseButtonPress(MouseEvent event) {
-        this.view.requireFocus();
-    }
-
-
-    protected void mouseButtonRelease(MouseEvent event, Iterable<GraphicElement> elementsInArea) {
-        Iterator var3 = elementsInArea.iterator();
     }
 
     protected void mouseButtonPressOnElement(GraphicElement element, MouseEvent event) {
@@ -143,10 +135,7 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
 
     private double[] getCoords(Node n) {
         AbstractParticle ap = viewManager.graphManager.getParticle(n);
-        return new double[] {
-                ap.x,
-                ap.y
-        };
+        return new double[] { ap.x, ap.y };
     }
 
     private boolean edgeSelected(Edge e, Point3 p) {
@@ -191,34 +180,16 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    /*
-    private boolean edgeSelected(Edge e, Point3 p) {
-        double[] ps = getCoords(e.getSourceNode());
-        double[] pt = getCoords(e.getTargetNode());
-        double[] mouseP = new double[] {p.x, p.y};
 
-        double margin = Math.abs((distance(ps,mouseP) + distance(mouseP,pt)) - distance(ps,pt));
-
-        return margin < 10.0;
-    }
-
-    private double distance(double[] a, double[] b) {
-        return Math.sqrt(Math.pow(a[0] - b[0], 2.0) + Math.pow(a[1] - b[1], 2.0));
-    }
-*/
     public void mouseDragged(MouseEvent event) {
-//        if(event.isShiftDown()) {
-            if (this.curElement != null) {
-                this.elementMoving(this.curElement, event);
-            } else {
-                //       this.view.selectionGrowsAt((double)event.getX(), (double)event.getY());
-
-                if (lastMouseDragEvent != null) {
-                    dragGraphMouseMoved(event, lastMouseDragEvent, view.getCamera());
-                }
-                lastMouseDragEvent = event;
+        if (this.curElement != null) {
+            this.elementMoving(this.curElement, event);
+        } else {
+            if (lastMouseDragEvent != null) {
+                dragGraphMouseMoved(event, lastMouseDragEvent, (DefaultCamera2D) view.getCamera());
             }
- //       }
+            lastMouseDragEvent = event;
+        }
     }
 
     public void mouseReleased(MouseEvent event) {
@@ -227,28 +198,7 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
         if (this.curElement != null) {
             this.mouseButtonReleaseOffElement(this.curElement, event);
             this.curElement = null;
-        } else {
-/*            float x2 = (float)event.getX();
-            float y2 = (float)event.getY();
-            float t;
-            if (this.x1 > x2) {
-                t = this.x1;
-                this.x1 = x2;
-                x2 = t;
-            }
-
-            if (this.y1 > y2) {
-                t = this.y1;
-                this.y1 = y2;
-                y2 = t;
-            }
-
-            this.mouseButtonRelease(event, this.view.allGraphicElementsIn(this.types, (double)this.x1, (double)this.y1, (double)x2, (double)y2));
-            this.view.endSelectionAt((double)x2, (double)y2);
-
- */
         }
-
     }
 
     public void mouseEntered(MouseEvent event) {
@@ -258,21 +208,17 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
     }
 
     public void mouseMoved(MouseEvent event) {
-        this.curElement = this.view.findGraphicElementAt(this.types, (double)event.getX() /* * 2*/, (double)event.getY() /* * 2*/);
+  /*      this.curElement = this.view.findGraphicElementAt(this.types, (double)event.getX(), (double)event.getY());
         if(curElement != null) {
-       //     System.out.println("Hover:" + curElement.getLabel());
         }
-
-//        System.out.println("Mouse Pos: x:" + event.getX() + "y:" + event.getY());
+   */
     }
 
-    public void dragGraphMouseMoved(MouseEvent me, MouseEvent lastMe, Camera camera) {
-        // https://github.com/graphstream/gs-core/issues/301
-
+    public void dragGraphMouseMoved(MouseEvent me, MouseEvent lastMe, DefaultCamera2D camera) {
         Point3 centerGU = camera.getViewCenter();
-        Point3 centerPX = camera.transformGuToPx(centerGU.x, centerGU.y, 0);
+        Point3 centerPX = camera.transformGuToPxSwing(centerGU.x, centerGU.y, 0);
 
-        Point3 newCenterGU = camera.transformPxToGu(
+        Point3 newCenterGU = camera.transformPxToGuSwing(
                 centerPX.x - (me.getX() - lastMe.getX()),
                 centerPX.y - (me.getY() - lastMe.getY())
         );
