@@ -27,7 +27,7 @@ public class QueueConsole extends AbstractConsole {
 
     public void renderQueue(StyledDocument sDoc, Thought t) {
         for(QueueEntry qe: t.getQueue()) {
-           appendEntry(sDoc, qe.getPhase() + " ", qe.getElement().toShortString());
+           appendEntry(sDoc, qe.getRound() + " " + qe.getPhase() + " ", qe.getElement().toShortString());
         }
 
         appendText(sDoc, "\n\n\n", "regular");
