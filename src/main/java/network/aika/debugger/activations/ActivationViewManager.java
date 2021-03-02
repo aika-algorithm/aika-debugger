@@ -26,6 +26,7 @@ import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.phase.Phase;
 import network.aika.text.Document;
 import network.aika.debugger.AbstractViewManager;
+import network.aika.text.TextModel;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Node;
@@ -194,11 +195,25 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             if(act.getNeuron().isInputNeuron() && act.getNeuron() instanceof PatternNeuron) {
                 n.setAttribute("layout.frozen");
             }
+
             if(act.getNeuron().isInputNeuron() && act.getFired() != NOT_FIRED) {
                 Fired f = act.getFired();
                 n.setAttribute("x", f.getInputTimestamp() * STANDARD_DISTANCE_X);
             }
+
+            if(act.getNeuron().isInputNeuron() && originAct != null && originAct.getFired() != NOT_FIRED) {
+                double offset = STANDARD_DISTANCE_X * 0.3;
+                Fired f = originAct.getFired();
+                if(act.getLabel().endsWith(TextModel.REL_NEXT_TOKEN_LABEL)) {
+                    n.setAttribute("x", f.getInputTimestamp() * STANDARD_DISTANCE_X + offset);
+                }
+
+                if(act.getLabel().endsWith(TextModel.REL_PREVIOUS_TOKEN_LABEL)) {
+                    n.setAttribute("x", f.getInputTimestamp() * STANDARD_DISTANCE_X - offset);
+                }
+            }
         });
+
 
         node.setAttribute("aika.id", act.getId());
         if(originAct != null) {
