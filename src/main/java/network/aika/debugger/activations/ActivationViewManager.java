@@ -61,10 +61,14 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     protected StepManager stepManager;
 
+    private Long numberOfInputTokens;
+
     public ActivationViewManager(Document doc) {
         super();
 
-        double width = doc.length() * STANDARD_DISTANCE_X;
+        computeNumberOfInputTokens(doc);
+
+        double width = numberOfInputTokens * STANDARD_DISTANCE_X;
         double height = 3 * STANDARD_DISTANCE_Y;
 
         getCamera().setGraphViewport(-(width / 2), -(height / 2), (width / 2), (height / 2));
@@ -84,6 +88,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         this.stepManager = new StepManager(visitorManager);
     }
 
+    public double scaleCharsToTokens() {
+        return (double) numberOfInputTokens / (double) doc.length();
+    }
 
     public StepManager getStepManager() {
         return stepManager;
@@ -185,6 +192,13 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         pumpAndWaitForUserAction();
     }
 
+    private void computeNumberOfInputTokens(Document doc) {
+        numberOfInputTokens = doc.getActivations()
+                .stream()
+                .filter(act -> act.getNeuron().isInputNeuron() && act.getNeuron() instanceof PatternNeuron)
+                .count();
+    }
+
     private Node onActivationEvent(Activation act, Activation originAct) {
         Node node = graphManager.lookupNode(act, n -> {
             if(originAct != null) {
@@ -198,22 +212,21 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
             if(act.getNeuron().isInputNeuron() && act.getFired() != NOT_FIRED) {
                 Fired f = act.getFired();
-                n.setAttribute("x", f.getInputTimestamp() * STANDARD_DISTANCE_X);
+                n.setAttribute("x", getXPosGU(f));
             }
 
             if(act.getNeuron().isInputNeuron() && originAct != null && originAct.getFired() != NOT_FIRED) {
                 double offset = STANDARD_DISTANCE_X * 0.3;
                 Fired f = originAct.getFired();
                 if(act.getLabel().endsWith(TextModel.REL_NEXT_TOKEN_LABEL)) {
-                    n.setAttribute("x", f.getInputTimestamp() * STANDARD_DISTANCE_X + offset);
+                    n.setAttribute("x", getXPosGU(f) + offset);
                 }
 
                 if(act.getLabel().endsWith(TextModel.REL_PREVIOUS_TOKEN_LABEL)) {
-                    n.setAttribute("x", f.getInputTimestamp() * STANDARD_DISTANCE_X - offset);
+                    n.setAttribute("x", getXPosGU(f) - offset);
                 }
             }
         });
-
 
         node.setAttribute("aika.id", act.getId());
         if(originAct != null) {
@@ -231,6 +244,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         return node;
     }
 
+    private double getXPosGU(Fired f) {
+        return f.getInputTimestamp() * scaleCharsToTokens() * STANDARD_DISTANCE_X;
+    }
 
     private void highlightCurrentOnly(Element e) {
         if(lastHighlighted != e) {
