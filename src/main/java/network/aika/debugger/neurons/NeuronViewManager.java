@@ -32,6 +32,8 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE_Y;
+
 
 public class NeuronViewManager extends AbstractNeuronViewManager {
 
@@ -87,7 +89,16 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
                 .map(Activation::getNeuron)
                 .forEach(n -> neurons.add(n));
 
-        // Inhibitory Neurons don't necessarily know their input and output synapses.
+
+
+        double y = n.getInputSynapses()
+                .map(s -> s.getInput())
+                .map(in -> graphManager.getNode(in))
+                .map(in -> graphManager.getParticle(in))
+                .mapToDouble(p -> p.y + STANDARD_DISTANCE_Y)
+                .max()
+                .orElse(0.0);
+
         neurons.stream()
                 .forEach(n -> drawNeuron(n));
 
