@@ -60,5 +60,4 @@ public abstract class AbstractLayout<G extends AbstractGraphManager> extends Spr
         ap.x = x;
         ap.y = y;
     }
-
 }

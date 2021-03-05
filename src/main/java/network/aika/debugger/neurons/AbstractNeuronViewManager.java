@@ -27,6 +27,8 @@ import org.graphstream.graph.Node;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE_Y;
+
 public abstract class AbstractNeuronViewManager extends AbstractViewManager<NeuronConsole, NeuronGraphManager> {
 
     private Model model;
@@ -51,9 +53,17 @@ public abstract class AbstractNeuronViewManager extends AbstractViewManager<Neur
                         neuronTypeModifier.accept(node);
                     }
 
-                    if(!(n instanceof InhibitoryNeuron)) {
-                        n.getInputSynapses().forEach(s -> drawSynapse(s));
-                    }
+                    double y = n.getInputSynapses()
+                            .map(s -> s.getInput())
+                            .map(in -> graphManager.getNode(in))
+                            .map(in -> graphManager.getParticle(in))
+                            .mapToDouble(p -> p.y + STANDARD_DISTANCE_Y)
+                            .max()
+                            .orElse(0.0);
+
+                    node.setAttribute("y", y);
+
+                    n.getInputSynapses().forEach(s -> drawSynapse(s));
                     n.getOutputSynapses().forEach(s -> drawSynapse(s));
                 });
     }
