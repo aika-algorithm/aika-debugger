@@ -75,6 +75,7 @@ public class NeuronLayout extends AbstractLayout<NeuronGraphManager> {
 
         graphManager.setParticle(np.getNeuron(), particle);
 
+
         return particle;
     }
 }
