@@ -16,6 +16,7 @@
  */
 package network.aika.debugger.activations;
 
+import network.aika.neuron.activation.Element;
 import network.aika.utils.Utils;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
@@ -25,6 +26,8 @@ import network.aika.neuron.sign.Sign;
 
 import javax.swing.text.StyledDocument;
 
+import static network.aika.neuron.activation.Element.RoundType.ACT;
+
 
 public class ActivationConsole extends AbstractConsole {
 
@@ -33,7 +36,7 @@ public class ActivationConsole extends AbstractConsole {
         appendText(sDoc, "Activation " + "\n\n", "headline");
         appendEntry(sDoc, "Id: ", "" + act.getId());
         appendEntry(sDoc, "Label: ", act.getLabel());
-        appendEntry(sDoc, "Round: ", "" + act.getRound());
+        appendEntry(sDoc, "Round: ", "" + act.getRound(ACT));
         appendEntry(sDoc, "Value: ", act.getValue() != null ? "" + Utils.round(act.getValue()) : "X");
         appendEntry(sDoc, "net[initial]: ", "" + Utils.round(act.getNet(false)));
         appendEntry(sDoc, "net[final]: ", "" + Utils.round(act.getNet(true)));
@@ -68,7 +71,7 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Output-net[initial]: ", "" + Utils.round(oAct.getNet(false)));
         appendEntry(sDoc, "Output-net[final]: ", "" + Utils.round(oAct.getNet(true)));
 
-        appendEntry(sDoc, "Round: ", "" + l.getRound());
+        appendEntry(sDoc, "Round: ", "" + l.getRound(ACT));
         appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
         appendEntry(sDoc, "f(net)': ", "" + Utils.round(oAct.getNeuron().getActivationFunction().outerGrad(oAct.getNet(true))));

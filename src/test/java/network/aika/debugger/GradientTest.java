@@ -49,7 +49,6 @@ public class GradientTest {
         m.setN(912);
 
         Document doc = new Document("A B ");
-        AikaDebugger.createAndShowGUI(doc,m);
 
         int i = 0;
         TextReference lastRef = null;
@@ -69,6 +68,8 @@ public class GradientTest {
         nB.setFrequency(10.0);
         nB.getSampleSpace().setN(121);
         nB.getSampleSpace().setLastPos(739);
+
+        AikaDebugger.createAndShowGUI(doc,m);
 
         doc.process(m);
 

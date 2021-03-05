@@ -212,7 +212,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
             if(act.getNeuron().isInputNeuron() && act.getFired() != NOT_FIRED) {
                 Fired f = act.getFired();
-                n.setAttribute("x", getXPosGU(f));
+                             n.setAttribute("x", getXPosGU(f));
             }
 
             if(act.getNeuron().isInputNeuron() && originAct != null && originAct.getFired() != NOT_FIRED) {
