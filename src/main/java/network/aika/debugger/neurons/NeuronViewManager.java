@@ -32,6 +32,7 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE_X;
 import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE_Y;
 
 
@@ -74,33 +75,17 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
 
     @Override
     public void click(int x, int y) {
-
     }
 
     public void initGraphNeurons() {
-        TreeSet<Neuron> neurons = new TreeSet<>(
-                Comparator.<Neuron, Boolean>comparing(n -> !(n.isInputNeuron() && n.getInputSynapses().count() == 0))
-                        .thenComparing(n -> n instanceof InhibitoryNeuron)
-                        .thenComparing(n -> n.getId())
-        );
-
+        double[] x = new double[] {0.0};
         document.getActivations()
                 .stream()
                 .map(Activation::getNeuron)
-                .forEach(n -> neurons.add(n));
-
-
-
-        double y = n.getInputSynapses()
-                .map(s -> s.getInput())
-                .map(in -> graphManager.getNode(in))
-                .map(in -> graphManager.getParticle(in))
-                .mapToDouble(p -> p.y + STANDARD_DISTANCE_Y)
-                .max()
-                .orElse(0.0);
-
-        neurons.stream()
-                .forEach(n -> drawNeuron(n));
-
+                .filter(n -> n.isInputNeuron())
+                .forEach(n -> {
+                    drawNeuron(n, x[0], 0.0);
+                    x[0] += STANDARD_DISTANCE_X;
+                });
     }
 }

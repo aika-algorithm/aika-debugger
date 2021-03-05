@@ -75,6 +75,6 @@ public class TemplateViewManager extends AbstractNeuronViewManager {
         getModel()
                 .getTemplates()
                 .getAllTemplates()
-                .forEach(n -> drawNeuron(n));
+                .forEach(n -> drawNeuron(n, 0.0, 0.0));
     }
 }

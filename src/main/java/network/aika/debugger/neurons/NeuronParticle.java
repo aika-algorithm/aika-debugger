@@ -47,7 +47,7 @@ public class NeuronParticle extends AbstractParticle {
             if (!edge.ignored) {
                 Synapse s = lookupSynapse(edge);
 
-                System.out.println("Layout synapse " + s.toString());
+//                System.out.println("Layout synapse " + s.toString());
 
                // edgeAttraction(delta, edge, energies);
             }

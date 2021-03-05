@@ -44,7 +44,7 @@ public abstract class AbstractNeuronViewManager extends AbstractViewManager<Neur
 
     public abstract void initGraphNeurons();
 
-    protected void drawNeuron(Neuron<?> n, double y) {
+    protected void drawNeuron(Neuron<?> n, double x, double y) {
         graphManager.lookupNode(n,
                 node -> {
                     node.setAttribute("aika.neuronId", n.getId());
@@ -53,10 +53,15 @@ public abstract class AbstractNeuronViewManager extends AbstractViewManager<Neur
                         neuronTypeModifier.accept(node);
                     }
 
+                    node.setAttribute("x", x);
                     node.setAttribute("y", y);
 
                     n.getInputSynapses().forEach(s -> drawSynapse(s));
-                    n.getOutputSynapses().forEach(s -> drawSynapse(s));
+                    n.getOutputSynapses().forEach(s -> {
+                        if(!s.isRecurrent() || s.getOutput().isInputNeuron())
+                            drawNeuron(s.getOutput(), x, y + STANDARD_DISTANCE_Y);
+                        drawSynapse(s);
+                    });
                 });
     }
 
