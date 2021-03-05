@@ -16,7 +16,9 @@
  */
 package network.aika.debugger;
 
+import network.aika.debugger.activations.ActivationGraphManager;
 import network.aika.debugger.activations.ActivationParticle;
+import network.aika.debugger.activations.ActivationViewManager;
 import network.aika.neuron.activation.Activation;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
@@ -34,6 +36,10 @@ public abstract class AbstractLayout<G extends AbstractGraphManager> extends Spr
     public static double STANDARD_DISTANCE_Y = 0.2f;
 
     protected G graphManager;
+
+    public AbstractLayout(G gm) {
+        this.graphManager = gm;
+    }
 
     @Override
     public String getLayoutAlgorithmName() {

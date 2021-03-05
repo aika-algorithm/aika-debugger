@@ -26,7 +26,9 @@ import org.graphstream.ui.graphicGraph.GraphicElement;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -74,18 +76,20 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
     }
 
     public void initGraphNeurons() {
-        Set<Neuron> neurons = document.getActivations()
+        TreeSet<Neuron> neurons = new TreeSet<>(
+                Comparator.<Neuron, Boolean>comparing(n -> !(n.isInputNeuron() && n.getInputSynapses().count() == 0))
+                        .thenComparing(n -> n instanceof InhibitoryNeuron)
+                        .thenComparing(n -> n.getId())
+        );
+
+        document.getActivations()
                 .stream()
                 .map(Activation::getNeuron)
-                .collect(Collectors.toSet());
+                .forEach(n -> neurons.add(n));
 
         // Inhibitory Neurons don't necessarily know their input and output synapses.
         neurons.stream()
-                .filter(n -> n instanceof InhibitoryNeuron)
                 .forEach(n -> drawNeuron(n));
 
-        neurons.stream()
-                .filter(n -> !(n instanceof InhibitoryNeuron))
-                .forEach(n -> drawNeuron(n));
     }
 }

@@ -28,8 +28,8 @@ public class ActivationLayout extends AbstractLayout<ActivationGraphManager> {
     ActivationViewManager avm;
 
     public ActivationLayout(ActivationViewManager avm, ActivationGraphManager gm) {
+        super(gm);
         this.avm = avm;
-        this.graphManager = gm;
 
         k = STANDARD_DISTANCE_X;
         K1Init = 0.06f;

@@ -23,13 +23,12 @@ import org.graphstream.graph.Node;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.miv.pherd.geom.Point3;
 
-public class NeuronLayout extends AbstractLayout {
+public class NeuronLayout extends AbstractLayout<NeuronGraphManager> {
     AbstractNeuronViewManager nvm;
-    NeuronGraphManager graphManager;
 
     public NeuronLayout(AbstractNeuronViewManager nvm, NeuronGraphManager gm) {
+        super(gm);
         this.nvm = nvm;
-        this.graphManager = gm;
 
         k = STANDARD_DISTANCE_X;
         K1Init = 0.06f;
