@@ -27,9 +27,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/aika-algorithm/aika-visualization</url>
-        <connection>scm:git:git://github.com/aika-algorithm/aika-visualization.git</connection>
-        <developerConnection>scm:git:git@github.com:aika-algorithm/aika-visualization.git</developerConnection>
+        <url>https://github.com/aika-algorithm/aika-debugger</url>
+        <connection>scm:git:git://github.com/aika-algorithm/aika-debugger.git</connection>
+        <developerConnection>scm:git:git@github.com:aika-algorithm/aika-debugger.git</developerConnection>
         <tag>aika-debugger-2.0.0</tag>
     </scm>
 
