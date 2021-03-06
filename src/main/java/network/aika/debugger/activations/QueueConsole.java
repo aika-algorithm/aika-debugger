@@ -26,13 +26,23 @@ import javax.swing.text.StyledDocument;
 public class QueueConsole extends AbstractConsole {
 
     public void renderQueue(StyledDocument sDoc, Thought t, QueueEntry currentQE) {
-
-        appendEntry(sDoc, getRoundStr(currentQE.getRound()) + " " + currentQE.getPhase() + " ", currentQE.getElement().toShortString());
-        appendText(sDoc, "----------------------------------------------------------------------------------------------------------------\n", "regular");
+        renderQueueEntry(sDoc, currentQE, currentQE.getCurrentTimestamp());
+        appendText(sDoc, "------------------------------------------------------------------------------------------------------------------------------\n", "regular");
         for(QueueEntry qe: t.getQueue()) {
-           appendEntry(sDoc, getRoundStr(qe.getRound()) + " " + qe.getPhase() + " ", qe.getElement().toShortString());
+            renderQueueEntry(sDoc, qe, currentQE.getCurrentTimestamp());
         }
 
         appendText(sDoc, "\n\n\n", "regular");
+    }
+
+    public void renderQueueEntry(StyledDocument sDoc, QueueEntry qe, long currentTimestamp) {
+        boolean isGreen = currentTimestamp == qe.getAddedTimestamp();
+        appendEntry(
+                sDoc,
+                getRoundStr(qe.getRound()) + " " + qe.getPhase() + " ",
+                qe.getElement().toShortString(),
+                isGreen ? "boldGreen" : "bold",
+                isGreen ? "regularGreen" : "regular"
+        );
     }
 }

@@ -25,6 +25,7 @@ import network.aika.neuron.sign.Sign;
 
 import javax.swing.*;
 import javax.swing.text.*;
+import java.awt.*;
 import java.util.function.Consumer;
 
 public abstract class AbstractConsole extends JTextPane {
@@ -52,18 +53,28 @@ public abstract class AbstractConsole extends JTextPane {
     }
 
     public void addStylesToDocument(StyledDocument doc) {
+        Color green = new Color(0, 130, 0);
+
         Style def = StyleContext.getDefaultStyleContext().
                 getStyle(StyleContext.DEFAULT_STYLE);
+        StyleConstants.setFontFamily(def, "SansSerif");
 
         Style regular = doc.addStyle("regular", def);
-        StyleConstants.setFontFamily(def, "SansSerif");
         StyleConstants.setFontSize(regular, 10);
+
+        Style regularGreen = doc.addStyle("regularGreen", def);
+        StyleConstants.setFontSize(regularGreen, 10);
+        StyleConstants.setForeground(regularGreen, green);
 
         Style s = doc.addStyle("italic", regular);
         StyleConstants.setItalic(s, true);
 
         s = doc.addStyle("bold", regular);
         StyleConstants.setBold(s, true);
+
+        s = doc.addStyle("boldGreen", regular);
+        StyleConstants.setBold(s, true);
+        StyleConstants.setForeground(s, green);
 
         s = doc.addStyle("small", regular);
         StyleConstants.setFontSize(s, 10);
@@ -146,8 +157,12 @@ public abstract class AbstractConsole extends JTextPane {
     }
 
     public void appendEntry(StyledDocument sDoc, String fieldName, String fieldValue) {
-        appendText(sDoc, fieldName, "bold");
-        appendText(sDoc, fieldValue + "\n", "regular");
+        appendEntry(sDoc, fieldName, fieldValue, "bold", "regular");
+    }
+
+    public void appendEntry(StyledDocument sDoc, String fieldName, String fieldValue, String titleStyle, String style) {
+        appendText(sDoc, fieldName, titleStyle);
+        appendText(sDoc, fieldValue + "\n", style);
     }
 
     protected void appendText(StyledDocument sDoc, String txt, String style) {

@@ -201,6 +201,10 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
 
     private void afterActivationProcessedEvent(QueueEntry qe, Activation act) {
+        queueConsole.render("Queue", sDoc ->
+                queueConsole.renderQueue(sDoc, act.getThought(), qe)
+        );
+
         if (!stepManager.stopHere(AFTER, ACT))
             return;
 
@@ -316,6 +320,10 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     private void afterLinkProcessedEvent(QueueEntry qe, Link l) {
+        queueConsole.render("Queue", sDoc ->
+                queueConsole.renderQueue(sDoc, l.getThought(), qe)
+        );
+
         if (!stepManager.stopHere(AFTER, LINK))
             return;
 
