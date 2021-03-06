@@ -81,6 +81,10 @@ public abstract class AbstractConsole extends JTextPane {
         }
     }
 
+    public String getRoundStr(int round) {
+        return Integer.MAX_VALUE == round ? "MAX" : "" + round;
+    }
+
     public void renderNeuronConsoleOutput(StyledDocument sDoc, Neuron n, Reference ref) {
         appendText(sDoc, "Neuron\n\n", "headline");
 

@@ -25,9 +25,12 @@ import javax.swing.text.StyledDocument;
 
 public class QueueConsole extends AbstractConsole {
 
-    public void renderQueue(StyledDocument sDoc, Thought t) {
+    public void renderQueue(StyledDocument sDoc, Thought t, QueueEntry currentQE) {
+
+        appendEntry(sDoc, getRoundStr(currentQE.getRound()) + " " + currentQE.getPhase() + " ", currentQE.getElement().toShortString());
+        appendText(sDoc, "----------------------------------------------------------------------------------------------------------------\n", "regular");
         for(QueueEntry qe: t.getQueue()) {
-           appendEntry(sDoc, qe.getRound() + " " + qe.getPhase() + " ", qe.getElement().toShortString());
+           appendEntry(sDoc, getRoundStr(qe.getRound()) + " " + qe.getPhase() + " ", qe.getElement().toShortString());
         }
 
         appendText(sDoc, "\n\n\n", "regular");

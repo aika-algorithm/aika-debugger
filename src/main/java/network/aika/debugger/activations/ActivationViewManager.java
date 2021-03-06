@@ -22,6 +22,7 @@ import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Fired;
 import network.aika.neuron.activation.Link;
+import network.aika.neuron.activation.QueueEntry;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.phase.Phase;
 import network.aika.text.Document;
@@ -162,9 +163,27 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     @Override
-    public void onActivationProcessedEvent(Phase p, Activation act) {
+    public void beforeProcessedEvent(QueueEntry qe) {
+        if(qe.getElement() instanceof Activation) {
+            beforeActivationProcessedEvent(qe, (Activation) qe.getElement());
+        } else if(qe.getElement() instanceof Link) {
+            beforeLinkProcessedEvent(qe, (Link) qe.getElement());
+        }
+    }
+
+
+    @Override
+    public void afterProcessedEvent(QueueEntry qe) {
+        if(qe.getElement() instanceof Activation) {
+            afterActivationProcessedEvent(qe, (Activation) qe.getElement());
+        } else if(qe.getElement() instanceof Link) {
+            afterLinkProcessedEvent(qe, (Link) qe.getElement());
+        }
+    }
+
+    private void beforeActivationProcessedEvent(QueueEntry qe, Activation act) {
         queueConsole.render("Queue", sDoc ->
-                queueConsole.renderQueue(sDoc, act.getThought())
+                queueConsole.renderQueue(sDoc, act.getThought(), qe)
         );
 
         Node n = onActivationEvent(act, null);
@@ -173,19 +192,19 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         if (!stepManager.stopHere(BEFORE, ACT))
             return;
 
-        console.render("Before " + Phase.toString(p), sDoc ->
+        console.render("Before " + Phase.toString(qe.getPhase()), sDoc ->
                 console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
         );
 
         pumpAndWaitForUserAction();
     }
 
-    @Override
-    public void afterActivationProcessedEvent(Phase p, Activation act) {
+
+    private void afterActivationProcessedEvent(QueueEntry qe, Activation act) {
         if (!stepManager.stopHere(AFTER, ACT))
             return;
 
-        console.render("After " + Phase.toString(p), sDoc ->
+        console.render("After " + Phase.toString(qe.getPhase()), sDoc ->
                 console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
         );
 
@@ -274,10 +293,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         pumpAndWaitForUserAction();
     }
 
-    @Override
-    public void onLinkProcessedEvent(Phase p, Link l) {
+    private void beforeLinkProcessedEvent(QueueEntry qe, Link l) {
         queueConsole.render("Queue", sDoc ->
-                queueConsole.renderQueue(sDoc, l.getThought())
+                queueConsole.renderQueue(sDoc, l.getThought(), qe)
         );
 
         Edge e = onLinkEvent(l);
@@ -290,22 +308,21 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         console.addStylesToDocument(sDoc);
         console.clear();
-        console.addHeadline(sDoc, "Before " + Phase.toString(p));
+        console.addHeadline(sDoc, "Before " + Phase.toString(qe.getPhase()));
         console.renderLinkConsoleOutput(sDoc, l);
         console.setStyledDocument(sDoc);
 
         pumpAndWaitForUserAction();
     }
 
-    @Override
-    public void afterLinkProcessedEvent(Phase p, Link l) {
+    private void afterLinkProcessedEvent(QueueEntry qe, Link l) {
         if (!stepManager.stopHere(AFTER, LINK))
             return;
 
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         console.addStylesToDocument(sDoc);
         console.clear();
-        console.addHeadline(sDoc, "After " + Phase.toString(p));
+        console.addHeadline(sDoc, "After " + Phase.toString(qe.getPhase()));
         console.renderLinkConsoleOutput(sDoc, l);
         console.setStyledDocument(sDoc);
 
