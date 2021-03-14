@@ -68,13 +68,15 @@ public class ActivationParticle extends AbstractParticle {
                         PatternPartSynapse pps = (PatternPartSynapse) s;
                         boolean isRecurrent = pps.isRecurrent() && !s.getOutput().isInputNeuron();
 
-                        if (isRecurrent) {
+                        if (isRecurrent)
                             continue;
-                        }
 
-                        if(link.getOutput().getNeuron().isInputNeuron() && link.getInput().getNeuron() instanceof InhibitoryNeuron) {
+
+                        if(link.getOutput().getNeuron().isInputNeuron() && link.getInput().getNeuron() instanceof InhibitoryNeuron)
                             continue;
-                        }
+
+                        if(pps.isSamePattern())
+                            continue;
                     }
                 }
 

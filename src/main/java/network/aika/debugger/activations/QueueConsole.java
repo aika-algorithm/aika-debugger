@@ -39,7 +39,7 @@ public class QueueConsole extends AbstractConsole {
         boolean isGreen = currentTimestamp == qe.getAddedTimestamp();
         appendEntry(
                 sDoc,
-                getRoundStr(qe.getRound()) + " " + qe.getPhase() + " ",
+                qe.getAddedTimestamp() + " " + getRoundStr(qe.getRound()) + " " + qe.getPhase() + " ",
                 qe.getElement().toShortString(),
                 isGreen ? "boldGreen" : "bold",
                 isGreen ? "regularGreen" : "regular"
