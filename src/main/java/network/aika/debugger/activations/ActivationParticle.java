@@ -71,7 +71,6 @@ public class ActivationParticle extends AbstractParticle {
                         if (isRecurrent)
                             continue;
 
-
                         if(link.getOutput().getNeuron().isInputNeuron() && link.getInput().getNeuron() instanceof InhibitoryNeuron)
                             continue;
 
