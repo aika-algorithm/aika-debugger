@@ -56,6 +56,8 @@ public abstract class AbstractNeuronViewManager extends AbstractViewManager<Neur
                     node.setAttribute("x", x);
                     node.setAttribute("y", y);
 
+                    node.setAttribute("ui.label", n.getLabel());
+
                     n.getInputSynapses().forEach(s -> drawSynapse(s));
                     n.getOutputSynapses().forEach(s -> {
                         if(!s.isRecurrent() || s.getOutput().isInputNeuron())

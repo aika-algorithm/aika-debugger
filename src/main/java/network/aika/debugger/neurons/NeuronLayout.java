@@ -66,10 +66,8 @@ public class NeuronLayout extends AbstractLayout<NeuronGraphManager> {
                 y = 0.0;
         }
 
-        if(Math.abs(x) < 0.01 && Math.abs(y) < 0.01) {
-            x += (random.nextDouble() - 0.5) * 0.02;
-            y += (random.nextDouble() - 0.5) * 0.02;
-        }
+        x += (random.nextDouble() - 0.5) * 0.1;
+        y += (random.nextDouble() - 0.5) * 0.1;
 
         particle = new NeuronParticle(this, id, np.getNeuron(), x, y, 0);
 
