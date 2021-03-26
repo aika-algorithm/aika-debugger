@@ -26,7 +26,7 @@ import network.aika.neuron.sign.Sign;
 
 import javax.swing.text.StyledDocument;
 
-import static network.aika.neuron.activation.Element.RoundType.*;
+import static network.aika.neuron.activation.RoundType.*;
 
 
 public class ActivationConsole extends AbstractConsole {
