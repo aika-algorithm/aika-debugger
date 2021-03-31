@@ -44,9 +44,9 @@ public class VisitorManager implements VisitorEventListener {
 
         ActivationGraphManager gm = avm.getGraphManager();
 
-        switch(v.transition) {
+        switch(v.getTransition()) {
             case ACT:
-                Node n = gm.getNode(v.act);
+                Node n = gm.getNode(v.getAct());
                 if(n != null) {
                     if (!dir)
                         avm.highlightElement(n);

@@ -36,9 +36,6 @@ public class ActivationConsole extends AbstractConsole {
         appendText(sDoc, "Activation " + "\n\n", "headline");
         appendEntry(sDoc, "Id: ", "" + act.getId());
         appendEntry(sDoc, "Label: ", act.getLabel());
-        appendEntry(sDoc, "Round(ACT): ", getRoundStr(act.getRound(ACT)));
-        appendEntry(sDoc, "Round(GRADIENT): ", getRoundStr(act.getRound(GRADIENT)));
-        appendEntry(sDoc, "Round(WEIGHT): ", getRoundStr(act.getRound(WEIGHT)));
         appendEntry(sDoc, "Value: ", act.getValue() != null ? "" + Utils.round(act.getValue()) : "X");
         appendEntry(sDoc, "net[initial]: ", "" + Utils.round(act.getNet(false)));
         appendEntry(sDoc, "net[final]: ", "" + Utils.round(act.getNet(true)));
@@ -73,9 +70,6 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Output-net[initial]: ", "" + Utils.round(oAct.getNet(false)));
         appendEntry(sDoc, "Output-net[final]: ", "" + Utils.round(oAct.getNet(true)));
 
-        appendEntry(sDoc, "Round(ACT): ", getRoundStr(l.getRound(ACT)));
-        appendEntry(sDoc, "Round(GRADIENT): ", getRoundStr(l.getRound(GRADIENT)));
-        appendEntry(sDoc, "Round(WEIGHT): ", getRoundStr(l.getRound(WEIGHT)));        appendEntry(sDoc, "IsSelfRef: ", "" + l.isSelfRef());
         appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
         appendEntry(sDoc, "f(net)': ", "" + Utils.round(oAct.getNeuron().getActivationFunction().outerGrad(oAct.getNet(true))));
 
@@ -87,22 +81,22 @@ public class ActivationConsole extends AbstractConsole {
     public void renderVisitorConsoleOutput(StyledDocument sDoc, Visitor v, boolean dir) {
         appendText(sDoc, "Visitor " + (dir ? "(up)" : "(down)") + "\n\n", "headline");
         appendText(sDoc, "\n", "regular");
-        appendEntry(sDoc, "Origin:", v.origin.act.toShortString());
+        appendEntry(sDoc, "Origin:", v.getOrigin().getAct().toShortString());
         appendText(sDoc, "\n", "regular");
 
         do {
             renderVisitorStep(sDoc, v);
 
             appendText(sDoc, "\n", "regular");
-            v = v.previousStep;
+            v = v.getPreviousStep();
         } while(v != null);
     }
 
     public void renderVisitorStep(StyledDocument sDoc, Visitor v) {
-        appendText(sDoc, v.transition.name() + "\n", "bold");
+        appendText(sDoc, v.getTransition().name() + "\n", "bold");
 
-        if(v.act != null) {
-            appendEntry(sDoc, "Current:", v.act.toShortString());
+        if(v.getAct() != null) {
+            appendEntry(sDoc, "Current:", v.getAct().toShortString());
         } else if(v.link != null) {
             appendEntry(sDoc, "Current:", v.link.toString());
         }
