@@ -26,23 +26,27 @@ import javax.swing.text.StyledDocument;
 public class QueueConsole extends AbstractConsole {
 
     public void renderQueue(StyledDocument sDoc, Thought t, QueueEntry currentQE) {
-        renderQueueEntry(sDoc, currentQE, currentQE.getCurrentTimestamp());
+        renderQueueEntry(sDoc, currentQE, t.getTimestampOnProcess());
         appendText(sDoc, "------------------------------------------------------------------------------------------------------------------------------\n", "regular");
         for(QueueEntry qe: t.getQueue()) {
-            renderQueueEntry(sDoc, qe, currentQE.getCurrentTimestamp());
+            renderQueueEntry(sDoc, qe, t.getTimestampOnProcess());
         }
 
         appendText(sDoc, "\n\n\n", "regular");
     }
 
     public void renderQueueEntry(StyledDocument sDoc, QueueEntry qe, long currentTimestamp) {
-        boolean isGreen = currentTimestamp == qe.getAddedTimestamp();
+        boolean isGreen = currentTimestamp <= qe.getTimestamp();
         appendEntry(
                 sDoc,
-                qe.getAddedTimestamp() + " " + getRoundStr(qe.getRound()) + " " + qe.getPhase() + " ",
+                getQueueEntrySortKeyDescription(qe),
                 qe.getElement().toShortString(),
                 isGreen ? "boldGreen" : "bold",
                 isGreen ? "regularGreen" : "regular"
         );
+    }
+
+    private String getQueueEntrySortKeyDescription(QueueEntry qe) {
+        return qe.getStep().getPhase().name() + "-" + qe.getFired() + "-" + qe.getTimestamp() + " " + qe.getStep() + " ";
     }
 }

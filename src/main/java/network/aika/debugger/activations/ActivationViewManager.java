@@ -24,7 +24,7 @@ import network.aika.neuron.activation.Fired;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.activation.QueueEntry;
 import network.aika.neuron.excitatory.PatternNeuron;
-import network.aika.neuron.phase.Phase;
+import network.aika.neuron.steps.Step;
 import network.aika.text.Document;
 import network.aika.debugger.AbstractViewManager;
 import network.aika.text.TextModel;
@@ -192,7 +192,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         if (!stepManager.stopHere(BEFORE, ACT))
             return;
 
-        console.render("Before " + Phase.toString(qe.getPhase()), sDoc ->
+        console.render("Before " + Step.toString(qe.getStep()), sDoc ->
                 console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
         );
 
@@ -208,7 +208,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         if (!stepManager.stopHere(AFTER, ACT))
             return;
 
-        console.render("After " + Phase.toString(qe.getPhase()), sDoc ->
+        console.render("After " + Step.toString(qe.getStep()), sDoc ->
                 console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
         );
 
@@ -312,7 +312,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         console.addStylesToDocument(sDoc);
         console.clear();
-        console.addHeadline(sDoc, "Before " + Phase.toString(qe.getPhase()));
+        console.addHeadline(sDoc, "Before " + Step.toString(qe.getStep()));
         console.renderLinkConsoleOutput(sDoc, l);
         console.setStyledDocument(sDoc);
 
@@ -330,7 +330,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         console.addStylesToDocument(sDoc);
         console.clear();
-        console.addHeadline(sDoc, "After " + Phase.toString(qe.getPhase()));
+        console.addHeadline(sDoc, "After " + Step.toString(qe.getStep()));
         console.renderLinkConsoleOutput(sDoc, l);
         console.setStyledDocument(sDoc);
 
