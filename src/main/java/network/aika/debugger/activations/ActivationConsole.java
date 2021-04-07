@@ -16,16 +16,20 @@
  */
 package network.aika.debugger.activations;
 
-import network.aika.neuron.activation.Element;
+import network.aika.neuron.activation.*;
 import network.aika.utils.Utils;
-import network.aika.neuron.activation.Activation;
-import network.aika.neuron.activation.Link;
-import network.aika.neuron.activation.Visitor;
 import network.aika.debugger.AbstractConsole;
 import network.aika.neuron.sign.Sign;
 
 import javax.swing.text.StyledDocument;
 
+import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static network.aika.debugger.activations.QueueConsole.getQueueEntrySortKeyDescription;
 import static network.aika.neuron.activation.RoundType.*;
 
 
@@ -57,10 +61,14 @@ public class ActivationConsole extends AbstractConsole {
         appendText(sDoc, "\n\n\n", "regular");
 
         renderNeuronConsoleOutput(sDoc, act.getNeuron(), act.getReference());
+
+        appendText(sDoc, "\n\n\n", "regular");
+
+        renderElementQueueOutput(sDoc, act);
     }
 
     public void renderLinkConsoleOutput(StyledDocument sDoc, Link l) {
-        appendText(sDoc, "Link" + "\n\n", "headline");
+        appendText(sDoc, "Link\n\n", "headline");
 
         Activation oAct = l.getOutput();
         appendEntry(sDoc, "Input: ", l.getInput().toShortString());
@@ -70,12 +78,39 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Output-net[initial]: ", "" + Utils.round(oAct.getNet(false)));
         appendEntry(sDoc, "Output-net[final]: ", "" + Utils.round(oAct.getNet(true)));
 
-        appendEntry(sDoc, "Gradient: ", "" + Utils.round(l.getGradient()));
         appendEntry(sDoc, "f(net)': ", "" + Utils.round(oAct.getNeuron().getActivationFunction().outerGrad(oAct.getNet(true))));
 
         appendText(sDoc, "\n\n\n", "regular");
 
         renderSynapseConsoleOutput(sDoc, l.getSynapse(), l.getInput().getReference());
+
+        appendText(sDoc, "\n\n\n", "regular");
+
+        renderElementQueueOutput(sDoc, l);
+    }
+
+    public void renderElementQueueOutput(StyledDocument sDoc, Element e) {
+        appendText(sDoc, "Queue\n\n", "headline");
+
+        Stream<QueueEntry> elementQueue = e.getQueuedEntries();
+
+        elementQueue = elementQueue.collect(
+                Collectors.toCollection(() ->
+                        new TreeSet<>(QueueEntry.COMPARATOR)
+                )
+        ).stream();
+
+        elementQueue.forEach(qe -> renderQueueEntry(sDoc, qe));
+    }
+
+    public void renderQueueEntry(StyledDocument sDoc, QueueEntry qe) {
+        appendEntry(
+                sDoc,
+                getQueueEntrySortKeyDescription(qe),
+                qe.getElement().toShortString(),
+                "bold",
+                "regular"
+        );
     }
 
     public void renderVisitorConsoleOutput(StyledDocument sDoc, Visitor v, boolean dir) {

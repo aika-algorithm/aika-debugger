@@ -46,7 +46,7 @@ public class QueueConsole extends AbstractConsole {
         );
     }
 
-    private String getQueueEntrySortKeyDescription(QueueEntry qe) {
+    public static String getQueueEntrySortKeyDescription(QueueEntry qe) {
         return qe.getStep().getPhase().name() + "-" + qe.getFired() + "-" + qe.getTimestamp() + " " + qe.getStep() + " ";
     }
 }
