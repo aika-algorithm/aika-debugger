@@ -103,8 +103,8 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, "Label: ", n.getLabel());
         appendEntry(sDoc, "Type: ", n.getClass().getSimpleName());
         appendEntry(sDoc, "Is Input Neuron: ", "" + n.isInputNeuron());
-        appendEntry(sDoc, "Bias: ", "" + Utils.round(n.getBias(false)));
-        appendEntry(sDoc, "Bias (final): ", "" + Utils.round(n.getBias(true)));
+        appendEntry(sDoc, "Bias: ", "" + Utils.round(n.getBias()));
+        appendEntry(sDoc, "Bias (recurrent): ", "" + Utils.round(n.getRecurrentBias()));
         if(!n.isTemplate()) {
             appendEntry(sDoc, "Frequency: ", "" + Utils.round(n.getFrequency()));
             appendEntry(sDoc, "N: ", "" + Utils.round(n.getSampleSpace().getN(ref)));

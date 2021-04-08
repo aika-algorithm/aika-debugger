@@ -41,9 +41,8 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Id: ", "" + act.getId());
         appendEntry(sDoc, "Label: ", act.getLabel());
         appendEntry(sDoc, "Value: ", act.getValue() != null ? "" + Utils.round(act.getValue()) : "X");
-        appendEntry(sDoc, "net[initial]: ", "" + Utils.round(act.getNet(false)));
-        appendEntry(sDoc, "net[final]: ", "" + Utils.round(act.getNet(true)));
-        appendEntry(sDoc, "f(net)': ", "" + Utils.round(act.getNeuron().getActivationFunction().outerGrad(act.getNet(true))));
+        appendEntry(sDoc, "net: ", "" + Utils.round(act.getNet()));
+        appendEntry(sDoc, "f(net)': ", "" + Utils.round(act.getNeuron().getActivationFunction().outerGrad(act.getNet())));
         appendEntry(sDoc, "Input-Gradient: ", "" + Utils.round(act.getInputGradient()));
         appendEntry(sDoc, "Output-Gradient-Sum: ", "" + Utils.round(act.getOutputGradientSum()));
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
@@ -75,10 +74,9 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Input-Value: ", "" + Utils.round(l.getInputValue(Sign.POS)));
         appendEntry(sDoc, "Output: ", l.getOutput().toShortString());
         appendEntry(sDoc, "Output-Value: ", oAct.getValue() != null ? "" + Utils.round(oAct.getValue()) : "X");
-        appendEntry(sDoc, "Output-net[initial]: ", "" + Utils.round(oAct.getNet(false)));
-        appendEntry(sDoc, "Output-net[final]: ", "" + Utils.round(oAct.getNet(true)));
+        appendEntry(sDoc, "Output-net: ", "" + Utils.round(oAct.getNet()));
 
-        appendEntry(sDoc, "f(net)': ", "" + Utils.round(oAct.getNeuron().getActivationFunction().outerGrad(oAct.getNet(true))));
+        appendEntry(sDoc, "f(net)': ", "" + Utils.round(oAct.getNeuron().getActivationFunction().outerGrad(oAct.getNet())));
 
         appendText(sDoc, "\n\n\n", "regular");
 

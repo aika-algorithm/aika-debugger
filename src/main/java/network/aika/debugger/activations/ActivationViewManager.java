@@ -116,8 +116,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             if(act == null)
                 return;
 
-            mainConsole.render(headlinePrefix, sDoc ->
-                    mainConsole.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+            selectedConsole.render(headlinePrefix, sDoc ->
+                    selectedConsole.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
             );
         } else if(ge instanceof Edge) {
             Edge e = (Edge) ge;
@@ -126,29 +126,64 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             if(l == null)
                 return;
 
-            mainConsole.render(headlinePrefix, sDoc ->
-                    mainConsole.renderLinkConsoleOutput(sDoc, l)
+            selectedConsole.render(headlinePrefix, sDoc ->
+                    selectedConsole.renderLinkConsoleOutput(sDoc, l)
             );
         }
     }
 
     @Override
     public JComponent getConsolePane() {
-        JScrollPane paneScrollPane = new JScrollPane(mainConsole);
-        paneScrollPane.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        paneScrollPane.setPreferredSize(new Dimension(250, 155));
-        paneScrollPane.setMinimumSize(new Dimension(10, 10));
-
         JScrollPane queuePaneScrollPane = new JScrollPane(queueConsole);
         queuePaneScrollPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         queuePaneScrollPane.setPreferredSize(new Dimension(250, 155));
         queuePaneScrollPane.setMinimumSize(new Dimension(10, 10));
 
-        JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, paneScrollPane, queuePaneScrollPane);
+        JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, getConsoleTabbedPane(), queuePaneScrollPane);
         sp.setResizeWeight(0.52);
         return sp;
+    }
+
+    private JComponent getConsoleTabbedPane() {
+        JTabbedPane tabbedPane = new JTabbedPane();
+//        ImageIcon icon = createImageIcon("images/middle.gif");
+
+        //The following line enables to use scrolling tabs.
+        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+        tabbedPane.setFocusCycleRoot(true);
+
+        {
+            JScrollPane paneScrollPane = new JScrollPane(selectedConsole);
+            paneScrollPane.setVerticalScrollBarPolicy(
+                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            paneScrollPane.setPreferredSize(new Dimension(250, 155));
+            paneScrollPane.setMinimumSize(new Dimension(10, 10));
+            tabbedPane.addTab("Selected", null, paneScrollPane,
+                    "Does nothing");
+        }
+
+        {
+            JScrollPane paneScrollPane = new JScrollPane(mainConsole);
+            paneScrollPane.setVerticalScrollBarPolicy(
+                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            paneScrollPane.setPreferredSize(new Dimension(250, 155));
+            paneScrollPane.setMinimumSize(new Dimension(10, 10));
+            tabbedPane.addTab("Main", null, paneScrollPane,
+                    "Does nothing");
+        }
+
+        {
+            JScrollPane paneScrollPane = new JScrollPane(visitorConsole);
+            paneScrollPane.setVerticalScrollBarPolicy(
+                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            paneScrollPane.setPreferredSize(new Dimension(250, 155));
+            paneScrollPane.setMinimumSize(new Dimension(10, 10));
+            tabbedPane.addTab("Visitor", null, paneScrollPane,
+                    "Does nothing");
+        }
+        return tabbedPane;
     }
 
     @Override
