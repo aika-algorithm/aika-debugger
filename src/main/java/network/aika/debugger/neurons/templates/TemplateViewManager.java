@@ -26,9 +26,6 @@ import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.Collection;
-import java.util.function.Consumer;
 
 
 public class TemplateViewManager extends AbstractNeuronViewManager {
@@ -37,7 +34,7 @@ public class TemplateViewManager extends AbstractNeuronViewManager {
         super(m);
         graphManager = new NeuronGraphManager(graph);
 
-        console = new NeuronConsole();
+        mainConsole = new NeuronConsole();
         viewer.enableAutoLayout(new NeuronLayout(this, graphManager));
 
         splitPane = initSplitPane();
@@ -51,15 +48,15 @@ public class TemplateViewManager extends AbstractNeuronViewManager {
             if (neuron == null)
                 return;
 
-            console.render(headlinePrefix, sDoc ->
-                    console.renderNeuronConsoleOutput(sDoc, neuron, null)
+            mainConsole.render(headlinePrefix, sDoc ->
+                    mainConsole.renderNeuronConsoleOutput(sDoc, neuron, null)
             );
         }
     }
 
     @Override
     public JComponent getConsolePane() {
-        return console;
+        return mainConsole;
     }
 
     public void viewClosed(String id) {

@@ -38,8 +38,8 @@ public class VisitorManager implements VisitorEventListener {
         if(!avm.stepManager.stopHere(BEFORE, VISITOR))
             return;
 
-        avm.getConsole().render("Visitor", sDoc ->
-                avm.getConsole().renderVisitorConsoleOutput(sDoc, v, dir)
+        avm.getVisitorConsole().render("Visitor", sDoc ->
+                avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, dir)
         );
 
         ActivationGraphManager gm = avm.getGraphManager();

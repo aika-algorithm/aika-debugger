@@ -42,8 +42,6 @@ import org.graphstream.ui.view.ViewerPipe;
 import org.graphstream.ui.view.camera.Camera;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -66,7 +64,9 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
 
     protected JSplitPane splitPane;
 
-    protected C console;
+    protected C mainConsole;
+
+    protected C selectedConsole;
 
     protected Element lastHighlighted;
 
@@ -119,8 +119,12 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         return splitPane;
     }
 
-    public C getConsole() {
-        return console;
+    public C getMainConsole() {
+        return mainConsole;
+    }
+
+    public C getSelectedConsole() {
+        return selectedConsole;
     }
 
     protected JSplitPane initSplitPane() {

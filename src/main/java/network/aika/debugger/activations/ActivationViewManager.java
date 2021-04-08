@@ -33,15 +33,11 @@ import org.graphstream.graph.Element;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.graphicGraph.GraphicElement;
-import org.graphstream.ui.swing.Backend;
 import org.graphstream.ui.view.camera.DefaultCamera2D;
 
 import javax.swing.*;
 import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -59,6 +55,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     private VisitorManager visitorManager;
 
     private QueueConsole queueConsole;
+
+    private VisitorConsole visitorConsole;
 
     protected StepManager stepManager;
 
@@ -80,13 +78,20 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         this.doc = doc;
         doc.addEventListener(this);
         visitorManager = new VisitorManager(this);
-        console = new ActivationConsole();
+        mainConsole = new ActivationConsole();
+        selectedConsole = new ActivationConsole();
         queueConsole = new QueueConsole();
+        visitorConsole = new VisitorConsole();
+
         viewer.enableAutoLayout(new ActivationLayout(this, graphManager));
 
         splitPane = initSplitPane();
 
         this.stepManager = new StepManager(visitorManager);
+    }
+
+    public VisitorConsole getVisitorConsole() {
+        return visitorConsole;
     }
 
     public double scaleCharsToTokens() {
@@ -111,8 +116,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             if(act == null)
                 return;
 
-            console.render(headlinePrefix, sDoc ->
-                    console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+            mainConsole.render(headlinePrefix, sDoc ->
+                    mainConsole.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
             );
         } else if(ge instanceof Edge) {
             Edge e = (Edge) ge;
@@ -121,15 +126,15 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             if(l == null)
                 return;
 
-            console.render(headlinePrefix, sDoc ->
-                    console.renderLinkConsoleOutput(sDoc, l)
+            mainConsole.render(headlinePrefix, sDoc ->
+                    mainConsole.renderLinkConsoleOutput(sDoc, l)
             );
         }
     }
 
     @Override
     public JComponent getConsolePane() {
-        JScrollPane paneScrollPane = new JScrollPane(console);
+        JScrollPane paneScrollPane = new JScrollPane(mainConsole);
         paneScrollPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         paneScrollPane.setPreferredSize(new Dimension(250, 155));
@@ -155,8 +160,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         n.setAttribute("aika.init-node", true);
 
-        console.render("New", sDoc ->
-                console.renderActivationConsoleOutput(sDoc,  act, graphManager.getParticle(act))
+        mainConsole.render("New", sDoc ->
+                mainConsole.renderActivationConsoleOutput(sDoc,  act, graphManager.getParticle(act))
         );
 
         pumpAndWaitForUserAction();
@@ -192,8 +197,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         if (!stepManager.stopHere(BEFORE, ACT))
             return;
 
-        console.render("Before " + Step.toString(qe.getStep()), sDoc ->
-                console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+        mainConsole.render("Before " + Step.toString(qe.getStep()), sDoc ->
+                mainConsole.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
         );
 
         pumpAndWaitForUserAction();
@@ -208,8 +213,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         if (!stepManager.stopHere(AFTER, ACT))
             return;
 
-        console.render("After " + Step.toString(qe.getStep()), sDoc ->
-                console.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+        mainConsole.render("After " + Step.toString(qe.getStep()), sDoc ->
+                mainConsole.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
         );
 
         pumpAndWaitForUserAction();
@@ -290,8 +295,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         if (!stepManager.stopHere(NEW, LINK))
             return;
 
-        console.render("New", sDoc ->
-                console.renderLinkConsoleOutput(sDoc, l)
+        mainConsole.render("New", sDoc ->
+                mainConsole.renderLinkConsoleOutput(sDoc, l)
         );
 
         pumpAndWaitForUserAction();
@@ -310,11 +315,11 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             return;
 
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
-        console.addStylesToDocument(sDoc);
-        console.clear();
-        console.addHeadline(sDoc, "Before " + Step.toString(qe.getStep()));
-        console.renderLinkConsoleOutput(sDoc, l);
-        console.setStyledDocument(sDoc);
+        mainConsole.addStylesToDocument(sDoc);
+        mainConsole.clear();
+        mainConsole.addHeadline(sDoc, "Before " + Step.toString(qe.getStep()));
+        mainConsole.renderLinkConsoleOutput(sDoc, l);
+        mainConsole.setStyledDocument(sDoc);
 
         pumpAndWaitForUserAction();
     }
@@ -328,11 +333,11 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             return;
 
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
-        console.addStylesToDocument(sDoc);
-        console.clear();
-        console.addHeadline(sDoc, "After " + Step.toString(qe.getStep()));
-        console.renderLinkConsoleOutput(sDoc, l);
-        console.setStyledDocument(sDoc);
+        mainConsole.addStylesToDocument(sDoc);
+        mainConsole.clear();
+        mainConsole.addHeadline(sDoc, "After " + Step.toString(qe.getStep()));
+        mainConsole.renderLinkConsoleOutput(sDoc, l);
+        mainConsole.setStyledDocument(sDoc);
 
 
         pumpAndWaitForUserAction();

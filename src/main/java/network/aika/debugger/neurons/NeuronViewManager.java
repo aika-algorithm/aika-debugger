@@ -19,21 +19,13 @@ package network.aika.debugger.neurons;
 import network.aika.Model;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.activation.Activation;
-import network.aika.neuron.inhibitory.InhibitoryNeuron;
 import network.aika.text.Document;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE_X;
-import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE_Y;
 
 
 public class NeuronViewManager extends AbstractNeuronViewManager {
@@ -44,7 +36,7 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
         super(m);
         graphManager = new NeuronGraphManager(graph);
         this.document = document;
-        console = new NeuronConsole();
+        mainConsole = new NeuronConsole();
         viewer.enableAutoLayout(new NeuronLayout(this, graphManager));
 
         splitPane = initSplitPane();
@@ -58,15 +50,15 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
             if (neuron == null)
                 return;
 
-            console.render(headlinePrefix, sDoc ->
-                    console.renderNeuronConsoleOutput(sDoc, neuron, null)
+            mainConsole.render(headlinePrefix, sDoc ->
+                    mainConsole.renderNeuronConsoleOutput(sDoc, neuron, null)
             );
         }
     }
 
     @Override
     public JComponent getConsolePane() {
-        return console;
+        return mainConsole;
     }
 
     public void viewClosed(String id) {
