@@ -157,14 +157,14 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         tabbedPane.addTab(
                 "Main",
                 null,
-                getScrollPane(mainConsole),
+                getScrollPane(mainConsole.getSplitPane()),
                 "Shows the currently processed graph element"
         );
 
         tabbedPane.addTab(
                 "Selected",
                 null,
-                getScrollPane(selectedConsole),
+                getScrollPane(selectedConsole.getSplitPane()),
                 "Shows the selected graph element"
         );
 

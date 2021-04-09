@@ -16,26 +16,31 @@
  */
 package network.aika.debugger.activations;
 
+import network.aika.debugger.neurons.NeuronConsole;
 import network.aika.neuron.activation.*;
 import network.aika.utils.Utils;
 import network.aika.debugger.AbstractConsole;
 import network.aika.neuron.sign.Sign;
 
+import javax.swing.*;
 import javax.swing.text.StyledDocument;
-
-import java.util.Collection;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static network.aika.debugger.activations.QueueConsole.getQueueEntrySortKeyDescription;
-import static network.aika.debugger.activations.QueueConsole.renderQueueEntry;
-import static network.aika.neuron.activation.RoundType.*;
-
+import java.awt.*;
 
 public class ActivationConsole extends AbstractConsole {
 
+    private NeuronConsole neuronConsole = new NeuronConsole();
+    private ElementQueueConsole elementQueueConsole = new ElementQueueConsole();
+
+
+    public Component getSplitPane() {
+        JSplitPane innerSP = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this, neuronConsole);
+        innerSP.setResizeWeight(0.5);
+
+        JSplitPane outerSP = new JSplitPane(JSplitPane.VERTICAL_SPLIT, innerSP, elementQueueConsole);
+        outerSP.setResizeWeight(0.70);
+
+        return outerSP;
+    }
 
     public void renderActivationConsoleOutput(StyledDocument sDoc, Activation act, String headline) {
         if(headline != null)
@@ -56,13 +61,13 @@ public class ActivationConsole extends AbstractConsole {
         }
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
 
-        appendText(sDoc, "\n", "regular");
+        neuronConsole.render(nsDoc ->
+                neuronConsole.renderNeuronConsoleOutput(nsDoc, act.getNeuron(), act.getReference())
+        );
 
-        renderNeuronConsoleOutput(sDoc, act.getNeuron(), act.getReference());
-
-        appendText(sDoc, "\n", "regular");
-
-        renderElementQueueOutput(sDoc, act);
+        elementQueueConsole.render(eqsDoc ->
+                elementQueueConsole.renderElementQueueOutput(eqsDoc, act)
+        );
     }
 
     public void renderLinkConsoleOutput(StyledDocument sDoc, Link l, String headline) {
@@ -82,26 +87,12 @@ public class ActivationConsole extends AbstractConsole {
 
         appendText(sDoc, "\n", "regular");
 
-        renderSynapseConsoleOutput(sDoc, l.getSynapse(), l.getInput().getReference());
+        neuronConsole.render(nsDoc ->
+                neuronConsole.renderSynapseConsoleOutput(nsDoc, l.getSynapse(), l.getOutput().getReference())
+        );
 
-        appendText(sDoc, "\n", "regular");
-
-        renderElementQueueOutput(sDoc, l);
-    }
-
-    public void renderElementQueueOutput(StyledDocument sDoc, Element e) {
-        appendText(sDoc, "Queue\n", "headline");
-
-        Stream<QueueEntry> elementQueue = e.getQueuedEntries();
-
-        elementQueue = elementQueue.collect(
-                Collectors.toCollection(() ->
-                        new TreeSet<>(QueueEntry.COMPARATOR)
-                )
-        ).stream();
-
-        elementQueue.forEach(qe ->
-                renderQueueEntry(sDoc, qe, e.getThought().getTimestampOnProcess())
+        elementQueueConsole.render(eqsDoc ->
+                elementQueueConsole.renderElementQueueOutput(eqsDoc, l)
         );
     }
 }
