@@ -60,34 +60,6 @@ public class AikaDebugger extends JPanel {
 
         tabbedPane.setFocusCycleRoot(true);
 
-        tabbedPane.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                System.out.println("Click");
-           //     click();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                System.out.println();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                System.out.println();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-
         actViewManager = new ActivationViewManager(doc);
         neuronViewManager =new NeuronViewManager(model, doc);
         templateViewManager =new TemplateViewManager(model);
@@ -133,7 +105,6 @@ public class AikaDebugger extends JPanel {
 
         //Add content to the window.
         frame.add(new AikaDebugger(doc,model), BorderLayout.CENTER);
-  //      frame.setSize( 800, 600 );
         frame.setVisible(true);
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
     }

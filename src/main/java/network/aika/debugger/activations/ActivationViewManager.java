@@ -108,7 +108,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         stepManager.waitForClick();
     }
 
-    public void showElementContext(String headlinePrefix, GraphicElement ge) {
+    public void showElementContext(GraphicElement ge) {
         if(ge instanceof Node) {
             Node n = (Node) ge;
 
@@ -116,8 +116,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             if(act == null)
                 return;
 
-            selectedConsole.render(headlinePrefix, sDoc ->
-                    selectedConsole.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+            selectedConsole.render(sDoc ->
+                    selectedConsole.renderActivationConsoleOutput(sDoc, act, null)
             );
         } else if(ge instanceof Edge) {
             Edge e = (Edge) ge;
@@ -126,8 +126,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             if(l == null)
                 return;
 
-            selectedConsole.render(headlinePrefix, sDoc ->
-                    selectedConsole.renderLinkConsoleOutput(sDoc, l)
+            selectedConsole.render(sDoc ->
+                    selectedConsole.renderLinkConsoleOutput(sDoc, l, null)
             );
         }
     }
@@ -141,7 +141,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         queuePaneScrollPane.setMinimumSize(new Dimension(10, 10));
 
         JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, getConsoleTabbedPane(), queuePaneScrollPane);
-        sp.setResizeWeight(0.52);
+        sp.setResizeWeight(0.65);
         return sp;
     }
 
@@ -154,36 +154,37 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         tabbedPane.setFocusCycleRoot(true);
 
-        {
-            JScrollPane paneScrollPane = new JScrollPane(selectedConsole);
-            paneScrollPane.setVerticalScrollBarPolicy(
-                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            paneScrollPane.setPreferredSize(new Dimension(250, 155));
-            paneScrollPane.setMinimumSize(new Dimension(10, 10));
-            tabbedPane.addTab("Selected", null, paneScrollPane,
-                    "Does nothing");
-        }
+        tabbedPane.addTab(
+                "Main",
+                null,
+                getScrollPane(mainConsole),
+                "Shows the currently processed graph element"
+        );
 
-        {
-            JScrollPane paneScrollPane = new JScrollPane(mainConsole);
-            paneScrollPane.setVerticalScrollBarPolicy(
-                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            paneScrollPane.setPreferredSize(new Dimension(250, 155));
-            paneScrollPane.setMinimumSize(new Dimension(10, 10));
-            tabbedPane.addTab("Main", null, paneScrollPane,
-                    "Does nothing");
-        }
+        tabbedPane.addTab(
+                "Selected",
+                null,
+                getScrollPane(selectedConsole),
+                "Shows the selected graph element"
+        );
 
-        {
-            JScrollPane paneScrollPane = new JScrollPane(visitorConsole);
-            paneScrollPane.setVerticalScrollBarPolicy(
-                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            paneScrollPane.setPreferredSize(new Dimension(250, 155));
-            paneScrollPane.setMinimumSize(new Dimension(10, 10));
-            tabbedPane.addTab("Visitor", null, paneScrollPane,
-                    "Does nothing");
-        }
+        tabbedPane.addTab(
+                "Visitor",
+                null,
+                getScrollPane(visitorConsole),
+                "Shows the path of the visitor"
+        );
+
         return tabbedPane;
+    }
+
+    private JScrollPane getScrollPane(Component c) {
+        JScrollPane scrollPane = new JScrollPane(c);
+        scrollPane.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(250, 155));
+        scrollPane.setMinimumSize(new Dimension(10, 10));
+        return scrollPane;
     }
 
     @Override
@@ -195,8 +196,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         n.setAttribute("aika.init-node", true);
 
-        mainConsole.render("New", sDoc ->
-                mainConsole.renderActivationConsoleOutput(sDoc,  act, graphManager.getParticle(act))
+        mainConsole.render(sDoc ->
+                mainConsole.renderActivationConsoleOutput(sDoc,  act, "New")
         );
 
         pumpAndWaitForUserAction();
@@ -222,7 +223,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     private void beforeActivationProcessedEvent(QueueEntry qe, Activation act) {
-        queueConsole.render("Queue", sDoc ->
+        queueConsole.render(sDoc ->
                 queueConsole.renderQueue(sDoc, act.getThought(), qe)
         );
 
@@ -232,8 +233,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         if (!stepManager.stopHere(BEFORE, ACT))
             return;
 
-        mainConsole.render("Before " + Step.toString(qe.getStep()), sDoc ->
-                mainConsole.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+        mainConsole.render(sDoc ->
+                mainConsole.renderActivationConsoleOutput(sDoc, act, "Before " + Step.toString(qe.getStep()))
         );
 
         pumpAndWaitForUserAction();
@@ -241,15 +242,15 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
 
     private void afterActivationProcessedEvent(QueueEntry qe, Activation act) {
-        queueConsole.render("Queue", sDoc ->
+        queueConsole.render(sDoc ->
                 queueConsole.renderQueue(sDoc, act.getThought(), qe)
         );
 
         if (!stepManager.stopHere(AFTER, ACT))
             return;
 
-        mainConsole.render("After " + Step.toString(qe.getStep()), sDoc ->
-                mainConsole.renderActivationConsoleOutput(sDoc, act, graphManager.getParticle(act))
+        mainConsole.render(sDoc ->
+                mainConsole.renderActivationConsoleOutput(sDoc, act, "After " + Step.toString(qe.getStep()))
         );
 
         pumpAndWaitForUserAction();
@@ -330,15 +331,15 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         if (!stepManager.stopHere(NEW, LINK))
             return;
 
-        mainConsole.render("New", sDoc ->
-                mainConsole.renderLinkConsoleOutput(sDoc, l)
+        mainConsole.render(sDoc ->
+                mainConsole.renderLinkConsoleOutput(sDoc, l, "New")
         );
 
         pumpAndWaitForUserAction();
     }
 
     private void beforeLinkProcessedEvent(QueueEntry qe, Link l) {
-        queueConsole.render("Queue", sDoc ->
+        queueConsole.render(sDoc ->
                 queueConsole.renderQueue(sDoc, l.getThought(), qe)
         );
 
@@ -352,15 +353,14 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         mainConsole.addStylesToDocument(sDoc);
         mainConsole.clear();
-        mainConsole.addHeadline(sDoc, "Before " + Step.toString(qe.getStep()));
-        mainConsole.renderLinkConsoleOutput(sDoc, l);
+        mainConsole.renderLinkConsoleOutput(sDoc, l, "Before " + Step.toString(qe.getStep()));
         mainConsole.setStyledDocument(sDoc);
 
         pumpAndWaitForUserAction();
     }
 
     private void afterLinkProcessedEvent(QueueEntry qe, Link l) {
-        queueConsole.render("Queue", sDoc ->
+        queueConsole.render(sDoc ->
                 queueConsole.renderQueue(sDoc, l.getThought(), qe)
         );
 
@@ -370,8 +370,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         mainConsole.addStylesToDocument(sDoc);
         mainConsole.clear();
-        mainConsole.addHeadline(sDoc, "After " + Step.toString(qe.getStep()));
-        mainConsole.renderLinkConsoleOutput(sDoc, l);
+        mainConsole.renderLinkConsoleOutput(sDoc, l, "After " + Step.toString(qe.getStep()));
         mainConsole.setStyledDocument(sDoc);
 
 
@@ -396,9 +395,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     @Override
     public void click(int x, int y) {
-        DefaultCamera2D camera = (DefaultCamera2D) getCamera();
+//        DefaultCamera2D camera = (DefaultCamera2D) getCamera();
 
-        Point3 guPoint = camera.transformPxToGuSwing(x, y);
+//        Point3 guPoint = camera.transformPxToGuSwing(x, y);
     }
 
     public Document getDocument() {

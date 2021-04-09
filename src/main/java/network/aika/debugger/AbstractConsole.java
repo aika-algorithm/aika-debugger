@@ -36,7 +36,7 @@ public abstract class AbstractConsole extends JTextPane {
         setEditable(false);
     }
 
-    public void render(String headline, Consumer<StyledDocument> content) {
+    public void render(Consumer<StyledDocument> content) {
         setDoubleBuffered(true);
         setOpaque(false);
         setEnabled(false);
@@ -44,7 +44,6 @@ public abstract class AbstractConsole extends JTextPane {
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         addStylesToDocument(sDoc);
         clear();
-        addHeadline(sDoc, headline);
 
         content.accept(sDoc);
         setStyledDocument(sDoc);
@@ -92,12 +91,8 @@ public abstract class AbstractConsole extends JTextPane {
         }
     }
 
-    public String getRoundStr(int round) {
-        return Integer.MAX_VALUE == round ? "MAX" : "" + round;
-    }
-
     public void renderNeuronConsoleOutput(StyledDocument sDoc, Neuron n, Reference ref) {
-        appendText(sDoc, "Neuron\n\n", "headline");
+        appendText(sDoc, "Neuron\n", "headline");
 
         appendEntry(sDoc, "Id: ", "" + n.getId());
         appendEntry(sDoc, "Label: ", n.getLabel());
@@ -124,7 +119,7 @@ public abstract class AbstractConsole extends JTextPane {
     }
 
     public void renderSynapseConsoleOutput(StyledDocument sDoc, Synapse s, Reference ref) {
-        appendText(sDoc, "Synapse\n\n", "headline");
+        appendText(sDoc, "Synapse\n", "headline");
 
         appendEntry(sDoc, "Type: ", s.getClass().getSimpleName());
         appendEntry(sDoc, "Weight: ", "" + Utils.round(s.getWeight()));
@@ -160,12 +155,12 @@ public abstract class AbstractConsole extends JTextPane {
         appendEntry(sDoc, fieldName, fieldValue, "bold", "regular");
     }
 
-    public void appendEntry(StyledDocument sDoc, String fieldName, String fieldValue, String titleStyle, String style) {
+    public static void appendEntry(StyledDocument sDoc, String fieldName, String fieldValue, String titleStyle, String style) {
         appendText(sDoc, fieldName, titleStyle);
         appendText(sDoc, fieldValue + "\n", style);
     }
 
-    protected void appendText(StyledDocument sDoc, String txt, String style) {
+    protected static void appendText(StyledDocument sDoc, String txt, String style) {
         try {
             sDoc.insertString(sDoc.getLength(), txt, sDoc.getStyle(style));
         } catch (BadLocationException e) {

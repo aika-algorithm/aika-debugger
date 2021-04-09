@@ -76,7 +76,7 @@ public class MouseManager implements MouseInputListener, org.graphstream.ui.view
         } else {
             element.setAttribute("ui.clicked", new Object[0]);
 
-            viewManager.showElementContext("Selected", element);
+            viewManager.showElementContext(element);
         }
     }
 

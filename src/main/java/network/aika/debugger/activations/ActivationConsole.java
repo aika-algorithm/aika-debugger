@@ -30,14 +30,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static network.aika.debugger.activations.QueueConsole.getQueueEntrySortKeyDescription;
+import static network.aika.debugger.activations.QueueConsole.renderQueueEntry;
 import static network.aika.neuron.activation.RoundType.*;
 
 
 public class ActivationConsole extends AbstractConsole {
 
 
-    public void renderActivationConsoleOutput(StyledDocument sDoc, Activation act, ActivationParticle ap) {
-        appendText(sDoc, "Activation " + "\n\n", "headline");
+    public void renderActivationConsoleOutput(StyledDocument sDoc, Activation act, String headline) {
+        if(headline != null)
+            addHeadline(sDoc, headline);
+
+        appendText(sDoc, "Activation " + "\n", "headline");
         appendEntry(sDoc, "Id: ", "" + act.getId());
         appendEntry(sDoc, "Label: ", act.getLabel());
         appendEntry(sDoc, "Value: ", act.getValue() != null ? "" + Utils.round(act.getValue()) : "X");
@@ -51,23 +55,21 @@ public class ActivationConsole extends AbstractConsole {
             appendEntry(sDoc, "Norm: ", "" + Utils.round(act.getNorm()));
         }
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
-/*
-// TODO: Remove Particle!
-            if(ap != null) {
-                appendText(sDoc, "X: " + ap.getPosition().x + " Y: " + ap.getPosition().y + "\n", "bold");
-            }
-*/
-        appendText(sDoc, "\n\n\n", "regular");
+
+        appendText(sDoc, "\n", "regular");
 
         renderNeuronConsoleOutput(sDoc, act.getNeuron(), act.getReference());
 
-        appendText(sDoc, "\n\n\n", "regular");
+        appendText(sDoc, "\n", "regular");
 
         renderElementQueueOutput(sDoc, act);
     }
 
-    public void renderLinkConsoleOutput(StyledDocument sDoc, Link l) {
-        appendText(sDoc, "Link\n\n", "headline");
+    public void renderLinkConsoleOutput(StyledDocument sDoc, Link l, String headline) {
+        if(headline != null)
+            addHeadline(sDoc, headline);
+
+        appendText(sDoc, "Link\n", "headline");
 
         Activation oAct = l.getOutput();
         appendEntry(sDoc, "Input: ", l.getInput().toShortString());
@@ -78,17 +80,17 @@ public class ActivationConsole extends AbstractConsole {
 
         appendEntry(sDoc, "f(net)': ", "" + Utils.round(oAct.getNeuron().getActivationFunction().outerGrad(oAct.getNet())));
 
-        appendText(sDoc, "\n\n\n", "regular");
+        appendText(sDoc, "\n", "regular");
 
         renderSynapseConsoleOutput(sDoc, l.getSynapse(), l.getInput().getReference());
 
-        appendText(sDoc, "\n\n\n", "regular");
+        appendText(sDoc, "\n", "regular");
 
         renderElementQueueOutput(sDoc, l);
     }
 
     public void renderElementQueueOutput(StyledDocument sDoc, Element e) {
-        appendText(sDoc, "Queue\n\n", "headline");
+        appendText(sDoc, "Queue\n", "headline");
 
         Stream<QueueEntry> elementQueue = e.getQueuedEntries();
 
@@ -98,17 +100,8 @@ public class ActivationConsole extends AbstractConsole {
                 )
         ).stream();
 
-        elementQueue.forEach(qe -> renderQueueEntry(sDoc, qe));
-    }
-
-    public void renderQueueEntry(StyledDocument sDoc, QueueEntry qe) {
-        appendEntry(
-                sDoc,
-                getQueueEntrySortKeyDescription(qe),
-                qe.getElement().toShortString(),
-                "bold",
-                "regular"
+        elementQueue.forEach(qe ->
+                renderQueueEntry(sDoc, qe, e.getThought().getTimestampOnProcess())
         );
     }
-
 }

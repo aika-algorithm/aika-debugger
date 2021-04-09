@@ -40,7 +40,7 @@ public class TemplateViewManager extends AbstractNeuronViewManager {
         splitPane = initSplitPane();
     }
 
-    public void showElementContext(String headlinePrefix, GraphicElement ge) {
+    public void showElementContext(GraphicElement ge) {
         if (ge instanceof Node) {
             Node n = (Node) ge;
 
@@ -48,7 +48,7 @@ public class TemplateViewManager extends AbstractNeuronViewManager {
             if (neuron == null)
                 return;
 
-            mainConsole.render(headlinePrefix, sDoc ->
+            mainConsole.render(sDoc ->
                     mainConsole.renderNeuronConsoleOutput(sDoc, neuron, null)
             );
         }

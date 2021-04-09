@@ -27,7 +27,7 @@ public class QueueConsole extends AbstractConsole {
 
     public void renderQueue(StyledDocument sDoc, Thought t, QueueEntry currentQE) {
         renderQueueEntry(sDoc, currentQE, t.getTimestampOnProcess());
-        appendText(sDoc, "------------------------------------------------------------------------------------------------------------------------------\n", "regular");
+        appendText(sDoc, "---------------------------------------------------------------------------------------------------------------------------------------------------------------------\n", "regular");
         for(QueueEntry qe: t.getQueue()) {
             renderQueueEntry(sDoc, qe, t.getTimestampOnProcess());
         }
@@ -35,7 +35,7 @@ public class QueueConsole extends AbstractConsole {
         appendText(sDoc, "\n\n\n", "regular");
     }
 
-    public void renderQueueEntry(StyledDocument sDoc, QueueEntry qe, long currentTimestamp) {
+    public static void renderQueueEntry(StyledDocument sDoc, QueueEntry qe, long currentTimestamp) {
         boolean isGreen = currentTimestamp <= qe.getTimestamp();
         appendEntry(
                 sDoc,

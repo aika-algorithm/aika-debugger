@@ -105,7 +105,7 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         return graphManager;
     }
 
-    public abstract void showElementContext(String headlinePrefix, GraphicElement ge);
+    public abstract void showElementContext(GraphicElement ge);
 
     public Graph getGraph() {
         return graph;
