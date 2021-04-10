@@ -26,7 +26,9 @@ import javax.swing.text.StyledDocument;
 public class QueueConsole extends AbstractConsole {
 
     public void renderQueue(StyledDocument sDoc, Thought t, QueueEntry currentQE) {
-        renderQueueEntry(sDoc, currentQE, t.getTimestampOnProcess());
+        if(currentQE != null)
+            renderQueueEntry(sDoc, currentQE, t.getTimestampOnProcess());
+
         appendText(sDoc, "---------------------------------------------------------------------------------------------------------------------------------------------------------------------\n", "regular");
         for(QueueEntry qe: t.getQueue()) {
             renderQueueEntry(sDoc, qe, t.getTimestampOnProcess());
