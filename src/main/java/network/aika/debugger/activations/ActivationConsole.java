@@ -28,18 +28,25 @@ import java.awt.*;
 
 public class ActivationConsole extends AbstractConsole {
 
-    private NeuronConsole neuronConsole = new NeuronConsole();
-    private ElementQueueConsole elementQueueConsole = new ElementQueueConsole();
+    private NeuronConsole neuronConsole;
+    private ElementQueueConsole elementQueueConsole;
+
+    private JSplitPane horizontalSplitPane;
+    private JSplitPane verticalSplitPane;
 
 
     public Component getSplitPane() {
-        JSplitPane innerSP = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this, neuronConsole);
-        innerSP.setResizeWeight(0.5);
+        neuronConsole = new NeuronConsole();
+        horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this, neuronConsole);
+        horizontalSplitPane.setResizeWeight(0.5);
+        horizontalSplitPane.setDividerLocation(0.5);
 
-        JSplitPane outerSP = new JSplitPane(JSplitPane.VERTICAL_SPLIT, innerSP, elementQueueConsole);
-        outerSP.setResizeWeight(0.70);
+        elementQueueConsole = new ElementQueueConsole();
+        verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, horizontalSplitPane, elementQueueConsole);
+        verticalSplitPane.setResizeWeight(0.70);
+        verticalSplitPane.setDividerLocation(0.70);
 
-        return outerSP;
+        return verticalSplitPane;
     }
 
     public void renderActivationConsoleOutput(StyledDocument sDoc, Activation act, String headline) {

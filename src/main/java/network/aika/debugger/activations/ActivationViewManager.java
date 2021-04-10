@@ -134,14 +134,12 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     @Override
     public JComponent getConsolePane() {
-        JScrollPane queuePaneScrollPane = new JScrollPane(queueConsole);
-        queuePaneScrollPane.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        queuePaneScrollPane.setPreferredSize(new Dimension(250, 155));
-        queuePaneScrollPane.setMinimumSize(new Dimension(10, 10));
-
-        JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, getConsoleTabbedPane(), queuePaneScrollPane);
+        JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+                getConsoleTabbedPane(),
+                getScrollPane(queueConsole)
+        );
         sp.setResizeWeight(0.65);
+
         return sp;
     }
 
@@ -178,10 +176,10 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         return tabbedPane;
     }
 
-    private JScrollPane getScrollPane(Component c) {
+    private static JScrollPane getScrollPane(Component c) {
         JScrollPane scrollPane = new JScrollPane(c);
         scrollPane.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setPreferredSize(new Dimension(250, 155));
         scrollPane.setMinimumSize(new Dimension(10, 10));
         return scrollPane;

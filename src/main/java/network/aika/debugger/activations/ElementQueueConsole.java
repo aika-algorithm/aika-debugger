@@ -14,7 +14,7 @@ import static network.aika.debugger.activations.QueueConsole.renderQueueEntry;
 public class ElementQueueConsole extends AbstractConsole {
 
     public void renderElementQueueOutput(StyledDocument sDoc, Element e) {
-        appendText(sDoc, "Queue\n", "headline");
+        appendText(sDoc, "Current Element Queue\n", "headline");
 
         Stream<QueueEntry> elementQueue = e.getQueuedEntries();
 

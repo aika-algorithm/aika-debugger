@@ -40,14 +40,14 @@ public abstract class AbstractConsole extends JTextPane {
         setDoubleBuffered(true);
         setOpaque(false);
         setEnabled(false);
-        setVisible(false);
+//        setVisible(false);
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         addStylesToDocument(sDoc);
         clear();
 
         content.accept(sDoc);
         setStyledDocument(sDoc);
-        setVisible(true);
+//        setVisible(true);
         setEnabled(true);
     }
 
