@@ -16,13 +16,11 @@
  */
 package network.aika.debugger.activations;
 
+import network.aika.Thought;
 import network.aika.callbacks.EventListener;
 import network.aika.debugger.StepManager;
 import network.aika.neuron.Synapse;
-import network.aika.neuron.activation.Activation;
-import network.aika.neuron.activation.Fired;
-import network.aika.neuron.activation.Link;
-import network.aika.neuron.activation.QueueEntry;
+import network.aika.neuron.activation.*;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.steps.Step;
 import network.aika.text.Document;
@@ -190,10 +188,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     @Override
-    public void onActivationCreationEvent(Activation act, Activation originAct) {
-        queueConsole.render(sDoc ->
-                queueConsole.renderQueue(sDoc, act.getThought(), null)
-        );
+    public void onActivationCreationEvent(Activation act, Activation originAct, Visitor v) {
+        updateQueueAndVisitorConsole(v, act.getThought());
 
         Node n = onActivationEvent(act, originAct);
 
@@ -232,6 +228,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         queueConsole.render(sDoc ->
                 queueConsole.renderQueue(sDoc, act.getThought(), qe)
         );
+        clearVisitorConsole();
 
         Node n = onActivationEvent(act, null);
         n.setAttribute("aika.init-node", false);
@@ -251,6 +248,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         queueConsole.render(sDoc ->
                 queueConsole.renderQueue(sDoc, act.getThought(), qe)
         );
+        clearVisitorConsole();
 
         if (!stepManager.stopHere(AFTER, ACT))
             return;
@@ -329,10 +327,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     @Override
-    public void onLinkCreationEvent(Link l) {
-        queueConsole.render(sDoc ->
-                queueConsole.renderQueue(sDoc, l.getThought(), null)
-        );
+    public void onLinkCreationEvent(Link l, Visitor v) {
+        updateQueueAndVisitorConsole(v, l.getThought());
 
         Edge e = onLinkEvent(l);
 
@@ -348,10 +344,27 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         pumpAndWaitForUserAction();
     }
 
+    private void updateQueueAndVisitorConsole(Visitor v, Thought t) {
+        queueConsole.render(sDoc ->
+                queueConsole.renderQueue(sDoc, t, null)
+        );
+
+        if (v != null) {
+            getVisitorConsole().render(sDoc ->
+                    getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, null)
+            );
+        }
+    }
+
+    private void clearVisitorConsole() {
+        getVisitorConsole().render(sDoc -> {});
+    }
+
     private void beforeLinkProcessedEvent(QueueEntry qe, Link l) {
         queueConsole.render(sDoc ->
                 queueConsole.renderQueue(sDoc, l.getThought(), qe)
         );
+        clearVisitorConsole();
 
         Edge e = onLinkEvent(l);
 
@@ -373,6 +386,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         queueConsole.render(sDoc ->
                 queueConsole.renderQueue(sDoc, l.getThought(), qe)
         );
+        clearVisitorConsole();
 
         if (!stepManager.stopHere(AFTER, LINK))
             return;

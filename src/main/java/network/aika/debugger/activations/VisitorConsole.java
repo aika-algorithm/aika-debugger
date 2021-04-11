@@ -7,8 +7,10 @@ import javax.swing.text.StyledDocument;
 
 public class VisitorConsole extends AbstractConsole {
 
-    public void renderVisitorConsoleOutput(StyledDocument sDoc, Visitor v, boolean dir) {
-        appendText(sDoc, "Visitor " + (dir ? "(up)" : "(down)") + "\n\n", "headline");
+    public void renderVisitorConsoleOutput(StyledDocument sDoc, Visitor v, Boolean dir) {
+        if(dir != null)
+            appendText(sDoc, (dir ? "after" : "before") + "\n", "regular");
+
         appendText(sDoc, "\n", "regular");
         appendEntry(sDoc, "Origin:", v.getOrigin().getAct().toShortString());
         appendText(sDoc, "\n", "regular");
