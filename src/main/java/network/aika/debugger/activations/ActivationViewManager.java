@@ -31,9 +31,7 @@ import network.aika.text.TextModel;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Node;
-import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.graphicGraph.GraphicElement;
-import org.graphstream.ui.view.camera.DefaultCamera2D;
 
 import javax.swing.*;
 import javax.swing.text.DefaultStyledDocument;
@@ -61,6 +59,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     protected StepManager stepManager;
 
     private Long numberOfInputTokens;
+
+    private JTabbedPane activationViewTabbedPane;
 
     public ActivationViewManager(Document doc) {
         super();
@@ -109,6 +109,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     public void showElementContext(GraphicElement ge) {
+        activationViewTabbedPane.setSelectedIndex(1);
+
         if(ge instanceof Node) {
             Node n = (Node) ge;
 
@@ -134,8 +136,10 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
     @Override
     public JComponent getConsolePane() {
+        initActivationViewTabbedPane();
+
         JSplitPane sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-                getConsoleTabbedPane(),
+                activationViewTabbedPane,
                 getScrollPane(queueConsole)
         );
         sp.setResizeWeight(0.65);
@@ -143,37 +147,37 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         return sp;
     }
 
-    private JComponent getConsoleTabbedPane() {
-        JTabbedPane tabbedPane = new JTabbedPane();
+    private JComponent initActivationViewTabbedPane() {
+        activationViewTabbedPane = new JTabbedPane();
 //        ImageIcon icon = createImageIcon("images/middle.gif");
 
         //The following line enables to use scrolling tabs.
-        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        activationViewTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-        tabbedPane.setFocusCycleRoot(true);
+        activationViewTabbedPane.setFocusCycleRoot(true);
 
-        tabbedPane.addTab(
+        activationViewTabbedPane.addTab(
                 "Main",
                 null,
                 getScrollPane(mainConsole.getSplitPane()),
                 "Shows the currently processed graph element"
         );
 
-        tabbedPane.addTab(
+        activationViewTabbedPane.addTab(
                 "Selected",
                 null,
                 getScrollPane(selectedConsole.getSplitPane()),
                 "Shows the selected graph element"
         );
 
-        tabbedPane.addTab(
+        activationViewTabbedPane.addTab(
                 "Visitor",
                 null,
                 getScrollPane(visitorConsole),
                 "Shows the path of the visitor"
         );
 
-        return tabbedPane;
+        return activationViewTabbedPane;
     }
 
     private static JScrollPane getScrollPane(Component c) {
