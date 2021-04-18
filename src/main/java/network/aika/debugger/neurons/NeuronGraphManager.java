@@ -32,7 +32,7 @@ public class NeuronGraphManager extends AbstractGraphManager<Neuron, Synapse, Ne
     }
 
     @Override
-    protected long getAikaNodeId(Neuron n) {
+    protected Long getAikaNodeId(Neuron n) {
         return n.getId();
     }
 

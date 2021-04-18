@@ -32,8 +32,8 @@ public class ActivationGraphManager extends AbstractGraphManager<Activation, Lin
         super(graph);
     }
 
-    protected long getAikaNodeId(Activation act) {
-        return act.getId();
+    protected Long getAikaNodeId(Activation act) {
+        return act != null ? Long.valueOf(act.getId()) : null;
     }
 
     public Edge lookupEdge(Link l, Consumer<Node> onCreate) {

@@ -50,7 +50,7 @@ public abstract class AbstractGraphManager<N, L, P extends AbstractParticle> {
         return nodeIdToAikaNode.get(e.getId().substring(e.getId().indexOf("-") + 1));
     }
 
-    protected abstract long getAikaNodeId(N key);
+    protected abstract Long getAikaNodeId(N key);
 
     public P getParticle(Node n) {
         return getParticle(Long.valueOf(n.getId()));
