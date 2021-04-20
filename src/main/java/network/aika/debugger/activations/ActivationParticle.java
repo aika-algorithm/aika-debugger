@@ -20,6 +20,7 @@ import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.excitatory.PatternPartSynapse;
+import network.aika.neuron.excitatory.SamePPSynapse;
 import network.aika.neuron.inhibitory.InhibitoryNeuron;
 import network.aika.debugger.AbstractLayout;
 import network.aika.debugger.AbstractParticle;
@@ -74,7 +75,7 @@ public class ActivationParticle extends AbstractParticle {
                         if(link.getOutput().getNeuron().isInputNeuron() && link.getInput().getNeuron() instanceof InhibitoryNeuron)
                             continue;
 
-                        if(pps.isSamePattern())
+                        if(pps instanceof SamePPSynapse)
                             continue;
                     }
                 }

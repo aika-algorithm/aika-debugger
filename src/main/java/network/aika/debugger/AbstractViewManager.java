@@ -18,10 +18,7 @@ package network.aika.debugger;
 
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
-import network.aika.neuron.excitatory.PatternNeuron;
-import network.aika.neuron.excitatory.PatternPartNeuron;
-import network.aika.neuron.excitatory.PatternPartSynapse;
-import network.aika.neuron.excitatory.PatternSynapse;
+import network.aika.neuron.excitatory.*;
 import network.aika.neuron.inhibitory.InhibitoryNeuron;
 import network.aika.neuron.inhibitory.InhibitorySynapse;
 import network.aika.neuron.inhibitory.PrimaryInhibitorySynapse;
@@ -192,10 +189,12 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
             PatternPartSynapse pps = (PatternPartSynapse) s;
             if(pps.isRecurrent()) {
                 e.setAttribute("ui.style", "fill-color: rgb(104,34,139);");
-            } else if(pps.isNegative()) {
+            } else if(pps instanceof NegativePPSynapse) {
                 e.setAttribute("ui.style", "fill-color: rgb(100,0,0);");
-            } if(pps.isInputScope()) {
+            } else if(pps instanceof InputPPSynapse) {
                 e.setAttribute("ui.style", "fill-color: rgb(50,200,50);");
+            } else if(pps instanceof SamePPSynapse) {
+                e.setAttribute("ui.style", "fill-color: rgb(20,170,20);");
             } else {
                 e.setAttribute("ui.style", "fill-color: rgb(0,130,0);");
             }

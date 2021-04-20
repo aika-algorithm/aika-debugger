@@ -67,10 +67,7 @@ public class NeuronConsole extends AbstractConsole {
         if(s instanceof PatternPartSynapse) {
             PatternPartSynapse pps = (PatternPartSynapse) s;
 
-            appendEntry(sDoc, "InputScope: ", "" + pps.isInputScope());
-            appendEntry(sDoc, "SamePattern: ", "" + pps.isSamePattern());
             appendEntry(sDoc, "Recurrent: ", "" + pps.isRecurrent());
-            appendEntry(sDoc, "is Negative: ", "" + pps.isNegative());
         }
 
         appendEntry(sDoc, "Frequency(POS, POS): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.POS, s.getSampleSpace().getN(ref))));
