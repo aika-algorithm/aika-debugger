@@ -185,18 +185,14 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         neuronTypeModifiers.put(PatternPartNeuron.class, n -> n.setAttribute("ui.style", "fill-color: rgb(0,205,0);"));
         neuronTypeModifiers.put(InhibitoryNeuron.class, n -> n.setAttribute("ui.style", "fill-color: rgb(100,100,255);"));
 
-        synapseTypeModifiers.put(PatternPartSynapse.class, (e, s) -> {
-            PatternPartSynapse pps = (PatternPartSynapse) s;
+        synapseTypeModifiers.put(InputPPSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(50,200,50);"));
+        synapseTypeModifiers.put(NegativePPSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(100,0,0);"));
+        synapseTypeModifiers.put(SamePPSynapse.class, (e, s) -> {
+            SamePPSynapse pps = (SamePPSynapse) s;
             if(pps.isRecurrent()) {
                 e.setAttribute("ui.style", "fill-color: rgb(104,34,139);");
-            } else if(pps instanceof NegativePPSynapse) {
-                e.setAttribute("ui.style", "fill-color: rgb(100,0,0);");
-            } else if(pps instanceof InputPPSynapse) {
-                e.setAttribute("ui.style", "fill-color: rgb(50,200,50);");
-            } else if(pps instanceof SamePPSynapse) {
-                e.setAttribute("ui.style", "fill-color: rgb(20,170,20);");
             } else {
-                e.setAttribute("ui.style", "fill-color: rgb(0,130,0);");
+                e.setAttribute("ui.style", "fill-color: rgb(20,170,20);");
             }
         });
         synapseTypeModifiers.put(InhibitorySynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(50,50,150);"));

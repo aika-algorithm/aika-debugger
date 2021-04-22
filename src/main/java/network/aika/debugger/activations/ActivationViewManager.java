@@ -88,6 +88,10 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         this.stepManager = new StepManager(visitorManager);
     }
 
+    public JTabbedPane getActivationViewTabbedPane() {
+        return activationViewTabbedPane;
+    }
+
     public VisitorConsole getVisitorConsole() {
         return visitorConsole;
     }

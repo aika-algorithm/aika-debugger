@@ -55,6 +55,8 @@ public class KeyManager implements KeyListener {
         } else if(e.getKeyChar() == 'l') {
             sm.setMode(LINK);
         } else if(e.getKeyChar() == 'v') {
+            actViewManager.getActivationViewTabbedPane().setSelectedIndex(2);
+
             sm.setMode(VISITOR);
         }
 
