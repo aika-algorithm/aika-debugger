@@ -17,7 +17,10 @@
 package network.aika.debugger.activations;
 
 import network.aika.callbacks.VisitorEventListener;
-import network.aika.neuron.activation.Visitor;
+import network.aika.neuron.activation.Link;
+import network.aika.neuron.activation.visitor.ActVisitor;
+import network.aika.neuron.activation.visitor.LinkVisitor;
+import network.aika.neuron.activation.visitor.Visitor;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
@@ -44,25 +47,24 @@ public class VisitorManager implements VisitorEventListener {
 
         ActivationGraphManager gm = avm.getGraphManager();
 
-        switch(v.getTransition()) {
-            case ACT:
-                Node n = gm.getNode(v.getAct());
-                if(n != null) {
-                    if (!dir)
-                        avm.highlightElement(n);
-                    else
-                        avm.unhighlightElement(n);
-                }
-                break;
-            case LINK:
-                Edge e = gm.getEdge(v.link);
-                if(e != null) {
-                    if (!dir)
-                        avm.highlightElement(e);
-                    else
-                        avm.unhighlightElement(e);
-                }
-                break;
+        if(v instanceof ActVisitor) {
+            ActVisitor av = (ActVisitor) v;
+            Node n = gm.getNode(av.getActivation());
+            if(n != null) {
+                if (!dir)
+                    avm.highlightElement(n);
+                else
+                    avm.unhighlightElement(n);
+            }
+        } else if(v instanceof LinkVisitor) {
+            LinkVisitor lv = (LinkVisitor) v;
+            Edge e = gm.getEdge(lv.getLink());
+            if(e != null) {
+                if (!dir)
+                    avm.highlightElement(e);
+                else
+                    avm.unhighlightElement(e);
+            }
         }
 
         avm.pump();

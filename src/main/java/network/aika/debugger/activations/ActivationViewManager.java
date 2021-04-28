@@ -21,6 +21,7 @@ import network.aika.callbacks.EventListener;
 import network.aika.debugger.StepManager;
 import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.*;
+import network.aika.neuron.activation.visitor.Visitor;
 import network.aika.neuron.excitatory.PatternNeuron;
 import network.aika.neuron.steps.Step;
 import network.aika.text.Document;
