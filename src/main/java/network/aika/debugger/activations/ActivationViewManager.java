@@ -336,6 +336,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         updateQueueAndVisitorConsole(v, l.getThought());
 
         Edge e = onLinkEvent(l);
+        if(e == null)
+            return;
 
         e.setAttribute("aika.init-node", true);
 
@@ -372,6 +374,8 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
         clearVisitorConsole();
 
         Edge e = onLinkEvent(l);
+        if(e == null)
+            return;
 
         e.setAttribute("aika.init-node", false);
 
@@ -407,6 +411,9 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     }
 
     private Edge onLinkEvent(Link l) {
+        if(l.getInput() == null || l.getOutput() == null)
+            return null;
+
         Edge edge = graphManager.lookupEdge(l, e -> {});
 
         highlightCurrentOnly(edge);
