@@ -19,8 +19,8 @@ package network.aika.debugger.activations;
 import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Activation;
 import network.aika.neuron.activation.Link;
-import network.aika.neuron.excitatory.PatternPartSynapse;
-import network.aika.neuron.excitatory.SamePPSynapse;
+import network.aika.neuron.excitatory.BindingNeuronSynapse;
+import network.aika.neuron.excitatory.SameBNSynapse;
 import network.aika.neuron.inhibitory.InhibitoryNeuron;
 import network.aika.debugger.AbstractLayout;
 import network.aika.debugger.AbstractParticle;
@@ -65,8 +65,8 @@ public class ActivationParticle extends AbstractParticle {
 
                 if(link != null) {
                     Synapse s = link.getSynapse();
-                    if (s instanceof PatternPartSynapse) {
-                        PatternPartSynapse pps = (PatternPartSynapse) s;
+                    if (s instanceof BindingNeuronSynapse) {
+                        BindingNeuronSynapse pps = (BindingNeuronSynapse) s;
                         boolean isRecurrent = pps.isRecurrent() && !s.getOutput().isInputNeuron();
 
                         if (isRecurrent)
@@ -75,7 +75,7 @@ public class ActivationParticle extends AbstractParticle {
                         if(link.getOutput().getNeuron().isInputNeuron() && link.getInput().getNeuron() instanceof InhibitoryNeuron)
                             continue;
 
-                        if(pps instanceof SamePPSynapse)
+                        if(pps instanceof SameBNSynapse)
                             continue;
                     }
                 }

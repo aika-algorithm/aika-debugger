@@ -21,7 +21,7 @@ import network.aika.debugger.AbstractConsole;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Reference;
-import network.aika.neuron.excitatory.PatternPartSynapse;
+import network.aika.neuron.excitatory.BindingNeuronSynapse;
 import network.aika.neuron.sign.Sign;
 import network.aika.utils.Utils;
 
@@ -64,8 +64,8 @@ public class NeuronConsole extends AbstractConsole {
         appendEntry(sDoc, "Weight: ", "" + Utils.round(s.getWeight()));
         appendEntry(sDoc, "Input: ", s.getInput().toString());
         appendEntry(sDoc, "Output: ", s.getOutput().toString());
-        if(s instanceof PatternPartSynapse) {
-            PatternPartSynapse pps = (PatternPartSynapse) s;
+        if(s instanceof BindingNeuronSynapse) {
+            BindingNeuronSynapse pps = (BindingNeuronSynapse) s;
 
             appendEntry(sDoc, "Recurrent: ", "" + pps.isRecurrent());
         }

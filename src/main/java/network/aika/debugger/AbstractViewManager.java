@@ -182,13 +182,13 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
 
     protected void initModifiers() {
         neuronTypeModifiers.put(PatternNeuron.class, n -> n.setAttribute("ui.style", "fill-color: rgb(0,130,0);"));
-        neuronTypeModifiers.put(PatternPartNeuron.class, n -> n.setAttribute("ui.style", "fill-color: rgb(0,205,0);"));
+        neuronTypeModifiers.put(BindingNeuron.class, n -> n.setAttribute("ui.style", "fill-color: rgb(0,205,0);"));
         neuronTypeModifiers.put(InhibitoryNeuron.class, n -> n.setAttribute("ui.style", "fill-color: rgb(100,100,255);"));
 
-        synapseTypeModifiers.put(InputPPSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(50,200,50);"));
-        synapseTypeModifiers.put(NegativePPSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(100,0,0);"));
-        synapseTypeModifiers.put(SamePPSynapse.class, (e, s) -> {
-            SamePPSynapse pps = (SamePPSynapse) s;
+        synapseTypeModifiers.put(InputBNSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(50,200,50);"));
+        synapseTypeModifiers.put(NegativeBNSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(100,0,0);"));
+        synapseTypeModifiers.put(SameBNSynapse.class, (e, s) -> {
+            SameBNSynapse pps = (SameBNSynapse) s;
             if(pps.isRecurrent()) {
                 e.setAttribute("ui.style", "fill-color: rgb(104,34,139);");
             } else {
