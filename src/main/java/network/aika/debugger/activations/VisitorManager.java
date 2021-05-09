@@ -16,7 +16,9 @@
  */
 package network.aika.debugger.activations;
 
+import network.aika.callbacks.VisitorEvent;
 import network.aika.callbacks.VisitorEventListener;
+import network.aika.neuron.Synapse;
 import network.aika.neuron.activation.Link;
 import network.aika.neuron.activation.visitor.ActVisitor;
 import network.aika.neuron.activation.visitor.LinkVisitor;
@@ -37,12 +39,12 @@ public class VisitorManager implements VisitorEventListener {
     }
 
     @Override
-    public void onVisitorEvent(Visitor v, boolean dir) {
+    public void onVisitorEvent(Visitor v, VisitorEvent ve, Synapse s) {
         if(!avm.stepManager.stopHere(BEFORE, VISITOR))
             return;
 
         avm.getVisitorConsole().render(sDoc ->
-                avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, dir)
+                avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, ve, s)
         );
 
         ActivationGraphManager gm = avm.getGraphManager();
@@ -51,19 +53,22 @@ public class VisitorManager implements VisitorEventListener {
             ActVisitor av = (ActVisitor) v;
             Node n = gm.getNode(av.getActivation());
             if(n != null) {
-                if (!dir)
-                    avm.highlightElement(n);
+                if (ve == VisitorEvent.BEFORE || ve == VisitorEvent.CANDIDATE_BEFORE)
+                    avm.highlightElement(n, ve == VisitorEvent.CANDIDATE_BEFORE);
                 else
-                    avm.unhighlightElement(n);
+                    avm.unhighlightElement(n, ve == VisitorEvent.CANDIDATE_AFTER);
             }
         } else if(v instanceof LinkVisitor) {
             LinkVisitor lv = (LinkVisitor) v;
-            Edge e = gm.getEdge(lv.getLink());
-            if(e != null) {
-                if (!dir)
-                    avm.highlightElement(e);
-                else
-                    avm.unhighlightElement(e);
+            Link l = lv.getLink();
+            if(l != null) {
+                Edge e = gm.getEdge(l);
+                if (e != null) {
+                    if (ve == VisitorEvent.BEFORE || ve == VisitorEvent.CANDIDATE_BEFORE)
+                        avm.highlightElement(e, ve == VisitorEvent.CANDIDATE_BEFORE);
+                    else
+                        avm.unhighlightElement(e, ve == VisitorEvent.CANDIDATE_AFTER);
+                }
             }
         }
 

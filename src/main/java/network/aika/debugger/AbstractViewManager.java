@@ -171,6 +171,11 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
                         "stroke-mode: plain; " +
                         "fill-color: red;" +
                         "stroke-width: 3px;" +
+                        "}" +
+                        "edge:selectedGreen {" +
+                        "stroke-mode: plain; " +
+                        "fill-color: green;" +
+                        "stroke-width: 3px;" +
                         "}"
         );
 
@@ -206,13 +211,13 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         // fromViewer.blockingPump();
     }
 
-    public void unhighlightElement(Element ge) {
-        ge.removeAttribute("ui.selected");
+    public void unhighlightElement(Element ge, boolean color) {
+        ge.removeAttribute(!color ? "ui.selected" :  "ui.selectedGreen");
         fromViewer.pump();
     }
 
-    public void highlightElement(Element ge) {
-        ge.setAttribute("ui.selected");
+    public void highlightElement(Element ge, boolean color) {
+        ge.setAttribute(!color ? "ui.selected" :  "ui.selectedGreen");
         fromViewer.pump();
     }
 

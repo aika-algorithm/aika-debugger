@@ -324,10 +324,11 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
     private void highlightCurrentOnly(Element e) {
         if(lastHighlighted != e) {
             if(lastHighlighted != null) {
-                unhighlightElement(lastHighlighted);
+                unhighlightElement(lastHighlighted, false);
+                unhighlightElement(lastHighlighted, true);
             }
             lastHighlighted = e;
-            highlightElement(e);
+            highlightElement(e, false);
         }
     }
 
@@ -358,7 +359,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         if (v != null) {
             getVisitorConsole().render(sDoc ->
-                    getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, null)
+                    getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, null, null)
             );
         }
     }
