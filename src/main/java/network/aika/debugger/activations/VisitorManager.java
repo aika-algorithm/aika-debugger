@@ -27,6 +27,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
 import static network.aika.debugger.StepManager.EventType.VISITOR;
+import static network.aika.debugger.StepManager.When.AFTER;
 import static network.aika.debugger.StepManager.When.BEFORE;
 
 public class VisitorManager implements VisitorEventListener {
@@ -38,42 +39,68 @@ public class VisitorManager implements VisitorEventListener {
         avm.getDocument().addVisitorEventListener(this);
     }
 
-    @Override
-    public void onVisitorEvent(Visitor v, VisitorEvent ve, Synapse s) {
-        if(!avm.stepManager.stopHere(BEFORE, VISITOR))
-            return;
 
-        avm.getVisitorConsole().render(sDoc ->
-                avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, ve, s)
-        );
+    @Override
+    public void onVisitorEvent(Visitor v, VisitorEvent ve) {
+        onVisitorEventInternal(v, ve, null, false);
 
         ActivationGraphManager gm = avm.getGraphManager();
 
         if(v instanceof ActVisitor) {
-            ActVisitor av = (ActVisitor) v;
-            Node n = gm.getNode(av.getActivation());
-            if(n != null) {
-                if (ve == VisitorEvent.BEFORE || ve == VisitorEvent.CANDIDATE_BEFORE)
-                    avm.highlightElement(n, ve == VisitorEvent.CANDIDATE_BEFORE);
-                else
-                    avm.unhighlightElement(n, ve == VisitorEvent.CANDIDATE_AFTER);
-            }
+            highlightActivation((ActVisitor) v, ve, gm);
         } else if(v instanceof LinkVisitor) {
-            LinkVisitor lv = (LinkVisitor) v;
-            Link l = lv.getLink();
-            if(l != null) {
-                Edge e = gm.getEdge(l);
-                if (e != null) {
-                    if (ve == VisitorEvent.BEFORE || ve == VisitorEvent.CANDIDATE_BEFORE)
-                        avm.highlightElement(e, ve == VisitorEvent.CANDIDATE_BEFORE);
-                    else
-                        avm.unhighlightElement(e, ve == VisitorEvent.CANDIDATE_AFTER);
-                }
-            }
+            highlightLink((LinkVisitor) v, ve, gm);
         }
 
         avm.pump();
 
         avm.stepManager.waitForClick();
     }
+
+    @Override
+    public void onVisitorCandidateEvent(Visitor v, Synapse s) {
+        onVisitorEventInternal(v, null, s, true);
+
+        if(!avm.stepManager.stopHere(AFTER, VISITOR))
+            return;
+
+        avm.pump();
+
+        avm.stepManager.waitForClick();
+    }
+
+    public void onVisitorEventInternal(Visitor v, VisitorEvent ve, Synapse s, boolean isCandidate) {
+        if(!avm.stepManager.stopHere(BEFORE, VISITOR))
+            return;
+
+        avm.getVisitorConsole().render(sDoc ->
+                avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, ve, s, isCandidate)
+        );
+    }
+
+    private void highlightActivation(ActVisitor v, VisitorEvent ve, ActivationGraphManager gm) {
+        ActVisitor av = v;
+        Node n = gm.getNode(av.getActivation());
+        if(n != null) {
+            if (ve == VisitorEvent.BEFORE)
+                avm.highlightElement(n);
+            else
+                avm.unhighlightElement(n);
+        }
+    }
+
+    private void highlightLink(LinkVisitor v, VisitorEvent ve, ActivationGraphManager gm) {
+        LinkVisitor lv = v;
+        Link l = lv.getLink();
+        if(l != null) {
+            Edge e = gm.getEdge(l);
+            if (e != null) {
+                if (ve == VisitorEvent.BEFORE)
+                    avm.highlightElement(e);
+                else
+                    avm.unhighlightElement(e);
+            }
+        }
+    }
+
 }

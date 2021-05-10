@@ -3,24 +3,28 @@ package network.aika.debugger.activations;
 import network.aika.callbacks.VisitorEvent;
 import network.aika.debugger.AbstractConsole;
 import network.aika.neuron.Synapse;
+import network.aika.neuron.activation.Link;
+import network.aika.neuron.activation.scopes.Transition;
 import network.aika.neuron.activation.visitor.ActVisitor;
 import network.aika.neuron.activation.visitor.LinkVisitor;
 import network.aika.neuron.activation.visitor.Visitor;
 
 import javax.swing.text.StyledDocument;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class VisitorConsole extends AbstractConsole {
 
-    public void renderVisitorConsoleOutput(StyledDocument sDoc, Visitor v, VisitorEvent ve, Synapse s) {
+    public void renderVisitorConsoleOutput(StyledDocument sDoc, Visitor v, VisitorEvent ve, Synapse s, boolean isCandidate) {
         if(ve != null)
-            appendText(sDoc, (ve == VisitorEvent.AFTER || ve == VisitorEvent.CANDIDATE_AFTER ? "after" : "before") + "\n", "regular");
+            appendText(sDoc, (ve == VisitorEvent.AFTER ? "after" : "before") + "\n", "regular");
 
         appendText(sDoc, "\n", "regular");
         appendEntry(sDoc, "Origin:", v.getOriginAct().toShortString());
         appendText(sDoc, "\n", "regular");
 
-        if(ve == VisitorEvent.CANDIDATE_BEFORE || ve == VisitorEvent.CANDIDATE_AFTER) {
+        if(isCandidate) {
             renderLinkCandidateVisitorStep(sDoc, (LinkVisitor) v, s);
 
             appendText(sDoc, "\n", "regular");
@@ -50,13 +54,14 @@ public class VisitorConsole extends AbstractConsole {
     }
 
 
-    public void renderLinkCandidateVisitorStep(StyledDocument sDoc, LinkVisitor v, Synapse s) {
+    public void renderLinkCandidateVisitorStep(StyledDocument sDoc, LinkVisitor v, Synapse syn) {
         appendText(sDoc, "Candidate Link Visitor Step\n", "boldGreen");
 
         ActVisitor pv = (ActVisitor) v.getPreviousStep();
 
         appendEntry(sDoc, "Scope Candidates: ", pv.getScopes().toString(), "boldGreen", "regularGreen");
-        appendEntry(sDoc, "Current Synapse:", s.toString(), "boldGreen", "regularGreen");
+        appendEntry(sDoc, "Transitions Candidates: ", v.getTransitions().toString(), "boldGreen", "regularGreen");
+        appendEntry(sDoc, "Current Synapse:", syn.toString(), "boldGreen", "regularGreen");
 
         renderVisitorStep(sDoc, v, "boldGreen", "regularGreen");
     }
