@@ -42,14 +42,6 @@ public class StepManager {
         VISITOR
     }
 
-
-    private VisitorManager visitorManager;
-
-
-    public StepManager(VisitorManager visitorManager) {
-        this.visitorManager = visitorManager;
-    }
-
     public void setStopAfterProcessed(boolean b) {
         stopAfterProcessed = b;
     }

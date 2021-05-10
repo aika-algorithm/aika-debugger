@@ -50,6 +50,7 @@ public class KeyManager implements KeyListener {
             sm.setStopAfterProcessed(true);
         } else if(e.getKeyChar() == 'r') {
             sm.setMode(null);
+            sm.lastTimestamp = null;
         } else if(e.getKeyChar() == 'a') {
             sm.setMode(ACT);
         } else if(e.getKeyChar() == 'l') {

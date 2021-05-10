@@ -42,7 +42,12 @@ public class VisitorManager implements VisitorEventListener {
 
     @Override
     public void onVisitorEvent(Visitor v, VisitorEvent ve) {
-        onVisitorEventInternal(v, ve, null, false);
+        if(!avm.stepManager.stopHere(BEFORE, VISITOR))
+            return;
+
+        avm.getVisitorConsole().render(sDoc ->
+                avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, ve, null, false)
+        );
 
         ActivationGraphManager gm = avm.getGraphManager();
 
@@ -59,7 +64,12 @@ public class VisitorManager implements VisitorEventListener {
 
     @Override
     public void onVisitorCandidateEvent(Visitor v, Synapse s) {
-        onVisitorEventInternal(v, null, s, true);
+        if(!avm.stepManager.stopHere(BEFORE, VISITOR))
+            return;
+
+        avm.getVisitorConsole().render(sDoc ->
+                avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, null, s, true)
+        );
 
         if(!avm.stepManager.stopHere(AFTER, VISITOR))
             return;
@@ -69,14 +79,6 @@ public class VisitorManager implements VisitorEventListener {
         avm.stepManager.waitForClick();
     }
 
-    public void onVisitorEventInternal(Visitor v, VisitorEvent ve, Synapse s, boolean isCandidate) {
-        if(!avm.stepManager.stopHere(BEFORE, VISITOR))
-            return;
-
-        avm.getVisitorConsole().render(sDoc ->
-                avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, ve, s, isCandidate)
-        );
-    }
 
     private void highlightActivation(ActVisitor v, VisitorEvent ve, ActivationGraphManager gm) {
         ActVisitor av = v;

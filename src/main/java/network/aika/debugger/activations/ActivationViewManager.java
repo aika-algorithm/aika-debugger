@@ -86,7 +86,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
 
         splitPane = initSplitPane();
 
-        this.stepManager = new StepManager(visitorManager);
+        this.stepManager = new StepManager();
     }
 
     public JTabbedPane getActivationViewTabbedPane() {
