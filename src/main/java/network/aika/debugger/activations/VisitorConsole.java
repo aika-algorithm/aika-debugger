@@ -77,7 +77,7 @@ public class VisitorConsole extends AbstractConsole {
 
     public void renderVisitorStep(StyledDocument sDoc, Visitor v, String titleStyle, String style) {
         appendEntry(sDoc, "DownUp:", "" + v.downUpDir, titleStyle, style);
-        appendEntry(sDoc, "StartDir:", "" + v.startDir, titleStyle, style);
+        appendEntry(sDoc, "TargetDir:", "" + v.targetDir, titleStyle, style);
 
         appendEntry(sDoc, "DownSteps:", "" + v.downSteps, titleStyle, style);
         appendEntry(sDoc, "UpSteps:", "" + v.upSteps, titleStyle, style);
