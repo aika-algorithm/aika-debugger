@@ -328,8 +328,10 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
             if(lastHighlighted != null) {
                 unhighlightElement(lastHighlighted);
             }
-            lastHighlighted = e;
-            highlightElement(e);
+            if(!visitorManager.isVisitorHighlighted()) {
+                lastHighlighted = e;
+                highlightElement(e);
+            }
         }
     }
 

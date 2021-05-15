@@ -34,21 +34,39 @@ public class VisitorManager implements VisitorEventListener {
 
     private ActivationViewManager avm;
 
+    private int visitorHighlightedCounter = 0;
+
     public VisitorManager(ActivationViewManager avm) {
         this.avm = avm;
         avm.getDocument().addVisitorEventListener(this);
     }
 
+    public boolean isVisitorHighlighted() {
+        return visitorHighlightedCounter > 0;
+    }
 
     @Override
     public void onVisitorEvent(Visitor v, VisitorEvent ve) {
-        if(!avm.stepManager.stopHere(BEFORE, VISITOR))
+        if(!avm.stepManager.stopHere(BEFORE, VISITOR)) {
+
+            if(isVisitorHighlighted()) {
+                updateHighlighted(v, ve);
+            }
             return;
+        }
 
         avm.getVisitorConsole().render(sDoc ->
                 avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, ve, null, false)
         );
 
+        updateHighlighted(v, ve);
+
+        avm.pump();
+
+        avm.stepManager.waitForClick();
+    }
+
+    private void updateHighlighted(Visitor v, VisitorEvent ve) {
         ActivationGraphManager gm = avm.getGraphManager();
 
         if(v instanceof ActVisitor) {
@@ -56,10 +74,6 @@ public class VisitorManager implements VisitorEventListener {
         } else if(v instanceof LinkVisitor) {
             highlightLink((LinkVisitor) v, ve, gm);
         }
-
-        avm.pump();
-
-        avm.stepManager.waitForClick();
     }
 
     @Override
@@ -84,10 +98,13 @@ public class VisitorManager implements VisitorEventListener {
         ActVisitor av = v;
         Node n = gm.getNode(av.getActivation());
         if(n != null) {
-            if (ve == VisitorEvent.BEFORE)
+            if (ve == VisitorEvent.BEFORE) {
                 avm.highlightElement(n);
-            else
+                visitorHighlightedCounter++;
+            } else {
                 avm.unhighlightElement(n);
+                visitorHighlightedCounter--;
+            }
         }
     }
 
@@ -97,10 +114,13 @@ public class VisitorManager implements VisitorEventListener {
         if(l != null) {
             Edge e = gm.getEdge(l);
             if (e != null) {
-                if (ve == VisitorEvent.BEFORE)
+                if (ve == VisitorEvent.BEFORE) {
                     avm.highlightElement(e);
-                else
+                    visitorHighlightedCounter++;
+                } else {
                     avm.unhighlightElement(e);
+                    visitorHighlightedCounter--;
+                }
             }
         }
     }
