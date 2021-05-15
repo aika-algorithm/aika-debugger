@@ -146,6 +146,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
                 getScrollPane(queueConsole)
         );
         sp.setResizeWeight(0.65);
+        sp.setDoubleBuffered(false);
 
         return sp;
     }
@@ -180,6 +181,7 @@ public class ActivationViewManager extends AbstractViewManager<ActivationConsole
                 "Shows the path of the visitor"
         );
 
+        activationViewTabbedPane.setDoubleBuffered(false);
         return activationViewTabbedPane;
     }
 

@@ -128,6 +128,7 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphView, getConsolePane());
         splitPane.setOneTouchExpandable(true);
         splitPane.setResizeWeight(0.7);
+        splitPane.setDoubleBuffered(false);
 
         return splitPane;
     }

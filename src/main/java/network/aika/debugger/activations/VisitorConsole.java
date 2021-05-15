@@ -3,15 +3,11 @@ package network.aika.debugger.activations;
 import network.aika.callbacks.VisitorEvent;
 import network.aika.debugger.AbstractConsole;
 import network.aika.neuron.Synapse;
-import network.aika.neuron.activation.Link;
-import network.aika.neuron.activation.scopes.Transition;
 import network.aika.neuron.activation.visitor.ActVisitor;
 import network.aika.neuron.activation.visitor.LinkVisitor;
 import network.aika.neuron.activation.visitor.Visitor;
 
 import javax.swing.text.StyledDocument;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class VisitorConsole extends AbstractConsole {

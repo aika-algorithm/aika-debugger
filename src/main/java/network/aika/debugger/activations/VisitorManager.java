@@ -68,7 +68,7 @@ public class VisitorManager implements VisitorEventListener {
             return;
 
         avm.getVisitorConsole().render(sDoc ->
-                avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, null, s, true)
+            avm.getVisitorConsole().renderVisitorConsoleOutput(sDoc, v, null, s, true)
         );
 
         if(!avm.stepManager.stopHere(AFTER, VISITOR))
