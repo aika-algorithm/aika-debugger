@@ -167,6 +167,14 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
                         "shape: cubic-curve;" +
                         "z-index: 0;" +
                         "arrow-size: 8px, 5px;" +
+                        "text-size: 20px;" +
+                        "text-alignment: under;" +
+                        "text-color: black;" +
+                        "text-style: bold;" +
+                        "text-background-mode: rounded-box;" +
+                        "text-background-color: rgba(100, 100, 100, 100); " +
+                        "text-padding: 2px;" +
+                        "text-offset: 0px, 2px;" +
                         "} " +
                         "edge:selected {" +
                         "stroke-mode: plain; " +
