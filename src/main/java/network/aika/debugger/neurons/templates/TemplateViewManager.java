@@ -22,10 +22,13 @@ import network.aika.debugger.neurons.AbstractNeuronViewManager;
 import network.aika.debugger.neurons.NeuronConsole;
 import network.aika.debugger.neurons.NeuronGraphManager;
 import network.aika.debugger.neurons.NeuronLayout;
+import network.aika.neuron.Synapse;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 
 import javax.swing.*;
+import java.util.function.BiConsumer;
 
 
 public class TemplateViewManager extends AbstractNeuronViewManager {
@@ -38,6 +41,13 @@ public class TemplateViewManager extends AbstractNeuronViewManager {
         viewer.enableAutoLayout(new NeuronLayout(this, graphManager));
 
         splitPane = initSplitPane();
+    }
+
+
+    protected Edge drawSynapse(Synapse s) {
+        Edge tse = super.drawSynapse(s);
+        tse.setAttribute("ui.label", s.getTemplateInfo().getLabel());
+        return tse;
     }
 
     public void showElementContext(GraphicElement ge) {
@@ -72,6 +82,13 @@ public class TemplateViewManager extends AbstractNeuronViewManager {
         getModel()
                 .getTemplates()
                 .getAllTemplates()
-                .forEach(n -> drawNeuron(n, 0.0, 0.0));
+                .forEach(tn -> drawNeuron(tn, tn.getTemplateInfo().getXCoord(), tn.getTemplateInfo().getYCoord()));
+
+        getModel()
+                .getTemplates()
+                .getAllTemplates()
+                .forEach(tn -> {
+                    drawInputSynapses(tn);
+                });
     }
 }

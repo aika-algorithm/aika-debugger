@@ -25,6 +25,9 @@ import org.graphstream.ui.graphicGraph.GraphicElement;
 
 import javax.swing.*;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE_X;
 
 
@@ -71,13 +74,20 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
 
     public void initGraphNeurons() {
         double[] x = new double[] {0.0};
-        document.getActivations()
+        Collection<Neuron> neurons = document.getActivations()
                 .stream()
                 .map(Activation::getNeuron)
                 .filter(n -> n.isInputNeuron())
-                .forEach(n -> {
+                .collect(Collectors.toList());
+
+        neurons.forEach(n -> {
                     drawNeuron(n, x[0], 0.0);
                     x[0] += STANDARD_DISTANCE_X;
                 });
+
+        neurons.forEach(n -> {
+            drawInputSynapses(n);
+//            drawOutputSynapses(n);
+        });
     }
 }

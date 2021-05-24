@@ -45,7 +45,7 @@ public class VisitorConsole extends AbstractConsole {
 
         appendEntry(sDoc, "Scopes: ", v.getScopes().toString());
         appendEntry(sDoc, "Current:", v.getActivation().toShortString());
-
+        appendEntry(sDoc, "Template Label:", v.getActivation().getNeuron().getTemplate().getTemplateInfo().getLabel());
         renderVisitorStep(sDoc, v, "bold", "regular");
     }
 
@@ -58,6 +58,7 @@ public class VisitorConsole extends AbstractConsole {
         appendEntry(sDoc, "Scope Candidates: ", pv.getScopes().toString(), "boldGreen", "regularGreen");
         appendEntry(sDoc, "Transitions Candidates: ", v.getTransitions().toString(), "boldGreen", "regularGreen");
         appendEntry(sDoc, "Current Synapse:", syn.toString(), "boldGreen", "regularGreen");
+        appendEntry(sDoc, "Template Label:", syn.getTemplate().getTemplateInfo().getLabel());
 
         renderVisitorStep(sDoc, v, "boldGreen", "regularGreen");
     }

@@ -57,19 +57,24 @@ public abstract class AbstractNeuronViewManager extends AbstractViewManager<Neur
                     node.setAttribute("y", y);
 
                     node.setAttribute("ui.label", n.getLabel());
-
-                    n.getInputSynapses().forEach(s -> drawSynapse(s));
-                    n.getOutputSynapses().forEach(s -> {
-                        if(!s.isRecurrent() || s.getOutput().isInputNeuron())
-                            drawNeuron(s.getOutput(), x, y + STANDARD_DISTANCE_Y);
-                        drawSynapse(s);
-                    });
                 });
     }
 
-    protected void drawSynapse(Synapse s) {
+    protected void drawInputSynapses(Neuron<?> n) {
+        n.getInputSynapses().forEach(s -> drawSynapse(s));
+    }
+
+    protected void drawOutputSynapses(Neuron<?> n) {
+        n.getOutputSynapses().forEach(s -> {
+//            if(!s.isRecurrent() || s.getOutput().isInputNeuron())
+ //               drawNeuron(s.getOutput(), x, y + STANDARD_DISTANCE_Y);
+            drawSynapse(s);
+        });
+    }
+
+    protected Edge drawSynapse(Synapse s) {
         if(graphManager.getNode(s.getInput()) == null || graphManager.getNode(s.getOutput()) == null)
-            return;
+            return null;
 
         Edge edge = graphManager.lookupEdge(s, e -> {});
 
@@ -77,5 +82,6 @@ public abstract class AbstractNeuronViewManager extends AbstractViewManager<Neur
         if(synapseTypeModifier != null) {
             synapseTypeModifier.accept(edge, s);
         }
+        return edge;
     }
 }

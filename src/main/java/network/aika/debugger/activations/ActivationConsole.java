@@ -26,6 +26,10 @@ import javax.swing.*;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 
+import static network.aika.neuron.activation.Activation.OWN;
+import static network.aika.neuron.activation.Activation.INCOMING;
+
+
 public class ActivationConsole extends AbstractConsole {
 
     private NeuronConsole neuronConsole;
@@ -59,8 +63,16 @@ public class ActivationConsole extends AbstractConsole {
         appendEntry(sDoc, "Value: ", act.getValue() != null ? "" + Utils.round(act.getValue()) : "X");
         appendEntry(sDoc, "net: ", "" + Utils.round(act.getNet()));
         appendEntry(sDoc, "f(net)': ", "" + Utils.round(act.getNeuron().getActivationFunction().outerGrad(act.getNet())));
-        appendEntry(sDoc, "Input-Gradient: ", "" + Utils.round(act.getInputGradient()));
-        appendEntry(sDoc, "Output-Gradient-Sum: ", "" + Utils.round(act.getOutputGradientSum()));
+        if(act.getInputGradient() != null) {
+            appendEntry(sDoc, "Input-Gradient: ", "Own:" + Utils.round(act.getInputGradient()[OWN]) + ", Incoming:" + Utils.round(act.getInputGradient()[INCOMING]));
+        } else {
+            appendEntry(sDoc, "Input-Gradient: ", "X");
+        }
+        if(act.getOutputGradientSum() != null) {
+            appendEntry(sDoc, "Output-Gradient-Sum: ", "Own:" + Utils.round(act.getOutputGradientSum()[OWN]) + ", Incoming:" + Utils.round(act.getOutputGradientSum()[INCOMING]));
+        } else {
+            appendEntry(sDoc, "Output-Gradient-Sum: ", "X");
+        }
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
         if(!act.getNeuron().isTemplate()) {

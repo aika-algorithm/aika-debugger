@@ -53,7 +53,7 @@ public class NeuronConsole extends AbstractConsole {
 
     private String templatesToString(Neuron<?> n) {
         StringBuilder sb = new StringBuilder();
-        n.getTemplates().forEach(tn -> sb.append(tn.getId() + ":" + tn.getLabel() + ", "));
+        n.getTemplateGroup().forEach(tn -> sb.append(tn.getId() + ":" + tn.getLabel() + ", "));
         return sb.toString();
     }
 
