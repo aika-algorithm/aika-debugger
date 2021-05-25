@@ -26,23 +26,17 @@ public abstract class AbstractConsole extends JTextPane {
     public AbstractConsole() {
         addStylesToDocument(getStyledDocument());
 
-        //  setFocusable(false);
-  //      setEditable(false);
         setDoubleBuffered(false);
     }
 
     public void render(Consumer<StyledDocument> content) {
         setOpaque(false);
-  //      setEnabled(false);
-//        setVisible(false);
         DefaultStyledDocument sDoc = new DefaultStyledDocument();
         addStylesToDocument(sDoc);
         clear();
 
         content.accept(sDoc);
         setStyledDocument(sDoc);
-//        setVisible(true);
-   //     setEnabled(true);
     }
 
     public void addStylesToDocument(StyledDocument doc) {

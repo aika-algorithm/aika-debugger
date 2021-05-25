@@ -58,7 +58,7 @@ public class VisitorConsole extends AbstractConsole {
         appendEntry(sDoc, "Scope Candidates: ", pv.getScopes().toString(), "boldGreen", "regularGreen");
         appendEntry(sDoc, "Transitions Candidates: ", v.getTransitions().toString(), "boldGreen", "regularGreen");
         appendEntry(sDoc, "Current Synapse:", syn.toString(), "boldGreen", "regularGreen");
-        appendEntry(sDoc, "Template Label:", syn.getTemplate().getTemplateInfo().getLabel());
+        appendEntry(sDoc, "Template Label:", syn.getTemplate().getTemplateInfo().getLabel(), "boldGreen", "regularGreen");
 
         renderVisitorStep(sDoc, v, "boldGreen", "regularGreen");
     }
