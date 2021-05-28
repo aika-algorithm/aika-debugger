@@ -195,7 +195,7 @@ public abstract class AbstractViewManager<C extends AbstractConsole, G extends A
         neuronTypeModifiers.put(InhibitoryNeuron.class, n -> n.setAttribute("ui.style", "fill-color: rgb(100,100,255);"));
 
         synapseTypeModifiers.put(InputBNSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(50,200,50);"));
-        synapseTypeModifiers.put(NegativeBNSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(100,0,0);"));
+        synapseTypeModifiers.put(NegativeBNSynapse.class, (e, s) -> e.setAttribute("ui.style", "fill-color: rgb(175,0,0);"));
         synapseTypeModifiers.put(SameBNSynapse.class, (e, s) -> {
             SameBNSynapse pps = (SameBNSynapse) s;
             if(pps.isRecurrent()) {
