@@ -39,6 +39,7 @@ public class NeuronConsole extends AbstractConsole {
         appendEntry(sDoc, "Is Input Neuron: ", "" + n.isInputNeuron());
         appendEntry(sDoc, "Bias: ", "" + Utils.round(n.getBias()));
         appendEntry(sDoc, "Bias (recurrent): ", "" + Utils.round(n.getRecurrentBias()));
+
         if(!n.isTemplate()) {
             appendEntry(sDoc, "Frequency: ", "" + Utils.round(n.getFrequency()));
             appendEntry(sDoc, "N: ", "" + Utils.round(n.getSampleSpace().getN(ref)));
@@ -70,21 +71,22 @@ public class NeuronConsole extends AbstractConsole {
             appendEntry(sDoc, "Recurrent: ", "" + pps.isRecurrent());
         }
 
-        appendEntry(sDoc, "Frequency(POS, POS): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.POS, s.getSampleSpace().getN(ref))));
-        appendEntry(sDoc, "Frequency(POS, NEG): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.NEG, s.getSampleSpace().getN(ref))));
-        appendEntry(sDoc, "Frequency(NEG, POS): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.POS, s.getSampleSpace().getN(ref))));
-        appendEntry(sDoc, "Frequency(NEG, NEG): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.NEG, s.getSampleSpace().getN(ref))));
-        appendEntry(sDoc, "N: ", "" + Utils.round(s.getSampleSpace().getN(ref)));
-        appendEntry(sDoc, "LastPos: ", "" + (s.getSampleSpace().getLastPos() != null ? Utils.round(s.getSampleSpace().getLastPos()) : "X"));
-        appendEntry(sDoc, "P(POS, POS) :", "" + Utils.round(s.getP(Sign.POS, Sign.POS, s.getSampleSpace().getN(ref))));
-        appendEntry(sDoc, "P(POS, NEG) :", "" + Utils.round(s.getP(Sign.POS, Sign.NEG, s.getSampleSpace().getN(ref))));
-        appendEntry(sDoc, "P(NEG, POS) :", "" + Utils.round(s.getP(Sign.NEG, Sign.POS, s.getSampleSpace().getN(ref))));
-        appendEntry(sDoc, "P(NEG, NEG) :", "" + Utils.round(s.getP(Sign.NEG, Sign.NEG, s.getSampleSpace().getN(ref))));
-        appendEntry(sDoc, "Surprisal(POS, POS): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.POS, ref)));
-        appendEntry(sDoc, "Surprisal(POS, NEG): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.NEG, ref)));
-        appendEntry(sDoc, "Surprisal(NEG, POS): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.POS, ref)));
-        appendEntry(sDoc, "Surprisal(NEG, NEG): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.NEG, ref)));
-        appendEntry(sDoc, "Template: ", s.getTemplate() != null ? s.getTemplate().toString() : null);
+        if(!s.isTemplate()) {
+            appendEntry(sDoc, "Frequency(POS, POS): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.POS, s.getSampleSpace().getN(ref))));
+            appendEntry(sDoc, "Frequency(POS, NEG): ", "" + Utils.round(s.getFrequency(Sign.POS, Sign.NEG, s.getSampleSpace().getN(ref))));
+            appendEntry(sDoc, "Frequency(NEG, POS): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.POS, s.getSampleSpace().getN(ref))));
+            appendEntry(sDoc, "Frequency(NEG, NEG): ", "" + Utils.round(s.getFrequency(Sign.NEG, Sign.NEG, s.getSampleSpace().getN(ref))));
+            appendEntry(sDoc, "N: ", "" + Utils.round(s.getSampleSpace().getN(ref)));
+            appendEntry(sDoc, "LastPos: ", "" + (s.getSampleSpace().getLastPos() != null ? Utils.round(s.getSampleSpace().getLastPos()) : "X"));
+            appendEntry(sDoc, "P(POS, POS) :", "" + Utils.round(s.getP(Sign.POS, Sign.POS, s.getSampleSpace().getN(ref))));
+            appendEntry(sDoc, "P(POS, NEG) :", "" + Utils.round(s.getP(Sign.POS, Sign.NEG, s.getSampleSpace().getN(ref))));
+            appendEntry(sDoc, "P(NEG, POS) :", "" + Utils.round(s.getP(Sign.NEG, Sign.POS, s.getSampleSpace().getN(ref))));
+            appendEntry(sDoc, "P(NEG, NEG) :", "" + Utils.round(s.getP(Sign.NEG, Sign.NEG, s.getSampleSpace().getN(ref))));
+            appendEntry(sDoc, "Surprisal(POS, POS): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.POS, ref)));
+            appendEntry(sDoc, "Surprisal(POS, NEG): ", "" + Utils.round(s.getSurprisal(Sign.POS, Sign.NEG, ref)));
+            appendEntry(sDoc, "Surprisal(NEG, POS): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.POS, ref)));
+            appendEntry(sDoc, "Surprisal(NEG, NEG): ", "" + Utils.round(s.getSurprisal(Sign.NEG, Sign.NEG, ref)));
+            appendEntry(sDoc, "Template: ", s.getTemplate().toString());
+        }
     }
-
 }
