@@ -21,8 +21,7 @@ public class GradientTest {
     @Test
     public void gradientAndInduction() throws InterruptedException {
         TextModel m = new TextModel();
-        m.setConfig(
-                new Config() {
+        Config c = new Config() {
                     public String getLabel(Activation act) {
                         Neuron n = act.getNeuron();
                         Activation iAct = act.getInputLinks()
@@ -41,14 +40,12 @@ public class GradientTest {
                 }
                         .setAlpha(0.99)
                         .setLearnRate(-0.1)
-                        .setEnableTraining(true)
-                        .setSurprisalInductionThreshold(0.0)
-                        .setGradientInductionThreshold(0.0)
-        );
+                        .setEnableTraining(true);
 
         m.setN(912);
 
         Document doc = new Document("A B ");
+        doc.setConfig(c);
 
         int i = 0;
         TextReference lastRef = null;

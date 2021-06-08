@@ -73,12 +73,20 @@ public class NeuronViewManager extends AbstractNeuronViewManager {
     }
 
     public void initGraphNeurons() {
-        double[] x = new double[] {0.0};
-        Collection<Neuron> neurons = document.getActivations()
+/*        Collection<Neuron> neurons = document.getActivations()
                 .stream()
                 .map(Activation::getNeuron)
                 .filter(n -> n.isInputNeuron())
                 .collect(Collectors.toList());
+*/
+
+        Collection<Neuron> neurons = getModel()
+                .getActiveNeurons()
+                .stream()
+                .map(p -> p.getNeuron())
+                .collect(Collectors.toList());
+
+        double[] x = new double[] {0.0};
 
         neurons.forEach(n -> {
                     drawNeuron(n, x[0], 0.0);
