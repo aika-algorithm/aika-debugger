@@ -27,14 +27,29 @@ public class TestFsModel {
 
         FSSuspensionCallback fsCallback = new FSSuspensionCallback();
 
-        TextModel m = new TextModel(fsCallback);
+        TextModel m = new TextModel();
         fsCallback.open(new File("F:/Model"), "AIKA-236-1", false);
+        m.setSuspensionHook(fsCallback);
 
-        Document doc = new Document("A B ");
+        Document doc = new Document("der koch ");
+
+        Config c = new TestConfig()
+                .setAlpha(0.99)
+                .setLearnRate(-0.1)
+                .setEnableTraining(true);
+        doc.setConfig(c);
+
+        int i = 0;
+        TextReference lastRef = null;
+        for(String t: doc.getContent().split(" ")) {
+            int j = i + t.length();
+            lastRef = doc.processToken(m, lastRef, i, j, "W-" + t).getReference();
+
+            i = j + 1;
+        }
 
         AikaDebugger.createAndShowGUI(doc,m);
 
         doc.process(m);
-
     }
 }

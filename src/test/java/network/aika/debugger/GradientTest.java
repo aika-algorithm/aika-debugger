@@ -14,30 +14,10 @@ import org.junit.jupiter.api.Test;
 public class GradientTest {
 
 
-    private String trimPrefix(String l) {
-        return l.substring(l.indexOf("-") + 1);
-    }
-
     @Test
     public void gradientAndInduction() throws InterruptedException {
         TextModel m = new TextModel();
-        Config c = new Config() {
-                    public String getLabel(Activation act) {
-                        Neuron n = act.getNeuron();
-                        Activation iAct = act.getInputLinks()
-                                .findFirst()
-                                .map(l -> l.getInput())
-                                .orElse(null);
-
-                        if(n instanceof BindingNeuron) {
-                            return "PP-" + trimPrefix(iAct.getLabel());
-                        } else if (n instanceof PatternNeuron) {
-                            return "P-" + ((Document)act.getThought()).getContent();
-                        } else {
-                            return "I-" + trimPrefix(iAct.getLabel());
-                        }
-                    }
-                }
+        Config c = new TestConfig()
                         .setAlpha(0.99)
                         .setLearnRate(-0.1)
                         .setEnableTraining(true);
