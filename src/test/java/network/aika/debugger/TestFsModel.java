@@ -17,11 +17,6 @@ import java.io.FileNotFoundException;
 
 public class TestFsModel {
 
-
-    private String trimPrefix(String l) {
-        return l.substring(l.indexOf("-") + 1);
-    }
-
     @Test
     public void testOpenModel() throws FileNotFoundException {
 
@@ -31,7 +26,7 @@ public class TestFsModel {
         fsCallback.open(new File("F:/Model"), "AIKA-236-1", false);
         m.setSuspensionHook(fsCallback);
 
-        Document doc = new Document("der koch ");
+        Document doc = new Document("agile methoden ");
 
         Config c = new TestConfig()
                 .setAlpha(0.99)
@@ -51,5 +46,7 @@ public class TestFsModel {
         AikaDebugger.createAndShowGUI(doc,m);
 
         doc.process(m);
+
+        System.out.println();
     }
 }
