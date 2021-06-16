@@ -13,18 +13,22 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 public class TestFsModel {
 
     @Test
-    public void testOpenModel() throws FileNotFoundException {
+    public void testOpenModel() throws IOException {
 
-        FSSuspensionCallback fsCallback = new FSSuspensionCallback();
+        FSSuspensionCallback fsCallback = new FSSuspensionCallback(
+                new File("F:/Model").toPath(),
+                "aika-2.0"
+        );
 
-        TextModel m = new TextModel();
-        fsCallback.open(new File("F:/Model"), "AIKA-236-1", false);
-        m.setSuspensionHook(fsCallback);
+        TextModel m = new TextModel(fsCallback);
+        m.open(false);
+        m.init();
 
         Document doc = new Document("agile methoden ");
 
