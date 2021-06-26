@@ -43,7 +43,7 @@ public class NeuronConsole extends AbstractConsole {
         if(!n.isTemplate()) {
             appendEntry(sDoc, "Frequency: ", "" + Utils.round(n.getFrequency()));
             appendEntry(sDoc, "N: ", "" + Utils.round(n.getSampleSpace().getN(ref)));
-            appendEntry(sDoc, "LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? Utils.round(n.getSampleSpace().getLastPos()) : "X"));
+            appendEntry(sDoc, "LastPos: ", "" + (n.getSampleSpace().getLastPos() != null ? n.getSampleSpace().getLastPos() : "X"));
             appendEntry(sDoc, "P(POS): ", "" + n.getP(Sign.POS, n.getSampleSpace().getN(ref)));
             appendEntry(sDoc, "P(NEG): ", "" + n.getP(Sign.NEG, n.getSampleSpace().getN(ref)));
             appendEntry(sDoc, "Surprisal(POS): ", "" + n.getSurprisal(Sign.POS, ref));

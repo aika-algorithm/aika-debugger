@@ -20,14 +20,11 @@ import network.aika.Model;
 import network.aika.debugger.AbstractViewManager;
 import network.aika.neuron.Neuron;
 import network.aika.neuron.Synapse;
-import network.aika.neuron.inhibitory.InhibitoryNeuron;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-
-import static network.aika.debugger.AbstractLayout.STANDARD_DISTANCE_Y;
 
 public abstract class AbstractNeuronViewManager extends AbstractViewManager<NeuronConsole, NeuronGraphManager> {
 
@@ -47,17 +44,21 @@ public abstract class AbstractNeuronViewManager extends AbstractViewManager<Neur
     protected void drawNeuron(Neuron<?> n, double x, double y) {
         graphManager.lookupNode(n,
                 node -> {
-                    node.setAttribute("aika.neuronId", n.getId());
-                    Consumer<Node> neuronTypeModifier = neuronTypeModifiers.get(n.getClass());
-                    if (neuronTypeModifier != null) {
-                        neuronTypeModifier.accept(node);
-                    }
-
-                    node.setAttribute("x", x);
-                    node.setAttribute("y", y);
-
-                    node.setAttribute("ui.label", n.getLabel());
+                    drawNeuron(n, x, y, node);
                 });
+    }
+
+    protected void drawNeuron(Neuron<?> n, double x, double y, Node node) {
+        node.setAttribute("aika.neuronId", n.getId());
+        Consumer<Node> neuronTypeModifier = neuronTypeModifiers.get(n.getClass());
+        if (neuronTypeModifier != null) {
+            neuronTypeModifier.accept(node);
+        }
+
+        node.setAttribute("x", x);
+        node.setAttribute("y", y);
+
+        node.setAttribute("ui.label", n.getLabel());
     }
 
     protected void drawInputSynapses(Neuron<?> n) {

@@ -23,6 +23,7 @@ import network.aika.debugger.neurons.NeuronConsole;
 import network.aika.debugger.neurons.NeuronGraphManager;
 import network.aika.debugger.neurons.NeuronLayout;
 import network.aika.neuron.Synapse;
+import network.aika.neuron.excitatory.PatternNeuron;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
@@ -44,9 +45,40 @@ public class TemplateViewManager extends AbstractNeuronViewManager {
     }
 
 
+
+    protected void drawNeuron(Neuron<?> n, double x, double y, Node node) {
+        super.drawNeuron(n, x, y, node);
+
+        if(n == n.getModel().getTemplates().SAME_PATTERN_TEMPLATE || n == n.getModel().getTemplates().INHIBITORY_TEMPLATE) {
+            node.setAttribute("ui.style", "text-alignment: above;");
+            node.setAttribute("ui.style", "text-offset: 0, -10;");
+        }
+
+    }
+
+
     protected Edge drawSynapse(Synapse s) {
         Edge tse = super.drawSynapse(s);
         tse.setAttribute("ui.label", s.getTemplateInfo().getLabel());
+
+        if(s == s.getModel().getTemplates().NEGATIVE_SYNAPSE_TEMPLATE) {
+            tse.setAttribute("ui.style", "text-offset: -30, -30;");
+        }
+        if(s == s.getModel().getTemplates().INHIBITORY_SYNAPSE_TEMPLATE) {
+            tse.setAttribute("ui.style", "text-offset: 30, 30;");
+        }
+
+        if(s == s.getModel().getTemplates().RECURRENT_SAME_PATTERN_SYNAPSE_TEMPLATE) {
+            tse.setAttribute("ui.style", "text-offset: -30, 30;");
+        }
+        if(s == s.getModel().getTemplates().PATTERN_SYNAPSE_TEMPLATE) {
+            tse.setAttribute("ui.style", "text-offset: 30, -50;");
+        }
+
+        if(s == s.getModel().getTemplates().SAME_PATTERN_SYNAPSE_TEMPLATE) {
+            tse.setAttribute("ui.style", "text-alignment: above;");
+            tse.setAttribute("ui.style", "text-offset: 50, -100;");
+        }
         return tse;
     }
 

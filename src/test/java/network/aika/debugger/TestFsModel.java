@@ -13,24 +13,27 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 public class TestFsModel {
 
     @Test
-    public void testOpenModel() throws FileNotFoundException {
+    public void testOpenModel() throws IOException {
 
-        FSSuspensionCallback fsCallback = new FSSuspensionCallback();
+        TextModel m = new TextModel(
+                new FSSuspensionCallback(new File("F:/Model").toPath(), "AIKA-2.0-1", true)
+        );
 
-        TextModel m = new TextModel();
-        fsCallback.open(new File("F:/Model"), "AIKA-236-1", false);
-        m.setSuspensionHook(fsCallback);
+        m.open(false);
+        m.init();
+        m.getTemplates().SAME_BINDING_TEMPLATE.setDirectConjunctiveBias(-0.32);
 
         Document doc = new Document("agile methoden ");
 
         Config c = new TestConfig()
                 .setAlpha(0.99)
-                .setLearnRate(-0.1)
+                .setLearnRate(-0.011)
                 .setEnableTraining(true);
         doc.setConfig(c);
 
@@ -47,6 +50,6 @@ public class TestFsModel {
 
         doc.process(m);
 
-        System.out.println();
+        m.close();
     }
 }

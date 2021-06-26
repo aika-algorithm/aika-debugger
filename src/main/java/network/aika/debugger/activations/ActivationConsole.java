@@ -75,9 +75,6 @@ public class ActivationConsole extends AbstractConsole {
         }
         appendEntry(sDoc, "Branch-Probability: ", "" + Utils.round(act.getBranchProbability()));
         appendEntry(sDoc, "Fired: ", "" + act.getFired());
-        if(!act.getNeuron().isTemplate()) {
-            appendEntry(sDoc, "Norm: ", "" + Utils.round(act.getNorm()));
-        }
         appendEntry(sDoc, "Reference: ", "" + act.getReference());
 
         neuronConsole.render(nsDoc ->
