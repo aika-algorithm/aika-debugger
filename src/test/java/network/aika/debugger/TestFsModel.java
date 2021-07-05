@@ -29,7 +29,7 @@ public class TestFsModel {
         m.init();
         m.getTemplates().SAME_BINDING_TEMPLATE.setDirectConjunctiveBias(-0.32);
 
-        Document doc = new Document("agile methoden ");
+        Document doc = new Document("arbeit fair arbeitsvermittlung ");
 
         Config c = new TestConfig()
                 .setAlpha(0.99)
