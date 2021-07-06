@@ -2,6 +2,9 @@ package network.aika.debugger.scopes;
 
 import network.aika.Model;
 import network.aika.debugger.AbstractViewManager;
+import network.aika.debugger.neurons.NeuronConsole;
+import network.aika.debugger.neurons.NeuronGraphManager;
+import network.aika.debugger.neurons.NeuronLayout;
 import network.aika.neuron.activation.scopes.Scope;
 import network.aika.neuron.activation.scopes.Transition;
 import org.graphstream.graph.Edge;
@@ -17,7 +20,14 @@ public class ScopesViewManager extends AbstractViewManager<ScopesConsole, Scopes
     private ScopesConsole console = new ScopesConsole();
 
     public ScopesViewManager(Model model) {
+        super();
         this.model = model;
+
+        graphManager = new ScopesGraphManager(graph);
+        mainConsole = new ScopesConsole();
+        viewer.enableAutoLayout(new ScopesLayout(this, graphManager));
+
+        splitPane = initSplitPane();
     }
 
     public Model getModel() {
