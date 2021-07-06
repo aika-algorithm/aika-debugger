@@ -4,11 +4,11 @@ import network.aika.Model;
 import network.aika.debugger.AbstractViewManager;
 import network.aika.neuron.activation.scopes.Scope;
 import network.aika.neuron.activation.scopes.Transition;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 
 import javax.swing.*;
-import java.util.function.Consumer;
 
 public class ScopesViewManager extends AbstractViewManager<ScopesConsole, ScopesGraphManager> {
 
@@ -30,8 +30,11 @@ public class ScopesViewManager extends AbstractViewManager<ScopesConsole, Scopes
     }
 
 
-    private void drawTransition(Transition t) {
+    private Edge drawTransition(Transition t) {
+        if(graphManager.getNode(t.getInput()) == null || graphManager.getNode(t.getOutput()) == null)
+            return null;
 
+        return graphManager.lookupEdge(t, e -> {});
     }
 
     private void drawScope(Scope s, double x, double y) {
