@@ -22,12 +22,18 @@ import network.aika.debugger.neurons.AbstractNeuronViewManager;
 import network.aika.debugger.neurons.NeuronGraphManager;
 import network.aika.debugger.neurons.NeuronParticle;
 import network.aika.neuron.NeuronProvider;
+import network.aika.neuron.activation.scopes.Scope;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 import org.miv.pherd.geom.Point3;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 public class ScopesLayout extends AbstractLayout<ScopesGraphManager> {
     ScopesViewManager svm;
+
+    private Map<Integer, ScopeParticle> particles = new TreeMap<>();
 
     public ScopesLayout(ScopesViewManager svm, ScopesGraphManager gm) {
         super(gm);
@@ -45,18 +51,15 @@ public class ScopesLayout extends AbstractLayout<ScopesGraphManager> {
         Node n = graphManager.getNode(id);
 
         Integer scopeId = n.getAttribute("aika.scopeId", Integer.class);
+        Scope scope = model.getScopes().getScopes().get(scopeId);
 
-        Double x;
-        Double y;
+        ScopeParticle particle = graphManager.getParticle(scope);
 
-        ScopeParticle particle = ;
+        if(particle == null) {
+            particle = new ScopeParticle(this, id, scope, scope.getXCoord(), scope.getYCoord(), 0);
 
-        x += (random.nextDouble() - 0.5) * 0.1;
-        y += (random.nextDouble() - 0.5) * 0.1;
-
-        particle = new ScopeParticle(this, id, np.getNeuron(), x, y, 0);
-
-        graphManager.setParticle(np.getNeuron(), particle);
+            graphManager.setParticle(scope, particle);
+        }
 
         return particle;
     }
