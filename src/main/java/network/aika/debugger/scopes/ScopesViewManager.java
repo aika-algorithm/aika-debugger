@@ -77,6 +77,7 @@ public class ScopesViewManager extends AbstractViewManager<ScopesConsole, Scopes
         getModel()
                 .getScopes()
                 .getScopes()
+                .values()
                 .forEach(s -> drawScope(s, s.getXCoord(), s.getYCoord()));
 
         getModel()
