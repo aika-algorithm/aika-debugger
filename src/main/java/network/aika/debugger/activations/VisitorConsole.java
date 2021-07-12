@@ -43,7 +43,6 @@ public class VisitorConsole extends AbstractConsole {
     public void renderActVisitorStep(StyledDocument sDoc, ActVisitor v) {
         appendText(sDoc, "Activation Visitor Step\n", "bold");
 
-        appendEntry(sDoc, "Scopes: ", v.getScopes().toString());
         appendEntry(sDoc, "Current:", v.getActivation().toShortString());
         appendEntry(sDoc, "Template Label:", v.getActivation().getNeuron().getTemplate().getTemplateInfo().getLabel());
         renderVisitorStep(sDoc, v, "bold", "regular");
@@ -55,8 +54,6 @@ public class VisitorConsole extends AbstractConsole {
 
         ActVisitor pv = (ActVisitor) v.getPreviousStep();
 
-        appendEntry(sDoc, "Scope Candidates: ", pv.getScopes().toString(), "boldGreen", "regularGreen");
-        appendEntry(sDoc, "Transitions Candidates: ", v.getTransitions().toString(), "boldGreen", "regularGreen");
         appendEntry(sDoc, "Current Synapse:", syn.toString(), "boldGreen", "regularGreen");
         appendEntry(sDoc, "Template Label:", syn.getTemplate().getTemplateInfo().getLabel(), "boldGreen", "regularGreen");
 
@@ -66,7 +63,6 @@ public class VisitorConsole extends AbstractConsole {
     public void renderLinkVisitorStep(StyledDocument sDoc, LinkVisitor v) {
         appendText(sDoc, "Link Visitor Step\n", "bold");
 
-        appendEntry(sDoc, "Transitions: ", v.getTransitions().toString());
         appendEntry(sDoc, "Current:", v.getLink().toShortString());
 
         renderVisitorStep(sDoc, v, "bold", "regular");
@@ -74,7 +70,6 @@ public class VisitorConsole extends AbstractConsole {
 
     public void renderVisitorStep(StyledDocument sDoc, Visitor v, String titleStyle, String style) {
         appendEntry(sDoc, "CurrentDir:", "" + v.getCurrentDir(), titleStyle, style);
-        appendEntry(sDoc, "TargetDir:", "" + v.getTargetDir(), titleStyle, style);
 
         appendEntry(sDoc, "DownSteps:", "" + v.getDownSteps(), titleStyle, style);
         appendEntry(sDoc, "UpSteps:", "" + v.getUpSteps(), titleStyle, style);

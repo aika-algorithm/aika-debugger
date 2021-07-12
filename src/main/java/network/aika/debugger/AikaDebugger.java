@@ -17,7 +17,6 @@
 package network.aika.debugger;
 
 import network.aika.Model;
-import network.aika.debugger.scopes.ScopesViewManager;
 import network.aika.text.Document;
 import network.aika.debugger.activations.ActivationViewManager;
 import network.aika.debugger.neurons.NeuronViewManager;
@@ -37,14 +36,12 @@ public class AikaDebugger extends JPanel {
     ActivationViewManager actViewManager;
     NeuronViewManager neuronViewManager;
     TemplateViewManager templateViewManager;
-    ScopesViewManager scopesViewManager;
 
     KeyManager keyManager;
 
     final static Integer ACTIVATION_TAB_INDEX = 0;
     final static Integer NEURON_TAB_INDEX = 1;
     final static Integer TEMPLATE_TAB_INDEX = 2;
-    final static Integer SCOPES_TAB_INDEX = 3;
 
     public AikaDebugger(Document doc,Model model) {
         super(new GridLayout(1, 1));
@@ -66,15 +63,12 @@ public class AikaDebugger extends JPanel {
         actViewManager = new ActivationViewManager(doc);
         neuronViewManager = new NeuronViewManager(model, doc);
         templateViewManager = new TemplateViewManager(model);
-        scopesViewManager = new ScopesViewManager(model);
-
 
         keyManager = new KeyManager(actViewManager);
 
         addTab(ACTIVATION_TAB_INDEX, "Activations", KeyEvent.VK_A, actViewManager.getView());
         addTab(NEURON_TAB_INDEX, "Neurons", KeyEvent.VK_N, neuronViewManager.getView());
         addTab(TEMPLATE_TAB_INDEX, "Templates", KeyEvent.VK_N, templateViewManager.getView());
-        addTab(SCOPES_TAB_INDEX, "Scopes", KeyEvent.VK_N, scopesViewManager.getView());
 
         tabbedPane.addKeyListener(keyManager);
         tabbedPane.addChangeListener(event-> {
@@ -82,8 +76,6 @@ public class AikaDebugger extends JPanel {
                 neuronViewManager.initGraphNeurons();
             } else if(tabbedPane.getSelectedIndex()==TEMPLATE_TAB_INDEX){
                 templateViewManager.initGraphNeurons();
-            } else if(tabbedPane.getSelectedIndex()==SCOPES_TAB_INDEX){
-                scopesViewManager.initScopes();
             }
         });
     }
